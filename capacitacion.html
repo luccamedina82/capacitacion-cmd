@@ -1,0 +1,779 @@
+<!-- Draft de estructura - Capacitación Notion / Comunicación Multimedial -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Organizá tu cursada — Capacitación Notion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --papel:#F4F5F0;
+    --papel-2:#EAEBE3;
+    --tinta:#23241F;
+    --tinta-suave:#5C5F55;
+    --marcador:#D6F24B;
+    --linea:#D5D7CB;
+    --radio:6px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--papel);color:var(--tinta);
+    font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:16px;line-height:1.6;
+  }
+  h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.05;margin:0}
+  h1{font-size:clamp(2.4rem,6vw,4.2rem);font-weight:800;letter-spacing:-.03em}
+  h2{font-size:clamp(1.6rem,3.4vw,2.3rem);font-weight:700;letter-spacing:-.02em}
+  h3{font-size:1.05rem;font-weight:700}
+  p{margin:0 0 .8em}
+  a{color:inherit}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  .col{max-width:62ch}
+
+  /* ---------- barra superior con progreso ---------- */
+  header{
+    position:sticky;top:0;z-index:10;background:rgba(244,245,240,.92);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--linea);
+  }
+  .barra{display:flex;align-items:center;gap:20px;padding:12px 0;flex-wrap:wrap}
+  .marca{font-family:"Bricolage Grotesque";font-weight:800;letter-spacing:-.02em}
+  .pasos-nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+  .pasos-nav a{
+    text-decoration:none;font-size:.82rem;padding:5px 10px;border:1px solid var(--linea);
+    border-radius:100px;color:var(--tinta-suave);
+  }
+  .pasos-nav a:hover,.pasos-nav a:focus-visible{border-color:var(--tinta);color:var(--tinta)}
+  .medidor{width:100%;height:4px;background:var(--papel-2)}
+  .medidor span{display:block;height:100%;width:0;background:var(--marcador);transition:width .35s ease}
+
+  /* ---------- hero: el umbral ---------- */
+  .hero{
+    padding:88px 0 64px;
+    background-image:linear-gradient(var(--papel-2) 1px,transparent 1px),
+                     linear-gradient(90deg,var(--papel-2) 1px,transparent 1px);
+    background-size:26px 26px;
+    border-bottom:1px solid var(--linea);
+  }
+  .hero p.bajada{font-size:1.15rem;color:var(--tinta-suave);max-width:52ch;margin-top:18px}
+  .umbral{
+    margin-top:40px;background:var(--papel);border:1px solid var(--tinta);
+    border-radius:var(--radio);padding:26px;max-width:640px;
+    box-shadow:6px 6px 0 var(--tinta);
+  }
+  .umbral h3{margin-bottom:4px}
+  .umbral .nota{font-size:.9rem;color:var(--tinta-suave);margin-bottom:16px}
+  .meta{display:flex;gap:12px;align-items:flex-start;padding:9px 0;cursor:pointer;border:0;background:none;
+        text-align:left;font:inherit;color:inherit;width:100%}
+  .caja{
+    flex:0 0 20px;height:20px;margin-top:2px;border:1.5px solid var(--tinta);border-radius:3px;
+    display:grid;place-items:center;font-size:13px;line-height:1;
+  }
+  .meta[aria-pressed="true"] .caja{background:var(--marcador)}
+  .meta .txt{position:relative}
+  .meta[aria-pressed="true"] .txt::after{
+    content:"";position:absolute;left:-3px;right:-5px;top:.15em;bottom:.15em;
+    background:var(--marcador);mix-blend-mode:multiply;transform:rotate(-.5deg);z-index:-1;
+  }
+  .meta .txt{z-index:0}
+
+  /* ---------- secciones ---------- */
+  section{padding:72px 0;border-bottom:1px solid var(--linea)}
+  .eyebrow{font-size:.85rem;color:var(--tinta-suave);margin-bottom:10px}
+  .intro{color:var(--tinta-suave);margin-top:14px}
+
+  /* ---------- encuesta ---------- */
+  .pregunta{margin:22px 0;padding-bottom:18px;border-bottom:1px dashed var(--linea)}
+  .pregunta p{font-weight:600;margin-bottom:10px}
+  .ops{display:flex;gap:8px;flex-wrap:wrap}
+  .ops button{
+    font:inherit;font-size:.9rem;padding:7px 14px;border:1px solid var(--linea);background:var(--papel);
+    border-radius:100px;cursor:pointer;color:var(--tinta-suave);
+  }
+  .ops button[aria-pressed="true"]{background:var(--marcador);border-color:var(--tinta);color:var(--tinta);font-weight:600}
+  .ops button:focus-visible{outline:2px solid var(--tinta);outline-offset:2px}
+
+  /* ---------- bloque ---------- */
+  .bloque{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:40px;align-items:start}
+  .num{font-family:"Bricolage Grotesque";font-weight:800;font-size:.95rem;color:var(--tinta-suave)}
+  .video{
+    margin:24px 0;border:1px solid var(--linea);border-radius:var(--radio);overflow:hidden;background:var(--papel-2);
+  }
+  .video .marco{aspect-ratio:16/9;display:grid;place-items:center;position:relative}
+  .play{width:56px;height:56px;border-radius:100px;background:var(--tinta);color:var(--papel);
+        display:grid;place-items:center;font-size:18px}
+  .video .pie{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;
+              font-size:.85rem;color:var(--tinta-suave);border-top:1px solid var(--linea);background:var(--papel)}
+
+  details{border-top:1px solid var(--linea)}
+  details summary{
+    cursor:pointer;padding:12px 0;font-weight:600;list-style:none;display:flex;gap:12px;align-items:center;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::before{content:"+";font-family:"Bricolage Grotesque";font-weight:700;color:var(--tinta-suave)}
+  details[open] summary::before{content:"–"}
+  details .cuerpo{padding:0 0 16px 24px;color:var(--tinta-suave)}
+  details .cuerpo code{background:var(--papel-2);padding:1px 5px;border-radius:3px;font-size:.9em}
+
+  .hands{
+    margin-top:26px;border:1px solid var(--tinta);border-left:6px solid var(--marcador);
+    border-radius:var(--radio);padding:20px 22px;background:var(--papel);
+  }
+  .hands h3{margin-bottom:8px}
+  .hands .tiempo{font-size:.85rem;color:var(--tinta-suave);margin-bottom:12px}
+  .hands ol{margin:0;padding-left:20px}
+  .hands li{margin-bottom:6px}
+  .check{margin-top:16px;padding-top:14px;border-top:1px dashed var(--linea)}
+  .check .rot{font-size:.85rem;color:var(--tinta-suave);margin-bottom:6px}
+
+  /* ---------- quiz de nivel ---------- */
+  .quiz{
+    margin-top:26px;border:1px solid var(--linea);border-radius:var(--radio);
+    padding:20px 22px;background:var(--papel-2);
+  }
+  .quiz h3{margin-bottom:4px}
+  .quiz .tiempo{font-size:.85rem;color:var(--tinta-suave);margin-bottom:16px}
+  .q{margin-bottom:16px}
+  .q > p{font-weight:600;margin-bottom:8px}
+  .ops-q{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+  .ops-q button{
+    font:inherit;font-size:.92rem;text-align:left;padding:8px 14px;border:1px solid var(--linea);
+    background:var(--papel);border-radius:var(--radio);cursor:pointer;color:var(--tinta-suave);width:100%;
+  }
+  .ops-q button[aria-pressed="true"]{border-color:var(--tinta);color:var(--tinta);font-weight:600}
+  .ops-q button:focus-visible{outline:2px solid var(--tinta);outline-offset:2px}
+  .q.bien .ops-q button[aria-pressed="true"]{background:var(--marcador);border-color:var(--tinta)}
+  .q.mal .ops-q button[aria-pressed="true"]{background:var(--papel-2);border-style:dashed;border-color:var(--tinta)}
+  .corregir{
+    font:inherit;font-weight:600;padding:9px 20px;border:1px solid var(--tinta);background:var(--tinta);
+    color:var(--papel);border-radius:var(--radio);cursor:pointer;
+  }
+  .veredicto{margin:12px 0 0;font-size:.92rem;min-height:1.4em}
+
+  /* ---------- cabecera plegable del bloque ---------- */
+  .cabecera{
+    width:100%;display:flex;gap:24px;align-items:flex-start;justify-content:space-between;
+    background:none;border:0;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer;
+  }
+  .cabecera:focus-visible{outline:2px solid var(--tinta);outline-offset:6px;border-radius:var(--radio)}
+  .cab-txt{display:block;max-width:62ch}
+  .cabecera .num{display:block;margin-bottom:10px}
+  .cabecera .intro{display:block;color:var(--tinta-suave);margin-top:14px}
+  .cab-lado{display:flex;align-items:center;gap:12px;flex:0 0 auto;padding-top:2px}
+  .flecha{font-size:1.2rem;color:var(--tinta-suave);transition:transform .2s ease}
+  .cabecera[aria-expanded="true"] .flecha{transform:rotate(180deg)}
+  .chip{font-size:.78rem;border:1px solid var(--linea);border-radius:100px;padding:3px 10px;color:var(--tinta-suave)}
+  .chip:empty{display:none}
+  .chip.ok{background:var(--marcador);border-color:var(--tinta);color:var(--tinta);font-weight:600}
+  .zona{position:relative}
+  .oculto{display:none}
+  .cuerpo-bloque{padding-top:36px}
+  .barra-plan{display:flex;gap:8px;padding:20px 0 0}
+  .barra-plan button{
+    font:inherit;font-size:.85rem;padding:6px 14px;border:1px solid var(--linea);background:var(--papel);
+    border-radius:100px;cursor:pointer;color:var(--tinta-suave);
+  }
+  .barra-plan button:hover{border-color:var(--tinta);color:var(--tinta)}
+
+  /* ---------- bloqueo de secciones ---------- */
+  .cabecera[aria-disabled="true"]{cursor:not-allowed}
+  .cabecera[aria-disabled="true"] .cab-txt{opacity:.55}
+  .cabecera[aria-disabled="true"] .flecha{opacity:.3}
+  .desbloqueo{
+    display:flex;gap:14px;align-items:center;flex-wrap:wrap;
+    margin-top:22px;padding-top:16px;border-top:1px dashed var(--linea);
+    font-size:.9rem;color:var(--tinta-suave);
+  }
+  .desbloqueo p{margin:0}
+  .saltear{
+    font:inherit;font-size:.85rem;background:none;border:0;border-bottom:1px solid var(--linea);
+    color:var(--tinta-suave);cursor:pointer;padding:0 0 2px;
+  }
+  .saltear:hover{color:var(--tinta);border-color:var(--tinta)}
+
+  aside.lateral{position:sticky;top:96px;font-size:.9rem}  aside.lateral .caja-lat{border:1px solid var(--linea);border-radius:var(--radio);padding:16px;background:var(--papel)}
+  aside.lateral h3{font-size:.95rem;margin-bottom:8px}
+  aside.lateral ul{margin:0;padding-left:18px;color:var(--tinta-suave)}
+  aside.lateral li{margin-bottom:5px}
+  .opcional{display:inline-block;font-size:.78rem;border:1px solid var(--tinta);border-radius:100px;
+            padding:2px 9px;margin-left:8px;vertical-align:middle}
+
+  footer{padding:56px 0 80px;color:var(--tinta-suave);font-size:.9rem}
+
+  @media (max-width:860px){
+    .bloque{grid-template-columns:1fr}
+    aside.lateral{position:static}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header>
+  <div class="wrap barra">
+    <span class="marca">Organizá tu cursada</span>
+    <nav class="pasos-nav">
+      <a href="#encuesta">Antes de empezar</a>
+      <a href="#b0">0 · Cómo piensa Notion</a>
+      <a href="#b1">1 · La página</a>
+      <a href="#b2">2 · La base de datos</a>
+      <a href="#b3">3 · Materias</a>
+      <a href="#cierre">Seguir solo</a>
+    </nav>
+  </div>
+  <div class="medidor"><span id="medidor"></span></div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>Dejá de enterarte<br>tarde de las entregas</h1>
+    <p class="bajada">Una capacitación de dos horas para armar en Notion el sistema con el que vas a seguir tu cursada. Con tus materias y tus fechas reales, no con un ejemplo.</p>
+
+    <div class="umbral">
+      <h3>Cuando termines vas a poder hacer esto sin ayuda</h3>
+      <p class="nota">Marcá lo que ya sabés hacer. Lo que quede sin marcar es lo que venimos a resolver.</p>
+      <button class="meta" aria-pressed="false"><span class="caja">✓</span><span class="txt">Crear una base de datos y darle fecha, materia, estado y prioridad</span></button>
+      <button class="meta" aria-pressed="false"><span class="caja">✓</span><span class="txt">Ver esas mismas tareas en calendario y en tablero</span></button>
+      <button class="meta" aria-pressed="false"><span class="caja">✓</span><span class="txt">Filtrar para ver solo lo de una materia o lo de esta semana</span></button>
+      <button class="meta" aria-pressed="false"><span class="caja">✓</span><span class="txt">Sumar una materia nueva el cuatrimestre que viene, solo</span></button>
+    </div>
+  </div>
+</div>
+
+<section id="encuesta">
+  <div class="wrap col">
+    <p class="eyebrow">Antes de empezar · 3 minutos</p>
+    <h2>¿Dónde se te escapan las cosas?</h2>
+    <p class="intro">Las respuestas arrancan la capacitación: mostramos los resultados en vivo y ajustamos qué tan rápido pasamos por la interfaz.</p>
+
+    <div class="pregunta">
+      <p>¿Dónde anotás hoy las fechas de parciales y entregas?</p>
+      <div class="ops">
+        <button aria-pressed="false">Papel o agenda</button>
+        <button aria-pressed="false">Calendario del celu</button>
+        <button aria-pressed="false">No las anoto</button>
+        <button aria-pressed="false">Otra app</button>
+      </div>
+    </div>
+
+    <div class="pregunta">
+      <p>En el último mes, ¿cuántas veces te enteraste tarde de una entrega?</p>
+      <div class="ops">
+        <button aria-pressed="false">Ninguna</button>
+        <button aria-pressed="false">Una o dos</button>
+        <button aria-pressed="false">Varias</button>
+        <button aria-pressed="false">Perdí la cuenta</button>
+      </div>
+    </div>
+
+    <div class="pregunta">
+      <p>¿Usaste Notion alguna vez?</p>
+      <div class="ops">
+        <button aria-pressed="false">Nunca</button>
+        <button aria-pressed="false">La abrí y la dejé</button>
+        <button aria-pressed="false">La uso</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <div class="wrap barra-plan">
+    <button id="desplegar">Desplegar todo</button>
+    <button id="plegar">Plegar todo</button>
+  </div>
+
+<section id="b0">
+  <div class="wrap">
+    <button class="cabecera" aria-expanded="false" aria-controls="cuerpo-b0">
+      <span class="cab-txt">
+        <span class="num">Bloque 0 · 10 minutos</span>
+        <h2>Cómo piensa Notion</h2>
+        <span class="intro">Dos ideas alcanzan para entender todo lo que viene después. Si estas dos quedan claras, el resto es práctica.</span>
+      </span>
+      <span class="cab-lado"><span class="chip"></span><span class="flecha" aria-hidden="true">▾</span></span>
+    </button>
+    <div class="zona">
+      <div class="cuerpo-bloque" id="cuerpo-b0" hidden>
+        <div class="bloque">
+    <div>
+
+      <div class="video">
+        <div class="marco"><div class="play">▶</div></div>
+        <div class="pie"><span>Video · Todo es un bloque, y una base de datos se mira de muchas formas</span><span>3:20</span></div>
+      </div>
+
+      <details open>
+        <summary>Idea 1 — Todo lo que escribís es un bloque y se puede arrastrar</summary>
+        <div class="cuerpo">Un título, un párrafo, una imagen: cada cosa es una pieza suelta. Por eso no hay que planificar la página antes de escribirla, se reordena después.</div>
+      </details>
+      <details>
+        <summary>Idea 2 — Una base de datos es un solo conjunto de datos con muchas vistas</summary>
+        <div class="cuerpo">El calendario no es una herramienta aparte de la lista de tareas: es la misma información mirada de otra forma. Cargás una vez, la ves donde te sirva.</div>
+      </details>
+      <details>
+        <summary>El atajo que vas a usar todo el tiempo</summary>
+        <div class="cuerpo">Escribí <code>/</code> en cualquier lugar de la página y aparece todo lo que podés insertar.</div>
+      </details>
+
+      <div class="hands">
+        <h3>Hands-on · Tu primera página</h3>
+        <p class="tiempo">5 minutos · lo hacemos juntos en pantalla</p>
+        <ol>
+          <li>Creá tu cuenta con el mail de la facultad.</li>
+          <li>Creá una página y llamala <em>Cursada 2026</em>.</li>
+          <li>Escribí <code>/</code> y agregá cualquier bloque para ver el menú.</li>
+        </ol>
+        <div class="check">
+          <p class="rot">Checkpoint</p>
+          <button class="meta" aria-pressed="false"><span class="caja">✓</span><span class="txt">Tenés una página propia abierta y le pusiste nombre</span></button>
+        </div>
+      </div>
+
+      <div class="quiz" data-quiz="q0">
+        <h3>¿Pasaste el nivel?</h3>
+        <p class="tiempo">Dos preguntas. Hay que acertar las dos para abrir el bloque siguiente.</p>
+        <div class="q" data-ok="b">
+          <p>En Notion, ¿qué es el calendario?</p>
+          <div class="ops-q">
+            <button data-op="a">Una herramienta aparte que hay que mantener sincronizada con las tareas</button>
+            <button data-op="b">Una forma de mirar una base de datos que ya cargaste</button>
+            <button data-op="c">Un bloque donde escribís las fechas a mano</button>
+          </div>
+        </div>
+        <div class="q" data-ok="c">
+          <p>¿Qué escribís para abrir el menú de cosas que podés insertar?</p>
+          <div class="ops-q">
+            <button data-op="a">@</button>
+            <button data-op="b">#</button>
+            <button data-op="c">/</button>
+          </div>
+        </div>
+        <button class="corregir">Corregir</button>
+        <p class="veredicto" role="status"></p>
+      </div>
+    </div>
+
+    <aside class="lateral">
+      <div class="caja-lat">
+        <h3>Recursos del bloque</h3>
+        <ul>
+          <li>Video: cómo piensa Notion (3:20)</li>
+          <li>Guía imprimible: atajos básicos</li>
+          <li>Link directo al registro</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="b1" data-requiere="q0">
+  <div class="wrap">
+    <button class="cabecera" aria-expanded="false" aria-controls="cuerpo-b1">
+      <span class="cab-txt">
+        <span class="num">Bloque 1 · 15 minutos</span>
+        <h2>La página: darle forma a lo que escribís</h2>
+        <span class="intro">Es la parte más intuitiva y la vas a descubrir sola. Acá solo le perdemos el miedo al menú.</span>
+      </span>
+      <span class="cab-lado"><span class="chip"></span><span class="flecha" aria-hidden="true">▾</span></span>
+    </button>
+    <div class="zona">
+      <div class="cuerpo-bloque" id="cuerpo-b1" hidden>
+        <div class="bloque">
+    <div>
+
+      <div class="video">
+        <div class="marco"><div class="play">▶</div></div>
+        <div class="pie"><span>Video · Títulos, listas, toggles y cómo mover bloques</span><span>2:45</span></div>
+      </div>
+
+      <details open><summary>Paso 1 — Jerarquía con títulos</summary>
+        <div class="cuerpo">Título 1 para la materia, título 2 para la unidad. La jerarquía arma sola el índice lateral.</div></details>
+      <details><summary>Paso 2 — Toggles para esconder lo largo</summary>
+        <div class="cuerpo">Los apuntes largos van adentro de un toggle: la página queda corta y se navega.</div></details>
+      <details><summary>Paso 3 — Columnas arrastrando</summary>
+        <div class="cuerpo">Arrastrá un bloque al costado de otro. Sirve para poner el resumen al lado del cronograma.</div></details>
+
+      <div class="hands">
+        <h3>Hands-on · Armá tu página de cursada</h3>
+        <p class="tiempo">10 minutos · solo, con nosotros dando vueltas</p>
+        <ol>
+          <li>Poné un título 1 por cada materia que estés cursando ahora.</li>
+          <li>Debajo de una de ellas, agregá un toggle con la bibliografía.</li>
+          <li>Reordená las materias arrastrándolas al orden en que te importan.</li>
+        </ol>
+        <div class="check">
+          <p class="rot">Checkpoint</p>
+          <button class="meta" aria-pressed="false"><span class="caja">✓</span><span class="txt">Tu página tiene tus materias reales y podés colapsar el contenido largo</span></button>
+        </div>
+      </div>
+
+      <div class="quiz" data-quiz="q1">
+        <h3>¿Pasaste el nivel?</h3>
+        <p class="tiempo">Dos preguntas. Hay que acertar las dos para abrir el bloque siguiente.</p>
+        <div class="q" data-ok="b">
+          <p>Tenés tres carillas de apuntes que te tapan la página. ¿Qué usás?</p>
+          <div class="ops-q">
+            <button data-op="a">Un título 1, para que quede separado</button>
+            <button data-op="b">Un toggle, para poder plegarlo</button>
+            <button data-op="c">Una página nueva, es la única forma</button>
+          </div>
+        </div>
+        <div class="q" data-ok="a">
+          <p>¿Cómo ponés dos bloques uno al lado del otro?</p>
+          <div class="ops-q">
+            <button data-op="a">Arrastrando uno hasta el costado del otro</button>
+            <button data-op="b">Insertando una tabla de dos columnas</button>
+            <button data-op="c">No se puede, Notion es de una sola columna</button>
+          </div>
+        </div>
+        <button class="corregir">Corregir</button>
+        <p class="veredicto" role="status"></p>
+      </div>
+    </div>
+
+    <aside class="lateral">
+      <div class="caja-lat">
+        <h3>Recursos del bloque</h3>
+        <ul>
+          <li>Video: bloques y jerarquía (2:45)</li>
+          <li>Guía paso a paso con capturas</li>
+          <li>Lista de atajos de teclado</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="b2" data-requiere="q1">
+  <div class="wrap">
+    <button class="cabecera" aria-expanded="false" aria-controls="cuerpo-b2">
+      <span class="cab-txt">
+        <span class="num">Bloque 2 · 50 minutos · el núcleo</span>
+        <h2>La base de datos y sus vistas</h2>
+        <span class="intro">Acá está todo lo que define si te vas a poder organizar solo. Es el bloque más largo y el que más práctica tiene.</span>
+      </span>
+      <span class="cab-lado"><span class="chip"></span><span class="flecha" aria-hidden="true">▾</span></span>
+    </button>
+    <div class="zona">
+      <div class="cuerpo-bloque" id="cuerpo-b2" hidden>
+        <div class="bloque">
+    <div>
+
+      <div class="video">
+        <div class="marco"><div class="play">▶</div></div>
+        <div class="pie"><span>Video · De una tabla suelta a una base de datos con vistas</span><span>4:10</span></div>
+      </div>
+
+      <details open><summary>Paso 1 — Tabla simple o base de datos: no son lo mismo</summary>
+        <div class="cuerpo">Se ven casi igual y es el error más común. La tabla simple es un dibujo; la base de datos guarda información que después podés filtrar, ordenar y ver en calendario. Nosotros usamos base de datos siempre.</div></details>
+      <details><summary>Paso 2 — Las cuatro propiedades que necesitás</summary>
+        <div class="cuerpo">Fecha de entrega, materia (selección), estado (por hacer / haciendo / listo) y prioridad. Ninguna más por ahora: cada propiedad extra es una decisión que vas a tener que tomar cada vez que cargues algo.</div></details>
+      <details><summary>Paso 3 — La misma información en calendario</summary>
+        <div class="cuerpo">Agregás una vista de calendario y las tareas se acomodan solas por la fecha que ya cargaste. No hay nada que sincronizar.</div></details>
+      <details><summary>Paso 4 — La misma información en tablero</summary>
+        <div class="cuerpo">Agrupado por estado, para arrastrar lo que vas terminando. Sirve para el día a día; el calendario sirve para ver la semana que se viene.</div></details>
+      <details><summary>Paso 5 — Filtros y orden</summary>
+        <div class="cuerpo">Una vista filtrada por materia y otra por "entrega esta semana". Es lo que reemplaza el buscar entre todo.</div></details>
+
+      <div class="hands">
+        <h3>Hands-on · Tu tablero de tareas real</h3>
+        <p class="tiempo">25 minutos · guiado al principio, solo al final</p>
+        <ol>
+          <li>Creá una base de datos llamada <em>Tareas</em> dentro de tu página de cursada.</li>
+          <li>Agregale las cuatro propiedades: fecha, materia, estado, prioridad.</li>
+          <li>Cargá cinco tareas reales tuyas de las próximas dos semanas.</li>
+          <li>Sumá una vista de calendario y comprobá dónde cayeron.</li>
+          <li>Sumá una vista de tablero agrupada por estado y mové una tarea a "haciendo".</li>
+          <li>Creá una vista filtrada que muestre solo una materia.</li>
+        </ol>
+        <div class="check">
+          <p class="rot">Checkpoint · marcá solo si te pasa a vos</p>
+          <button class="meta" aria-pressed="false"><span class="caja">✓</span><span class="txt">Cambiás la fecha de una tarea y se mueve sola en el calendario</span></button>
+          <button class="meta" aria-pressed="false"><span class="caja">✓</span><span class="txt">Podés ver solo las tareas de una materia sin borrar nada</span></button>
+        </div>
+      </div>
+
+      <div class="quiz" data-quiz="q2">
+        <h3>¿Pasaste el nivel?</h3>
+        <p class="tiempo">Dos preguntas. Hay que acertar las dos para abrir el cierre.</p>
+        <div class="q" data-ok="c">
+          <p>Cargaste todas tus entregas en una tabla simple y ahora las querés ver en calendario.</p>
+          <div class="ops-q">
+            <button data-op="a">Agregás una vista de calendario a la tabla</button>
+            <button data-op="b">Copiás las fechas a un calendario aparte</button>
+            <button data-op="c">No se puede: una tabla simple no tiene vistas, necesitás una base de datos</button>
+          </div>
+        </div>
+        <div class="q" data-ok="a">
+          <p>Corrés la fecha de una entrega desde la vista de tabla. ¿Qué pasa en el calendario?</p>
+          <div class="ops-q">
+            <button data-op="a">Se mueve sola: es la misma información vista de otra forma</button>
+            <button data-op="b">Queda desactualizado hasta que lo edites también ahí</button>
+            <button data-op="c">Se duplica la tarea en las dos fechas</button>
+          </div>
+        </div>
+        <button class="corregir">Corregir</button>
+        <p class="veredicto" role="status"></p>
+      </div>
+    </div>
+
+    <aside class="lateral">
+      <div class="caja-lat">
+        <h3>Recursos del bloque</h3>
+        <ul>
+          <li>Video: bases de datos y vistas (4:10)</li>
+          <li>Guía paso a paso con capturas</li>
+          <li>Errores frecuentes: tabla vs base</li>
+          <li>Ayudantes dando vueltas por el aula</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="b3" data-requiere="q2">
+  <div class="wrap">
+    <button class="cabecera" aria-expanded="false" aria-controls="cuerpo-b3">
+      <span class="cab-txt">
+        <span class="num">Bloque 3 · 20 minutos</span>
+        <h2>Una base de materias<span class="opcional">opcional</span></h2>
+        <span class="intro">Si llegaste hasta acá con tiempo, este bloque conecta dos bases. Si no lo hacés, tu sistema funciona igual: la propiedad de selección ya te resuelve la materia.</span>
+      </span>
+      <span class="cab-lado"><span class="chip"></span><span class="flecha" aria-hidden="true">▾</span></span>
+    </button>
+    <div class="zona">
+      <div class="cuerpo-bloque" id="cuerpo-b3" hidden>
+        <div class="bloque">
+    <div>
+
+      <div class="video">
+        <div class="marco"><div class="play">▶</div></div>
+        <div class="pie"><span>Video · Cuándo conviene una segunda base de datos</span><span>3:00</span></div>
+      </div>
+
+      <details open><summary>Paso 1 — Cuándo una selección deja de alcanzar</summary>
+        <div class="cuerpo">Cuando de cada materia querés guardar más que el nombre: profesor, aula, horario, condición de promoción.</div></details>
+      <details><summary>Paso 2 — Relacionar Tareas con Materias</summary>
+        <div class="cuerpo">La propiedad de relación reemplaza a la selección. Desde la materia ves todas sus tareas, desde la tarea llegás a la materia.</div></details>
+
+      <div class="hands">
+        <h3>Hands-on · Conectá las dos bases</h3>
+        <p class="tiempo">12 minutos</p>
+        <ol>
+          <li>Creá una base <em>Materias</em> con una fila por materia.</li>
+          <li>Reemplazá la selección de <em>Tareas</em> por una relación a <em>Materias</em>.</li>
+          <li>Abrí una materia y verificá que aparezcan sus tareas.</li>
+        </ol>
+        <div class="check">
+          <p class="rot">Checkpoint</p>
+          <button class="meta" aria-pressed="false"><span class="caja">✓</span><span class="txt">Desde una materia ves su lista de tareas sin buscarlas</span></button>
+        </div>
+      </div>
+
+      <div class="quiz" data-quiz="q3">
+        <h3>¿Pasaste el nivel?</h3>
+        <p class="tiempo">Este bloque es opcional: no bloquea nada si lo salteás.</p>
+        <div class="q" data-ok="b">
+          <p>¿Cuándo conviene una base de datos de Materias en vez de una propiedad de selección?</p>
+          <div class="ops-q">
+            <button data-op="a">Siempre, la selección es una versión incompleta</button>
+            <button data-op="b">Cuando de cada materia querés guardar más cosas que el nombre</button>
+            <button data-op="c">Cuando cursás más de cinco materias</button>
+          </div>
+        </div>
+        <div class="q" data-ok="c">
+          <p>Con Tareas y Materias relacionadas, ¿qué ganás?</p>
+          <div class="ops-q">
+            <button data-op="a">Que las tareas se creen solas cada cuatrimestre</button>
+            <button data-op="b">Que el calendario ordene por materia automáticamente</button>
+            <button data-op="c">Que al abrir una materia veas todas sus tareas</button>
+          </div>
+        </div>
+        <button class="corregir">Corregir</button>
+        <p class="veredicto" role="status"></p>
+      </div>
+    </div>
+
+    <aside class="lateral">
+      <div class="caja-lat">
+        <h3>Recursos del bloque</h3>
+        <ul>
+          <li>Video: relaciones entre bases (3:00)</li>
+          <li>Guía paso a paso con capturas</li>
+          <li>Cuándo no vale la pena hacerlo</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cierre" data-requiere="q2">
+  <div class="wrap col">
+    <p class="eyebrow">Cierre</p>
+    <h2>La prueba de que te podés organizar solo</h2>
+    <p class="intro">Sin mirar la guía y sin preguntar: agregá una materia nueva y cargale tres tareas con fecha y prioridad. Si te sale, terminaste la capacitación.</p>
+
+    <div class="cuerpo-cierre">
+    <div class="hands">
+      <h3>Para seguir por tu cuenta</h3>
+      <p class="tiempo">No lo damos en la capacitación, pero existe y lo podés investigar</p>
+      <ol>
+        <li>Fórmulas: días que faltan para la entrega, calculados solos.</li>
+        <li>Plantillas de la comunidad, para copiar sistemas ya armados.</li>
+        <li>La app del celular, para cargar una tarea saliendo del aula.</li>
+      </ol>
+      <div class="check">
+        <p class="rot">Antes de irte</p>
+        <button class="meta" aria-pressed="false"><span class="caja">✓</span><span class="txt">Descargaste la plantilla de respaldo con el sistema completo</span></button>
+      </div>
+    </div>
+
+    <p style="margin-top:28px" class="intro">En dos semanas te escribimos con la misma encuesta del principio para ver si cambió algo.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Draft de estructura · Comunicación Multimedial · Capacitación Notion para estudiantes de 18 a 25</div>
+</footer>
+
+<script>
+  // Toggle de opciones de la encuesta (una respuesta por pregunta)
+  document.querySelectorAll('.ops').forEach(grupo => {
+    grupo.addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      grupo.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+    });
+  });
+
+  // Checkboxes de metas y checkpoints + barra de progreso
+  const metas = document.querySelectorAll('.meta');
+  const medidor = document.getElementById('medidor');
+
+  function actualizarProgreso() {
+    const hechas = document.querySelectorAll('.meta[aria-pressed="true"]').length;
+    medidor.style.width = (hechas / metas.length * 100) + '%';
+  }
+
+  metas.forEach(m => m.addEventListener('click', () => {
+    m.setAttribute('aria-pressed', m.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+    actualizarProgreso();
+  }));
+
+  actualizarProgreso();
+
+  // ---- Quiz de nivel y bloqueo de las secciones siguientes ----
+  document.querySelectorAll('.ops-q').forEach(grupo => {
+    grupo.addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      grupo.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+      grupo.closest('.q').classList.remove('bien', 'mal');
+    });
+  });
+
+  // ---- Plegado de bloques ----
+  function plegar(sec, abierto) {
+    const cab = sec.querySelector('.cabecera');
+    const cuerpo = sec.querySelector('.cuerpo-bloque');
+    if (!cab || !cuerpo) return;
+    cab.setAttribute('aria-expanded', String(abierto));
+    cuerpo.hidden = !abierto;
+  }
+
+  document.querySelectorAll('.cabecera').forEach(cab => {
+    cab.addEventListener('click', () => {
+      const sec = cab.closest('section');
+      if (sec.classList.contains('candado')) return;
+      plegar(sec, cab.getAttribute('aria-expanded') !== 'true');
+    });
+  });
+
+  const cabeceras = document.querySelectorAll('.cabecera');
+  document.getElementById('desplegar').addEventListener('click',
+    () => cabeceras.forEach(c => {
+      const sec = c.closest('section');
+      if (!sec.classList.contains('candado')) plegar(sec, true);
+    }));
+  document.getElementById('plegar').addEventListener('click',
+    () => cabeceras.forEach(c => plegar(c.closest('section'), false)));
+
+  plegar(document.getElementById('b0'), true);
+
+  function abrir(sec) {
+    sec.classList.remove('candado');
+    const aviso = sec.querySelector('.desbloqueo');
+    if (aviso) aviso.remove();
+    const cab = sec.querySelector('.cabecera');
+    if (cab) cab.removeAttribute('aria-disabled');
+    const chip = sec.querySelector('.chip');
+    if (chip) { chip.textContent = 'Abierto'; chip.classList.add('ok'); }
+    const oculto = sec.querySelector('.oculto');
+    if (oculto) oculto.classList.remove('oculto');
+    plegar(sec, true);
+  }
+
+  document.querySelectorAll('section[data-requiere]').forEach(sec => {
+    sec.classList.add('candado');
+
+    const cab = sec.querySelector('.cabecera');
+    if (cab) cab.setAttribute('aria-disabled', 'true');
+
+    const chip = sec.querySelector('.chip');
+    if (chip) chip.textContent = 'Cerrado';
+
+    // El cierre no tiene cabecera plegable: se oculta su contenido
+    const cierre = sec.querySelector('.cuerpo-cierre');
+    if (!cab && cierre) cierre.classList.add('oculto');
+
+    const aviso = document.createElement('div');
+    aviso.className = 'desbloqueo';
+    aviso.innerHTML = '<p>Se abre cuando aprobás el quiz del bloque anterior.</p>';
+    const saltear = document.createElement('button');
+    saltear.className = 'saltear';
+    saltear.textContent = 'Abrirlo igual';
+    saltear.addEventListener('click', () => abrir(sec));
+    aviso.appendChild(saltear);
+    (sec.querySelector('.wrap') || sec).appendChild(aviso);
+  });
+
+  document.querySelectorAll('.corregir').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const quiz = btn.closest('.quiz');
+      const preguntas = quiz.querySelectorAll('.q');
+      let correctas = 0, sinResponder = 0;
+
+      preguntas.forEach(q => {
+        const elegida = q.querySelector('.ops-q button[aria-pressed="true"]');
+        if (!elegida) { sinResponder++; q.classList.remove('bien', 'mal'); return; }
+        const ok = elegida.dataset.op === q.dataset.ok;
+        q.classList.toggle('bien', ok);
+        q.classList.toggle('mal', !ok);
+        if (ok) correctas++;
+      });
+
+      const veredicto = quiz.querySelector('.veredicto');
+      if (sinResponder) {
+        veredicto.textContent = 'Falta responder ' + sinResponder + (sinResponder === 1 ? ' pregunta.' : ' preguntas.');
+        return;
+      }
+      if (correctas === preguntas.length) {
+        veredicto.textContent = 'Nivel aprobado. Se abrió lo que sigue.';
+        document.querySelectorAll('section[data-requiere="' + quiz.dataset.quiz + '"]').forEach(abrir);
+      } else {
+        veredicto.textContent = 'Revisá lo que quedó con borde punteado y volvé a intentar. Los reintentos son ilimitados.';
+      }
+    });
+  });
+</script>
