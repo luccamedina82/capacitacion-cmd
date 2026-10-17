@@ -14,9 +14,9 @@ export const SECCIONES = [
     num: 'Sección 1 · Módulo Fundamentos',
     titulo: 'Deconstruyendo el Caos Estudiantil (Mentalidad Notion)',
     tag: 'Mentalidad Notion',
-    videoSrc: '/videos/sec1.mp4',
+    videoSrc: 'https://youtu.be/bQJq6nPtoTI',
     videoTitulo: 'Deconstruyendo el Caos Estudiantil: Bloques y Atajos Clave',
-    videoDuracion: '8:40',
+    videoDuracion: '2:09',
     explicacionBreve:
       'Descubrí qué es Notion y por qué funciona diferente a Word o Google Docs. Aprenderemos a navegar por la interfaz, a crear tu primera página y a dominar el concepto fundamental de "bloques" para centralizar toda tu cursada sin saturarte de información.',
     explicacionDetallada: [
@@ -29,7 +29,7 @@ export const SECCIONES = [
       url: '/pdfs/guia-1.pdf',
     },
     recursosAside: [
-      'Video: Mentalidad de bloques (8:40)',
+      'Video: Mentalidad de bloques (2:09)',
       'PDF: 10 atajos y comandos esenciales',
       'Atajo clave: escribe / para insertar cualquier bloque',
     ],
@@ -59,9 +59,9 @@ export const SECCIONES = [
     num: 'Sección 2 · Toma de Notas Inteligente',
     titulo: 'El Cuaderno Digital Inteligente (Toma de Apuntes Activa)',
     tag: 'Active Recall',
-    videoSrc: '/videos/sec2.mp4',
+    videoSrc: 'https://youtu.be/GHYURkZ4qX4',
     videoTitulo: 'Estructuración de Materias, Toggles y Active Recall',
-    videoDuracion: '10:15',
+    videoDuracion: '2:08',
     explicacionBreve:
       'Transformá tus apuntes estáticos en material interactivo. Aprenderemos a estructurar la página de una materia, a incrustar recursos externos (como PDFs de la cátedra) y a utilizar los Toggles para aplicar la técnica de Active Recall y estudiar en menos tiempo.',
     explicacionDetallada: [
@@ -74,7 +74,7 @@ export const SECCIONES = [
       url: '/pdfs/guia-2.pdf',
     },
     recursosAside: [
-      'Video: Toggles y Active Recall (10:15)',
+      'Video: Toggles y Active Recall (2:08)',
       'PDF: Metodología Active Recall',
       'Comando clave: /toggle para ocultar respuestas',
     ],
@@ -104,7 +104,7 @@ export const SECCIONES = [
     num: 'Sección 3 · Bases de Datos',
     titulo: 'El Núcleo de Datos: Tu Primera Base de Datos Estudiantil',
     tag: 'Bases de Datos',
-    videoSrc: '/videos/sec3.mp4',
+    videoSrc: '',
     videoTitulo: 'Creación de Bases de Datos, Propiedades y Parámetros',
     videoDuracion: '14:20',
     explicacionBreve:
@@ -149,9 +149,9 @@ export const SECCIONES = [
     num: 'Sección 4 · Vistas Visuales',
     titulo: 'Control Visual del Tiempo: Tableros Kanban y Calendarios',
     tag: 'Kanban & Calendarios',
-    videoSrc: '/videos/sec4.mp4',
+    videoSrc: 'https://youtu.be/rRNDw2sclAA',
     videoTitulo: 'Múltiples Vistas para los Mismos Datos: Board y Calendar',
-    videoDuracion: '11:50',
+    videoDuracion: '2:09',
     explicacionBreve:
       'Una misma información, múltiples formas de verla. A partir de la base de datos que creamos, aprenderemos a transformarla con un clic en un Calendario mensual y en un Tablero visual por columnas (Kanban) para gestionar entregas.',
     explicacionDetallada: [
@@ -164,7 +164,7 @@ export const SECCIONES = [
       url: '/pdfs/guia-4.pdf',
     },
     recursosAside: [
-      'Video: Vistas Board y Calendar (11:50)',
+      'Video: Vistas Board y Calendar (2:09)',
       'PDF: Guía de las 6 Vistas de Notion',
       'Tip: Arrastrá tarjetas en el Board para cambiar su estado',
     ],
@@ -194,7 +194,7 @@ export const SECCIONES = [
     num: 'Sección 5 · Filtros & Foco',
     titulo: 'Filtros, Ordenamiento y "Mi Día Hoy"',
     tag: 'Filtros & Sorts',
-    videoSrc: '/videos/sec5.mp4',
+    videoSrc: '',
     videoTitulo: 'Reducción de Ruido Visual: Filtros Dinámicos y Vistas "Hoy"',
     videoDuracion: '12:10',
     explicacionBreve:
@@ -239,7 +239,7 @@ export const SECCIONES = [
     num: 'Sección 6 · Arquitectura Final',
     titulo: 'El Hub Central del Estudiante (Dashboard Principal)',
     tag: 'Dashboard Maestro',
-    videoSrc: '/videos/sec6.mp4',
+    videoSrc: '',
     videoTitulo: 'Construcción del Dashboard: Linked Databases y Multi-Columnas',
     videoDuracion: '15:45',
     explicacionBreve:
