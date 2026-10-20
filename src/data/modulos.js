@@ -104,7 +104,7 @@ export const SECCIONES = [
     num: 'Sección 3 · Bases de Datos',
     titulo: 'El Núcleo de Datos: Tu Primera Base de Datos Estudiantil',
     tag: 'Bases de Datos',
-    videoSrc: '',
+    videoSrc: 'https://youtu.be/0mFkgNtjftk',
     videoTitulo: 'Creación de Bases de Datos, Propiedades y Parámetros',
     videoDuracion: '14:20',
     explicacionBreve:
