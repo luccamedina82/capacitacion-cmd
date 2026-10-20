@@ -194,7 +194,7 @@ export const SECCIONES = [
     num: 'Sección 5 · Filtros & Foco',
     titulo: 'Filtros, Ordenamiento y "Mi Día Hoy"',
     tag: 'Filtros & Sorts',
-    videoSrc: '',
+    videoSrc: 'https://youtu.be/SPmtSxDQJN0',
     videoTitulo: 'Reducción de Ruido Visual: Filtros Dinámicos y Vistas "Hoy"',
     videoDuracion: '12:10',
     explicacionBreve:
@@ -239,7 +239,7 @@ export const SECCIONES = [
     num: 'Sección 6 · Arquitectura Final',
     titulo: 'El Hub Central del Estudiante (Dashboard Principal)',
     tag: 'Dashboard Maestro',
-    videoSrc: '',
+    videoSrc: 'https://youtu.be/ePpSRGgOn0A',
     videoTitulo: 'Construcción del Dashboard: Linked Databases y Multi-Columnas',
     videoDuracion: '15:45',
     explicacionBreve:
