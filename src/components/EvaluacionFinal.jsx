@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { ClipboardCheck, Target, ArrowRight, CircleCheck, CircleX, Info } from 'lucide-react'
+import { CircleCheck, CircleX } from 'lucide-react'
 import TallyQuiz from './TallyQuiz.jsx'
 import Callout from './Callout.jsx'
 import { TALLY_FORMS } from '../data/tally.js'
@@ -201,8 +201,8 @@ export default function EvaluacionFinal({ tallyAprobado = false, onAprobado }) {
           aria-pressed={tab === 'tally'}
           onClick={() => setTab('tally')}
         >
-          <ClipboardCheck size={16} aria-hidden="true" /> Evaluación final
-          {tallyAprobado && <CircleCheck size={14} role="img" aria-label="aprobada" />}
+          <span aria-hidden="true">📝</span> Evaluación final
+          {tallyAprobado && <span role="img" aria-label="aprobada">✓</span>}
         </button>
         <button
           type="button"
@@ -210,7 +210,7 @@ export default function EvaluacionFinal({ tallyAprobado = false, onAprobado }) {
           aria-pressed={tab === 'situaciones'}
           onClick={() => setTab('situaciones')}
         >
-          <Target size={16} aria-hidden="true" /> Situaciones reales de estudio ({respondidas}/{totalPreguntas})
+          <span aria-hidden="true">🎯</span> Situaciones reales de estudio ({respondidas}/{totalPreguntas})
         </button>
       </div>
 
@@ -246,7 +246,7 @@ export default function EvaluacionFinal({ tallyAprobado = false, onAprobado }) {
                   </div>
 
                   <p className="caso-pregunta" id={`caso-pregunta-${caso.id}`}>
-                    <ArrowRight size={18} className="ico" aria-hidden="true" />
+                    <span aria-hidden="true">👉</span>
                     <span>{caso.pregunta}</span>
                   </p>
 
@@ -316,7 +316,7 @@ export default function EvaluacionFinal({ tallyAprobado = false, onAprobado }) {
                 </button>
                 {aviso && (
                   <p id="eval-aviso" className="eval-aviso" role="alert">
-                    <Info size={16} className="ico" aria-hidden="true" /> {aviso}
+                    <span aria-hidden="true">ℹ️</span> {aviso}
                   </p>
                 )}
               </>
@@ -331,14 +331,14 @@ export default function EvaluacionFinal({ tallyAprobado = false, onAprobado }) {
                   {aprobado ? (
                     <>
                       <h3>
-                        <CircleCheck size={20} aria-hidden="true" /> ¡Excelente! Aprobaste la evaluación integradora
+                        <span aria-hidden="true">✅</span> ¡Excelente! Aprobaste la evaluación integradora
                       </h3>
                       <p>Demostraste un dominio sólido del modelo mental de bloques, bases de datos y vistas de Notion.</p>
                     </>
                   ) : (
                     <>
                       <h3>
-                        <Info size={20} aria-hidden="true" /> Necesitás 80 % o más para certificar (actual: {porcentaje} %)
+                        <span aria-hidden="true">ℹ️</span> Necesitás 80 % o más para certificar (actual: {porcentaje} %)
                       </h3>
                       <p>Revisá las situaciones marcadas en rojo, leé la explicación sugerida y volvé a intentar.</p>
                     </>

@@ -1,9 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import { flushSync } from 'react-dom'
-import {
-  GraduationCap, BookOpen, Clock, Signal, CircleCheck, Target, ClipboardList,
-  ChevronsUpDown, ChevronsDownUp, Flag, Lock, Check, Play,
-} from 'lucide-react'
+import { ChevronsUpDown, ChevronsDownUp, Play } from 'lucide-react'
 import MetaCheck        from './components/MetaCheck.jsx'
 import TallyQuiz        from './components/TallyQuiz.jsx'
 import BloqueSeccion    from './components/BloqueSeccion.jsx'
@@ -200,7 +197,7 @@ export default function App() {
           </span>
 
           <span className="notion-workspace-tag">
-            <GraduationCap size={14} aria-hidden="true" />
+            <span aria-hidden="true">🎓</span>
             Comunicación Multimedial · 6 Módulos
           </span>
 
@@ -221,7 +218,7 @@ export default function App() {
               >
                 <span className="nav-num">{i + 1}</span>
                 <span className="nav-txt"> · {sec.corto}</span>
-                {aprobados[sec.id] && <Check size={14} role="img" aria-label="aprobado" />}
+                {aprobados[sec.id] && <span role="img" aria-label="aprobado">✓</span>}
               </a>
             ))}
             <a
@@ -230,7 +227,7 @@ export default function App() {
               onClick={e => irA('cierre', e)}
             >
               Cierre
-              {cierreDesbloqueado && <Check size={14} role="img" aria-label="desbloqueado" />}
+              {cierreDesbloqueado && <span role="img" aria-label="desbloqueado">✓</span>}
             </a>
           </nav>
 
@@ -260,7 +257,7 @@ export default function App() {
       <div className="hero">
         <div className="wrap">
           <div className="hero-inner">
-            <span className="hero-emoji" aria-hidden="true"><BookOpen size={32} /></span>
+            <span className="hero-emoji" aria-hidden="true">📚</span>
             <h2 className="hero-titulo">Dejá de enterarte<br />tarde de las entregas</h2>
             <p className="bajada">
               Capacitación práctica intensiva para armar en Notion el sistema definitivo con el que
@@ -269,15 +266,15 @@ export default function App() {
 
             <div className="notion-page-meta">
               <div className="notion-property">
-                <span className="notion-property-label"><Clock size={14} aria-hidden="true" /> Duración</span>
+                <span className="notion-property-label"><span aria-hidden="true">⏱️</span> Duración</span>
                 <span className="notion-property-value tag">6 Módulos prácticos</span>
               </div>
               <div className="notion-property">
-                <span className="notion-property-label"><Signal size={14} aria-hidden="true" /> Nivel</span>
+                <span className="notion-property-label"><span aria-hidden="true">🧑‍💻</span> Nivel</span>
                 <span className="notion-property-value tag">De cero a avanzado</span>
               </div>
               <div className="notion-property">
-                <span className="notion-property-label"><CircleCheck size={14} aria-hidden="true" /> Módulos listos</span>
+                <span className="notion-property-label"><span aria-hidden="true">✅</span> Módulos listos</span>
                 <span className="notion-property-value tag">
                   {seccionesAprobadas} de {totalSecciones} ({progresoPorcentaje}%)
                 </span>
@@ -305,7 +302,7 @@ export default function App() {
             </div>
 
             <div className="notion-callout">
-              <span className="notion-callout-emoji" aria-hidden="true"><Target size={24} /></span>
+              <span className="notion-callout-emoji" aria-hidden="true">🎯</span>
               <div className="notion-callout-body">
                 <h2>Objetivos de aprendizaje del programa</h2>
                 <p className="nota">
@@ -357,7 +354,7 @@ export default function App() {
               <div className="section-card-header">
                 <div className="cab-txt">
                   <span className="num">
-                    <ClipboardList size={14} className="ico" aria-hidden="true" /> Diagnóstico inicial · 3 minutos
+                    <span aria-hidden="true">📋</span> Diagnóstico inicial · 3 minutos
                   </span>
                   <h2>¿Dónde se te escapan las cosas hoy?</h2>
                   <p className="intro">
@@ -499,7 +496,7 @@ export default function App() {
               <div className="section-card-header">
                 <div className="cab-txt">
                   <span className="num">
-                    <Flag size={14} className="ico" aria-hidden="true" /> Cierre integrador · Proyecto final
+                    <span aria-hidden="true">🏁</span> Cierre integrador · Proyecto final
                   </span>
                   <h2>La prueba de que dominás tu cursada en Notion</h2>
                   <p className="intro">
@@ -510,9 +507,9 @@ export default function App() {
 
                 <div className="cab-lado">
                   {cierreDesbloqueado ? (
-                    <span className="chip ok"><Check size={14} aria-hidden="true" /> Desbloqueado</span>
+                    <span className="chip ok"><span aria-hidden="true">✓</span> Desbloqueado</span>
                   ) : (
-                    <span className="chip cerrado"><Lock size={14} aria-hidden="true" /> Bloqueado</span>
+                    <span className="chip cerrado"><span aria-hidden="true">🔒</span> Bloqueado</span>
                   )}
                 </div>
               </div>
@@ -520,7 +517,7 @@ export default function App() {
               {!cierreDesbloqueado ? (
                 <div className="desbloqueo-banner">
                   <div className="desbloqueo-content">
-                    <span className="desbloqueo-icon" aria-hidden="true"><Lock size={20} /></span>
+                    <span className="desbloqueo-icon" aria-hidden="true">🔒</span>
                     <div className="desbloqueo-texto">
                       <strong>Cierre y evaluación final bloqueados</strong>
                       <span>Esta sección final se habilita al aprobar los cuestionarios de los 6 módulos.</span>

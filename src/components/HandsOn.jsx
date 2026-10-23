@@ -1,4 +1,3 @@
-import { Clock } from 'lucide-react'
 import Callout from './Callout.jsx'
 
 /**
@@ -13,7 +12,7 @@ export default function HandsOn({ titulo, tiempo, pasos, children }) {
     <Callout variante="practica" className="hands">
       <h3>{titulo}</h3>
       <p className="tiempo">
-        <Clock size={14} className="ico" aria-hidden="true" /> {tiempo}
+        <span aria-hidden="true">⏱</span> {tiempo}
       </p>
       <ol>
         {pasos.map((paso, i) => (

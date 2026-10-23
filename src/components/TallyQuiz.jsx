@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { CircleCheck, Lock } from 'lucide-react'
 import RepasoModal from './RepasoModal.jsx'
 import { PUNTAJE_MAXIMO, PUNTAJE_MINIMO } from '../data/tally.js'
 
@@ -109,7 +108,7 @@ export default function TallyQuiz({
 
       {bloqueado ? (
         <div className="quiz-bloqueado">
-          <span className="quiz-bloqueado-icono" aria-hidden="true"><Lock size={20} /></span>
+          <span className="quiz-bloqueado-icono" aria-hidden="true">🔒</span>
           <div className="quiz-bloqueado-texto">
             <strong>Cuestionario bloqueado</strong>
             <span>
@@ -141,7 +140,7 @@ export default function TallyQuiz({
       <div role="status" aria-live="polite">
       {aprobado && (
         <p className="veredicto aprobado">
-          <CircleCheck size={16} className="ico" aria-hidden="true" /> Nivel aprobado{puntaje !== null && puntaje >= PUNTAJE_MINIMO ? ` con ${puntaje}/${PUNTAJE_MAXIMO}` : ''}: {exito}
+          <span aria-hidden="true">✅</span> Nivel aprobado{puntaje !== null && puntaje >= PUNTAJE_MINIMO ? ` con ${puntaje}/${PUNTAJE_MAXIMO}` : ''}: {exito}
         </p>
       )}
       {!aprobado && puntaje !== null && puntaje < PUNTAJE_MINIMO && (

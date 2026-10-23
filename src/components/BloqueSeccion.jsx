@@ -1,4 +1,4 @@
-import { Check, Lock, ChevronRight, BookOpen } from 'lucide-react'
+import { Lock, ChevronRight } from 'lucide-react'
 
 /**
  * Sección plegable (tarjeta plana). El estado abierto/cerrado lo controla App
@@ -46,14 +46,14 @@ export default function BloqueSeccion({
 
           <div className="cab-lado">
             {estado === 'aprobado' && (
-              <span className="chip completado"><Check size={14} aria-hidden="true" /> Aprobado</span>
+              <span className="chip completado"><span aria-hidden="true">✓</span> Aprobado</span>
             )}
             {estado === 'en-curso' && (
               <span className="chip ok">En curso</span>
             )}
             {estado === 'bloqueado' && (
               <span className="chip cerrado">
-                <BookOpen size={14} aria-hidden="true" /> Disponible
+                <span aria-hidden="true">📖</span> Disponible
                 <span className="sr-only">; cuestionario bloqueado</span>
                 <Lock size={12} aria-hidden="true" />
               </span>

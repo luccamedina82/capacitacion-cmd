@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Play, Film } from 'lucide-react'
+import { Play } from 'lucide-react'
 
 function getYouTubeId(url) {
   if (!url) return null
@@ -76,7 +76,7 @@ export default function VideoPlaceholder({ titulo, duracion, src, id }) {
         <div className="pie">
           <div className="pie-info">
             <span className="pie-icon" aria-hidden="true">
-              {youtubeId ? <Play size={16} /> : <Film size={16} />}
+              {youtubeId ? '▶️' : '🎬'}
             </span>
             <span className="pie-titulo">{titulo}</span>
           </div>

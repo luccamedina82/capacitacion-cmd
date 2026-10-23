@@ -1,4 +1,4 @@
-import { FileText, Download, ExternalLink } from 'lucide-react'
+import { Download, ExternalLink } from 'lucide-react'
 
 /**
  * Componente de descarga para Recurso PDF estilo bloque de archivo Notion (/file).
@@ -19,7 +19,7 @@ export default function RecursoPdf({ titulo, url, id }) {
       >
         <div className="recurso-pdf-left">
           <span className="recurso-pdf-icon" aria-hidden="true">
-            <FileText size={24} />
+            📄
           </span>
           <div className="recurso-pdf-info">
             <span className="recurso-pdf-label">Recurso descargable</span>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { GraduationCap, Printer } from 'lucide-react'
+import { Printer } from 'lucide-react'
 import DashboardProgreso from './DashboardProgreso.jsx'
 
 const FORMATO_FECHA = { year: 'numeric', month: 'long', day: 'numeric' }
@@ -55,7 +55,7 @@ export default function Certificado({ nombre, onNombre, fecha, aprobados }) {
 
       <div className="certificado-notion-card">
         <div className="cert-header">
-          <span className="cert-emoji" aria-hidden="true"><GraduationCap size={44} /></span>
+          <span className="cert-emoji" aria-hidden="true">🎓</span>
           <div>
             <span className="cert-kicker">Capacitación · Comunicación Multimedial · 2026</span>
             <h3>Certificado de finalización</h3>

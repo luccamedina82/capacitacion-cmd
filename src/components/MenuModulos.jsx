@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Menu, X, Check, Lock, ClipboardList, Flag } from 'lucide-react'
+import { Menu, X, Lock } from 'lucide-react'
 
 /**
  * Navegación compacta para pantallas angostas (< 900px).
@@ -62,13 +62,13 @@ export default function MenuModulos({ items, activa, resumen, onIr }) {
                   onClick={(e) => { setAbierto(false); onIr(item.id, e) }}
                 >
                   <span className="menu-item-icono" aria-hidden="true">
-                    {item.icono === 'encuesta' && <ClipboardList size={16} />}
-                    {item.icono === 'cierre' && <Flag size={16} />}
+                    {item.icono === 'encuesta' && '📋'}
+                    {item.icono === 'cierre' && '🏁'}
                   </span>
                   <span className="menu-item-texto">{item.etiqueta}</span>
                   <span className="menu-item-estado">
                     {item.estado === 'aprobado' && (
-                      <><Check size={14} aria-hidden="true" /> Aprobado</>
+                      <><span aria-hidden="true">✓</span> Aprobado</>
                     )}
                     {item.estado === 'en-curso' && 'En curso'}
                     {item.estado === 'bloqueado' && (
