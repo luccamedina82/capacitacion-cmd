@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react'
 import { flushSync } from 'react-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ChevronsUpDown, ChevronsDownUp, Play } from 'lucide-react'
-import MetaCheck        from './components/MetaCheck.jsx'
+import ObjetivosPrograma from './components/ObjetivosPrograma.jsx'
 import TallyQuiz        from './components/TallyQuiz.jsx'
 import BloqueSeccion    from './components/BloqueSeccion.jsx'
 import VideoPlaceholder from './components/VideoPlaceholder.jsx'
@@ -48,17 +48,7 @@ function AlMontar({ accion }) {
   return null
 }
 
-const METAS_INICIALES = {
-  meta_bloques:   false, // Sec 1
-  meta_apuntes:   false, // Sec 2
-  meta_bd:        false, // Sec 3
-  meta_vistas:    false, // Sec 4
-  meta_filtros:   false, // Sec 5
-  meta_dashboard: false, // Sec 6
-}
-
 export default function App() {
-  const [metas,        setMetas]        = useState(() => ({ ...METAS_INICIALES, ...leerProgreso(CLAVES.metas, {}) }))
   const [aprobados,    setAprobados]    = useState(() => leerProgreso(CLAVES.aprobados, {}))
   const [encuesta,     setEncuesta]     = useState(() => ({ e1: null, e2: null, e3: null, ...leerProgreso(CLAVES.encuesta, {}) }))
   const [nombre,       setNombre]       = useState(() => leerProgreso(CLAVES.nombre, ''))
@@ -84,7 +74,6 @@ export default function App() {
   const sinMovimiento = Boolean(useReducedMotion())
 
   useEffect(() => { guardarProgreso(CLAVES.aprobados, aprobados) },   [aprobados])
-  useEffect(() => { guardarProgreso(CLAVES.metas, metas) },           [metas])
   useEffect(() => { guardarProgreso(CLAVES.encuesta, encuesta) },     [encuesta])
   useEffect(() => { guardarProgreso(CLAVES.nombre, nombre) },         [nombre])
   useEffect(() => { guardarProgreso(CLAVES.ultima, ultima) },         [ultima])
@@ -179,7 +168,6 @@ export default function App() {
   const hayAvance       = seccionesAprobadas > 0 || Boolean(ultima)
   const continuar       = () => irA(siguiente ? siguiente.id : 'cierre')
 
-  const toggleMeta  = useCallback(k  => setMetas(p => ({ ...p, [k]: !p[k] })), [])
   const aprobarQuiz = useCallback(id => {
     setAprobados(p => ({ ...p, [id]: true }))
     const idx = SECCIONES.findIndex(s => s.id === id)
@@ -369,40 +357,7 @@ export default function App() {
                 <div className="notion-callout">
                   <span className="notion-callout-emoji" aria-hidden="true">🎯</span>
                   <div className="notion-callout-body">
-                    <h2>Objetivos de aprendizaje del programa</h2>
-                    <p className="nota">
-                      Marcá lo que ya sabés hacer. El resto es lo que vas a dominar módulo a módulo a lo largo de la capacitación:
-                    </p>
-                    <MetaCheck
-                      texto="Módulo 1: Dominar el menú de bloques con la barra (/) y anidar páginas limpiamente"
-                      marcado={metas.meta_bloques}
-                      onChange={() => toggleMeta('meta_bloques')}
-                    />
-                    <MetaCheck
-                      texto="Módulo 2: Estructurar materias con Toggles para aplicar Active Recall y embeber PDFs de cátedra"
-                      marcado={metas.meta_apuntes}
-                      onChange={() => toggleMeta('meta_apuntes')}
-                    />
-                    <MetaCheck
-                      texto="Módulo 3: Crear una base de datos con propiedades clave (Materia, Estado, Fecha de entrega)"
-                      marcado={metas.meta_bd}
-                      onChange={() => toggleMeta('meta_bd')}
-                    />
-                    <MetaCheck
-                      texto="Módulo 4: Visualizar las mismas tareas en Tablero Kanban y Calendario mensual sincronizado"
-                      marcado={metas.meta_vistas}
-                      onChange={() => toggleMeta('meta_vistas')}
-                    />
-                    <MetaCheck
-                      texto="Módulo 5: Configurar filtros dinámicos ('Esta semana') y ordenamiento por urgencia"
-                      marcado={metas.meta_filtros}
-                      onChange={() => toggleMeta('meta_filtros')}
-                    />
-                    <MetaCheck
-                      texto="Módulo 6: Diseñar un Dashboard principal en columnas con bases vinculadas (Linked DB)"
-                      marcado={metas.meta_dashboard}
-                      onChange={() => toggleMeta('meta_dashboard')}
-                    />
+                    <ObjetivosPrograma aprobados={aprobados} />
                   </div>
                 </div>
               </div>
@@ -615,16 +570,7 @@ export default function App() {
                               'Agregá una vista de Calendario mensual para tener visibilidad de los parciales que se aproximan.',
                               'Creá los toggles de Active Recall dentro de la página de cada materia.',
                             ]}
-                          >
-                            <div>
-                              <p className="rot">Confirmación de sistema listo</p>
-                              <MetaCheck
-                                texto="Tengo mi Dashboard armado con mis materias reales y vistas sincronizadas"
-                                marcado={metas.meta_dashboard}
-                                onChange={() => toggleMeta('meta_dashboard')}
-                              />
-                            </div>
-                          </HandsOn>
+                          />
 
                           <p style={{ marginTop: 24, marginBottom: 12 }} className="intro">
                             ¡Felicitaciones por llegar al final de los 6 módulos! A continuación podés realizar la

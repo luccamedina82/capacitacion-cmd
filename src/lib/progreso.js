@@ -7,7 +7,6 @@
 // La clave de aprobados se mantiene igual para no perder el avance existente.
 export const CLAVES = {
   aprobados:   'capacitacion-cmd:aprobados',
-  metas:       'capacitacion-cmd:metas',
   encuesta:    'capacitacion-cmd:encuesta',
   nombre:      'capacitacion-cmd:nombre',
   ultima:      'capacitacion-cmd:ultima',

@@ -5,7 +5,7 @@ import Callout from './Callout.jsx'
  * @param {string}   titulo
  * @param {string}   tiempo
  * @param {string[]} pasos
- * @param {React.ReactNode} children - checkpoints (MetaCheck)
+ * @param {React.ReactNode} children - checkpoints opcionales
  */
 export default function HandsOn({ titulo, tiempo, pasos, children }) {
   return (
