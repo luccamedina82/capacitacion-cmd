@@ -1,10 +1,15 @@
 import { useState, useCallback, useEffect } from 'react'
+import {
+  GraduationCap, BookOpen, Clock, Signal, CircleCheck, Target, ClipboardList,
+  ChevronsUpDown, ChevronsDownUp, Flag, Lock, Check,
+} from 'lucide-react'
 import MetaCheck        from './components/MetaCheck.jsx'
 import TallyQuiz        from './components/TallyQuiz.jsx'
 import BloqueSeccion    from './components/BloqueSeccion.jsx'
 import VideoPlaceholder from './components/VideoPlaceholder.jsx'
 import RecursoPdf       from './components/RecursoPdf.jsx'
 import HandsOn          from './components/HandsOn.jsx'
+import Callout          from './components/Callout.jsx'
 import Acordeon         from './components/Acordeon.jsx'
 import NotionLogo       from './components/NotionLogo.jsx'
 import EvaluacionFinal  from './components/EvaluacionFinal.jsx'
@@ -85,17 +90,22 @@ export default function App() {
           </span>
 
           <span className="notion-workspace-tag">
-            💡 Comunicación Multimedial · 6 Módulos
+            <GraduationCap size={14} aria-hidden="true" />
+            Comunicación Multimedial · 6 Módulos
           </span>
 
           <nav className="pasos-nav">
             <a href="#encuesta">Antes de empezar</a>
             {SECCIONES.map((sec, i) => (
               <a key={sec.id} href={`#${sec.id}`}>
-                Sec {i + 1} {aprobados[sec.id] ? '✓' : ''}
+                Sec {i + 1}
+                {aprobados[sec.id] && <Check size={14} role="img" aria-label="aprobada" />}
               </a>
             ))}
-            <a href="#cierre">Cierre {cierreDesbloqueado ? '✓' : ''}</a>
+            <a href="#cierre">
+              Cierre
+              {cierreDesbloqueado && <Check size={14} role="img" aria-label="desbloqueado" />}
+            </a>
           </nav>
         </div>
         <div className="medidor">
@@ -107,7 +117,7 @@ export default function App() {
       <div className="hero">
         <div className="wrap">
           <div className="hero-inner">
-            <span className="hero-emoji">📚</span>
+            <span className="hero-emoji" aria-hidden="true"><BookOpen size={32} /></span>
             <h1>Dejá de enterarte<br />tarde de las entregas</h1>
             <p className="bajada">
               Capacitación práctica intensiva para armar en Notion el sistema definitivo con el que
@@ -116,15 +126,15 @@ export default function App() {
 
             <div className="notion-page-meta">
               <div className="notion-property">
-                <span className="notion-property-label"><span>⏱️</span> Duración</span>
+                <span className="notion-property-label"><Clock size={14} aria-hidden="true" /> Duración</span>
                 <span className="notion-property-value tag">6 Módulos prácticos</span>
               </div>
               <div className="notion-property">
-                <span className="notion-property-label"><span>🧑‍💻</span> Nivel</span>
+                <span className="notion-property-label"><Signal size={14} aria-hidden="true" /> Nivel</span>
                 <span className="notion-property-value tag">De cero a avanzado</span>
               </div>
               <div className="notion-property">
-                <span className="notion-property-label"><span>✅</span> Módulos listos</span>
+                <span className="notion-property-label"><CircleCheck size={14} aria-hidden="true" /> Módulos listos</span>
                 <span className="notion-property-value tag">
                   {seccionesAprobadas} de {totalSecciones} ({progresoPorcentaje}%)
                 </span>
@@ -132,9 +142,9 @@ export default function App() {
             </div>
 
             <div className="notion-callout">
-              <span className="notion-callout-emoji">🎯</span>
+              <span className="notion-callout-emoji" aria-hidden="true"><Target size={24} /></span>
               <div className="notion-callout-body">
-                <h3>Objetivos de aprendizaje del programa</h3>
+                <h2>Objetivos de aprendizaje del programa</h2>
                 <p className="nota">
                   Marcá lo que ya sabés hacer. El resto es lo que vas a dominar módulo a módulo a lo largo de la capacitación:
                 </p>
@@ -183,7 +193,9 @@ export default function App() {
             <div className="section-card is-open">
               <div className="section-card-header">
                 <div className="cab-txt">
-                  <span className="num">📋 Diagnóstico Inicial · 3 minutos</span>
+                  <span className="num">
+                    <ClipboardList size={14} className="ico" aria-hidden="true" /> Diagnóstico inicial · 3 minutos
+                  </span>
                   <h2>¿Dónde se te escapan las cosas hoy?</h2>
                   <p className="intro">
                     Tus respuestas nos ayudan a entender tu punto de partida antes de comenzar los 6 módulos.
@@ -220,8 +232,12 @@ export default function App() {
               </span>
             </div>
             <div className="barra-plan-actions">
-              <button type="button" onClick={expandAll}>▾ Desplegar todo</button>
-              <button type="button" onClick={collapseAll}>▸ Plegar todo</button>
+              <button type="button" onClick={expandAll}>
+                <ChevronsUpDown size={16} aria-hidden="true" /> Desplegar todo
+              </button>
+              <button type="button" onClick={collapseAll}>
+                <ChevronsDownUp size={16} aria-hidden="true" /> Plegar todo
+              </button>
             </div>
           </div>
 
@@ -252,13 +268,9 @@ export default function App() {
                 <div className="bloque">
                   <div className="bloque-principal">
                     {/* 1. Explicación breve visible por defecto */}
-                    <div className="seccion-intro-box">
-                      <div className="seccion-intro-badge">
-                        <span>💡</span>
-                        <span>Explicación Breve</span>
-                      </div>
+                    <Callout variante="idea" className="seccion-intro-box">
                       <p className="seccion-explicacion-breve">{sec.explicacionBreve}</p>
-                    </div>
+                    </Callout>
 
                     {/* 2. Contenedor para el video */}
                     <VideoPlaceholder
@@ -269,7 +281,7 @@ export default function App() {
                     />
 
                     {/* 3. Acordeón / desplegable para Explicación Detallada */}
-                    <Acordeon summary="📖 Explicación Detallada (Paso a paso)">
+                    <Acordeon summary="Explicación detallada (paso a paso)">
                       {Array.isArray(sec.explicacionDetallada) ? (
                         sec.explicacionDetallada.map((parrafo, pIdx) => (
                           <p key={pIdx}>{parrafo}</p>
@@ -323,7 +335,9 @@ export default function App() {
             <div className={`section-card${!cierreDesbloqueado ? ' is-locked' : ' is-open'}`}>
               <div className="section-card-header">
                 <div className="cab-txt">
-                  <span className="num">🏁 Cierre Integrador · Proyecto Final</span>
+                  <span className="num">
+                    <Flag size={14} className="ico" aria-hidden="true" /> Cierre integrador · Proyecto final
+                  </span>
                   <h2>La prueba de que dominás tu cursada en Notion</h2>
                   <p className="intro">
                     Aplicá todo lo visto en los 6 módulos: poné a prueba tu sistema y realizá la evaluación
@@ -333,9 +347,9 @@ export default function App() {
 
                 <div className="cab-lado">
                   {cierreDesbloqueado ? (
-                    <span className="chip ok">✓ Desbloqueado</span>
+                    <span className="chip ok"><Check size={14} aria-hidden="true" /> Desbloqueado</span>
                   ) : (
-                    <span className="chip cerrado">🔒 Bloqueado</span>
+                    <span className="chip cerrado"><Lock size={14} aria-hidden="true" /> Bloqueado</span>
                   )}
                 </div>
               </div>
@@ -343,9 +357,9 @@ export default function App() {
               {!cierreDesbloqueado ? (
                 <div className="desbloqueo-banner">
                   <div className="desbloqueo-content">
-                    <span className="desbloqueo-icon">🔒</span>
+                    <span className="desbloqueo-icon" aria-hidden="true"><Lock size={20} /></span>
                     <div className="desbloqueo-texto">
-                      <strong>Cierre y Evaluación Final bloqueados</strong>
+                      <strong>Cierre y evaluación final bloqueados</strong>
                       <span>Esta sección final se habilita al completar y aprobar los quizzes de los 6 módulos.</span>
                     </div>
                   </div>
@@ -367,7 +381,7 @@ export default function App() {
                     <div className="cuerpo-cierre">
                       <HandsOn
                         titulo="Checklist para tu Dashboard de cursada"
-                        tiempo="⏱ Proyecto integrador en tu cuenta de Notion"
+                        tiempo="Proyecto integrador en tu cuenta de Notion"
                         pasos={[
                           'Creá la página principal <em>Hub Cursada 2026</em> y dividila en columnas.',
                           'Enlazá tu base de datos de tareas (/linked database) aplicando el filtro "Date is Today" o "Date is This week".',

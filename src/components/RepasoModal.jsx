@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { BookOpen, Film, FileText } from 'lucide-react'
 import { PUNTAJE_MAXIMO, PUNTAJE_MINIMO } from '../data/tally.js'
 
 /**
@@ -31,7 +32,7 @@ export default function RepasoModal({ abierto, puntaje, videoId, pdfId, onReinte
       aria-labelledby="repaso-modal-titulo"
       onClose={onCerrar}
     >
-      <span className="repaso-modal-emoji" aria-hidden="true">📚</span>
+      <span className="repaso-modal-emoji" aria-hidden="true"><BookOpen size={32} /></span>
       <h3 id="repaso-modal-titulo">¿Te gustaría volver a ver el video o el PDF?</h3>
       <p>
         Obtuviste {puntaje ?? 0}/{PUNTAJE_MAXIMO}. Necesitás {PUNTAJE_MINIMO} o más para desbloquear
@@ -41,12 +42,12 @@ export default function RepasoModal({ abierto, puntaje, videoId, pdfId, onReinte
       <div className="repaso-modal-acciones">
         {videoId && (
           <button type="button" className="corregir" onClick={() => irA(videoId)}>
-            🎬 Ver el video
+            <Film size={16} className="ico" aria-hidden="true" /> Ver el video
           </button>
         )}
         {pdfId && (
           <button type="button" className="corregir" onClick={() => irA(pdfId)}>
-            📄 Ver el PDF
+            <FileText size={16} className="ico" aria-hidden="true" /> Ver el PDF
           </button>
         )}
         <button type="button" className="saltear" onClick={onReintentar}>

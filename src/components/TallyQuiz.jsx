@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { CircleCheck } from 'lucide-react'
 import RepasoModal from './RepasoModal.jsx'
 import { PUNTAJE_MAXIMO, PUNTAJE_MINIMO } from '../data/tally.js'
 
@@ -102,7 +103,7 @@ export default function TallyQuiz({ formId, titulo, aprobado, onAprobado, videoI
 
       {aprobado && (
         <p className="veredicto aprobado" role="status">
-          ✓ Nivel aprobado{puntaje !== null && puntaje >= PUNTAJE_MINIMO ? ` con ${puntaje}/${PUNTAJE_MAXIMO}` : ''}: se abrió el siguiente bloque.
+          <CircleCheck size={16} className="ico" aria-hidden="true" /> Nivel aprobado{puntaje !== null && puntaje >= PUNTAJE_MINIMO ? ` con ${puntaje}/${PUNTAJE_MAXIMO}` : ''}: se abrió el siguiente bloque.
         </p>
       )}
       {!aprobado && puntaje !== null && puntaje < PUNTAJE_MINIMO && (

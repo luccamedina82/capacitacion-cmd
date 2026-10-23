@@ -11,7 +11,8 @@ export default function NotionLogo({ size = 28, color = 'currentColor' }) {
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      aria-label="Notion"
+      aria-hidden="true"
+      focusable="false"
     >
       <path
         d="M10 17H9V9.5L14.2182 17.3273C14.687 18.0305 15.5474 18.3632 16.3674 18.1582L16.6213 18.0947C16.8439 18.039 17 17.839 17 17.6096V7C17 7 18 7 18 6H15C14 6 14 7 14 7H15V13L10.1496 6.20938C10.0557 6.07798 9.90425 6 9.74277 6H7C6 6 6 7 6 7H7V17C7 17 6 17 6 18H9C10 18 10 17 10 17Z"

@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
+import { Check, Lock, ChevronRight } from 'lucide-react'
 
 /**
  * Sección plegable con diseño de tarjeta flotante estilo Notion.
@@ -64,9 +65,9 @@ export default function BloqueSeccion({
 
           <div className="cab-lado">
             {completado ? (
-              <span className="chip completado">✓ Aprobado</span>
+              <span className="chip completado"><Check size={14} aria-hidden="true" /> Aprobado</span>
             ) : estaBloqueado ? (
-              <span className="chip cerrado">🔒 Bloqueado</span>
+              <span className="chip cerrado"><Lock size={14} aria-hidden="true" /> Bloqueado</span>
             ) : (
               <span className="chip ok">{abierto ? 'Abierto' : 'Listo'}</span>
             )}
@@ -74,7 +75,7 @@ export default function BloqueSeccion({
               className={`flecha${abierto && !estaBloqueado ? ' expandido' : ''}`}
               aria-hidden="true"
             >
-              ▶
+              <ChevronRight size={16} />
             </span>
           </div>
         </button>
@@ -83,7 +84,7 @@ export default function BloqueSeccion({
         {estaBloqueado && (
           <div className="desbloqueo-banner">
             <div className="desbloqueo-content">
-              <span className="desbloqueo-icon">🔒</span>
+              <span className="desbloqueo-icon" aria-hidden="true"><Lock size={20} /></span>
               <div className="desbloqueo-texto">
                 <strong>Sección bloqueada</strong>
                 <span>Aprobá el cuestionario del módulo anterior (8/10 o más) para desbloquear este contenido.</span>

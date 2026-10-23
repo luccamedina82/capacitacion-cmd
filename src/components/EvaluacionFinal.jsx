@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react'
+import { ClipboardCheck, Target, ArrowRight, CircleCheck, Info, GraduationCap } from 'lucide-react'
 import TallyQuiz from './TallyQuiz.jsx'
+import Callout from './Callout.jsx'
 import { TALLY_FORMS } from '../data/tally.js'
 
 const CASOS_EVALUACION = [
@@ -193,29 +195,27 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
           className={`eval-tab-btn${tab === 'tally' ? ' active' : ''}`}
           onClick={() => setTab('tally')}
         >
-          <span>📋</span> Evaluación final {tallyAprobado ? '✓' : ''}
+          <ClipboardCheck size={16} aria-hidden="true" /> Evaluación final
+          {tallyAprobado && <CircleCheck size={14} role="img" aria-label="aprobada" />}
         </button>
         <button
           type="button"
           className={`eval-tab-btn${tab === 'situaciones' ? ' active' : ''}`}
           onClick={() => setTab('situaciones')}
         >
-          <span>🎯</span> Situaciones Reales de Estudio ({respondidas}/{totalPreguntas})
+          <Target size={16} aria-hidden="true" /> Situaciones reales de estudio ({respondidas}/{totalPreguntas})
         </button>
       </div>
 
       {tab === 'situaciones' && (
         <div className="eval-casos-container">
-          <div className="eval-intro-box">
-            <span className="eval-intro-icon">💡</span>
-            <div>
-              <p className="eval-intro-title">Evaluación General Integradora</p>
-              <p className="eval-intro-desc">
-                Poné a prueba tu criterio frente a 5 situaciones cotidianas de cursada universitaria.
-                Leé con atención cada escenario y seleccioná la mejor decisión de diseño y organización en Notion.
-              </p>
-            </div>
-          </div>
+          <Callout variante="idea" className="eval-intro-box">
+            <p className="eval-intro-title">Evaluación general integradora</p>
+            <p className="eval-intro-desc">
+              Poné a prueba tu criterio frente a 5 situaciones cotidianas de cursada universitaria.
+              Leé con atención cada escenario y seleccioná la mejor decisión de diseño y organización en Notion.
+            </p>
+          </Callout>
 
           <div className="casos-lista">
             {CASOS_EVALUACION.map((caso, index) => {
@@ -238,7 +238,10 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
                     <p>{caso.contexto}</p>
                   </div>
 
-                  <p className="caso-pregunta">👉 {caso.pregunta}</p>
+                  <p className="caso-pregunta">
+                    <ArrowRight size={18} className="ico" aria-hidden="true" />
+                    <span>{caso.pregunta}</span>
+                  </p>
 
                   <div className="caso-opciones">
                     {caso.opciones.map(op => {
@@ -265,10 +268,9 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
                   </div>
 
                   {mostrarFeedback && (
-                    <div className={`caso-feedback ${esCorrecta ? 'feedback-ok' : 'feedback-error'}`}>
-                      <span className="feedback-icon">{esCorrecta ? '✅' : 'ℹ️'}</span>
+                    <Callout variante={esCorrecta ? 'comprobacion' : 'idea'} className="caso-feedback">
                       <p>{caso.feedback}</p>
-                    </div>
+                    </Callout>
                   )}
                 </div>
               )
@@ -295,12 +297,16 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
                 <div className="eval-resultado-texto">
                   {aprobado ? (
                     <>
-                      <h4>🎉 ¡Excelente! Aprobaste la evaluación integradora</h4>
+                      <h4>
+                        <CircleCheck size={20} aria-hidden="true" /> ¡Excelente! Aprobaste la evaluación integradora
+                      </h4>
                       <p>Demostraste un dominio sólido del modelo mental de bloques, bases de datos y vistas de Notion.</p>
                     </>
                   ) : (
                     <>
-                      <h4>Necesitás 80% o más para certificar (actual: {porcentaje}%)</h4>
+                      <h4>
+                        <Info size={20} aria-hidden="true" /> Necesitás 80 % o más para certificar (actual: {porcentaje} %)
+                      </h4>
                       <p>Revisá las situaciones marcadas en rojo, leé la explicación sugerida y volvé a intentar.</p>
                     </>
                   )}
@@ -334,7 +340,7 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
       {certificado && (
         <div className="certificado-notion-card">
           <div className="cert-header">
-            <span className="cert-emoji">🎓</span>
+            <span className="cert-emoji" aria-hidden="true"><GraduationCap size={44} /></span>
             <div>
               <span className="cert-kicker">Capacitación Comunicación Multimedial · 2026</span>
               <h3>Certificado de Finalización de Sistema en Notion</h3>

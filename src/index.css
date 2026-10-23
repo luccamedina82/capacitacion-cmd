@@ -340,7 +340,9 @@ header {
   margin-top: 2px;
 }
 
-.notion-callout-body h3 {
+.notion-callout-body h2 {
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
   font-weight: 600;
   margin-bottom: 4px;
   color: var(--n-text);
@@ -578,7 +580,7 @@ button.section-card-header.disabled:hover {
   height: 24px;
   border-radius: 4px;
   transition: transform var(--dur-base) var(--ease-out), background var(--dur-fast);
-  transform: rotate(-90deg);
+  transform: rotate(0deg);
 }
 
 button.section-card-header:hover .flecha {
@@ -586,7 +588,7 @@ button.section-card-header:hover .flecha {
 }
 
 .flecha.expandido {
-  transform: rotate(0deg);
+  transform: rotate(90deg);
 }
 
 /* Chips de estado Notion */
@@ -1220,6 +1222,10 @@ details .cuerpo {
 }
 
 .corregir {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   font-family: var(--font-ui);
   font-size: var(--fs-meta);
   font-weight: 600;
