@@ -86,12 +86,15 @@ export default function BloqueSeccion({
               <span className="desbloqueo-icon">🔒</span>
               <div className="desbloqueo-texto">
                 <strong>Sección bloqueada</strong>
-                <span>Aprobá el quiz del bloque anterior para desbloquear este contenido y avanzar secuencialmente.</span>
+                <span>Aprobá el cuestionario del módulo anterior (8/10 o más) para desbloquear este contenido.</span>
               </div>
             </div>
-            <button className="saltear" type="button" onClick={saltear}>
-              Desbloquear para explorar
-            </button>
+            {/* Atajo solo para desarrollo: no se incluye en el build de producción */}
+            {import.meta.env.DEV && (
+              <button className="saltear" type="button" onClick={saltear}>
+                Desbloquear para explorar (dev)
+              </button>
+            )}
           </div>
         )}
 

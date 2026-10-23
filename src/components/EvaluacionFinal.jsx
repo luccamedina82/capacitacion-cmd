@@ -1,4 +1,6 @@
 import { useState, useCallback } from 'react'
+import TallyQuiz from './TallyQuiz.jsx'
+import { TALLY_FORMS } from '../data/tally.js'
 
 const CASOS_EVALUACION = [
   {
@@ -148,11 +150,14 @@ const CASOS_EVALUACION = [
   },
 ]
 
-export default function EvaluacionFinal() {
-  const [tab, setTab] = useState('situaciones') // 'situaciones' | 'tally'
+/**
+ * @param {boolean}  tallyAprobado   - si el Tally integrador ya fue aprobado (persistido en App)
+ * @param {function} onTallyAprobado
+ */
+export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado }) {
+  const [tab, setTab] = useState('tally') // 'tally' | 'situaciones'
   const [respuestas, setRespuestas] = useState({})
   const [enviado, setEnviado] = useState(false)
-  const [tallyUrl, setTallyUrl] = useState('https://tally.so/embed/placeholder')
   const [nombreAlumno, setNombreAlumno] = useState('')
 
   const handleSeleccionar = useCallback((casoId, op) => {
@@ -165,6 +170,7 @@ export default function EvaluacionFinal() {
   const correctas = CASOS_EVALUACION.filter(c => respuestas[c.id] === c.correcta).length
   const porcentaje = Math.round((correctas / totalPreguntas) * 100)
   const aprobado = enviado && porcentaje >= 80
+  const certificado = aprobado || tallyAprobado
 
   const corregir = () => {
     if (respondidas < totalPreguntas) {
@@ -184,17 +190,17 @@ export default function EvaluacionFinal() {
       <div className="eval-header-tabs">
         <button
           type="button"
+          className={`eval-tab-btn${tab === 'tally' ? ' active' : ''}`}
+          onClick={() => setTab('tally')}
+        >
+          <span>📋</span> Evaluación final {tallyAprobado ? '✓' : ''}
+        </button>
+        <button
+          type="button"
           className={`eval-tab-btn${tab === 'situaciones' ? ' active' : ''}`}
           onClick={() => setTab('situaciones')}
         >
           <span>🎯</span> Situaciones Reales de Estudio ({respondidas}/{totalPreguntas})
-        </button>
-        <button
-          type="button"
-          className={`eval-tab-btn${tab === 'tally' ? ' active' : ''}`}
-          onClick={() => setTab('tally')}
-        >
-          <span>📋</span> Formulario Tally.so
         </button>
       </div>
 
@@ -310,63 +316,44 @@ export default function EvaluacionFinal() {
               </div>
             )}
           </div>
-
-          {/* Certificado Notion cuando aprueba */}
-          {aprobado && (
-            <div className="certificado-notion-card">
-              <div className="cert-header">
-                <span className="cert-emoji">🎓</span>
-                <div>
-                  <span className="cert-kicker">Capacitación Comunicación Multimedial · 2026</span>
-                  <h3>Certificado de Finalización de Sistema en Notion</h3>
-                </div>
-              </div>
-              <p className="cert-body">
-                Este certificado avala que has completado el diseño de tu sistema académico personal
-                en Notion: configuración de página, bases de datos con vistas cruzadas (calendario, tablero, tabla),
-                filtros inteligentes y relaciones entre asignaturas y entregas.
-              </p>
-              <div className="cert-footer">
-                <input
-                  type="text"
-                  className="cert-input-name"
-                  placeholder="Escribí tu nombre completo..."
-                  value={nombreAlumno}
-                  onChange={e => setNombreAlumno(e.target.value)}
-                />
-                <span className="cert-date">{new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-              </div>
-            </div>
-          )}
         </div>
       )}
 
       {tab === 'tally' && (
         <div className="eval-tally-container">
-          <div className="tally-config-bar">
-            <span className="tally-config-icon">🔗</span>
+          <TallyQuiz
+            formId={TALLY_FORMS.final}
+            titulo="Evaluación integradora — Formulario Tally.so"
+            aprobado={tallyAprobado}
+            onAprobado={onTallyAprobado}
+          />
+        </div>
+      )}
+
+      {/* Certificado Notion cuando aprueba cualquiera de las dos evaluaciones */}
+      {certificado && (
+        <div className="certificado-notion-card">
+          <div className="cert-header">
+            <span className="cert-emoji">🎓</span>
+            <div>
+              <span className="cert-kicker">Capacitación Comunicación Multimedial · 2026</span>
+              <h3>Certificado de Finalización de Sistema en Notion</h3>
+            </div>
+          </div>
+          <p className="cert-body">
+            Este certificado avala que has completado el diseño de tu sistema académico personal
+            en Notion: configuración de página, bases de datos con vistas cruzadas (calendario, tablero, tabla),
+            filtros inteligentes y relaciones entre asignaturas y entregas.
+          </p>
+          <div className="cert-footer">
             <input
               type="text"
-              className="tally-url-input"
-              value={tallyUrl}
-              onChange={e => setTallyUrl(e.target.value)}
-              placeholder="Pegá tu URL de Tally.so (ej: https://tally.so/embed/...)"
+              className="cert-input-name"
+              placeholder="Escribí tu nombre completo..."
+              value={nombreAlumno}
+              onChange={e => setNombreAlumno(e.target.value)}
             />
-            <button
-              type="button"
-              className="saltear"
-              onClick={() => setTallyUrl('https://tally.so/embed/placeholder')}
-            >
-              Restablecer
-            </button>
-          </div>
-
-          <div className="tally-wrapper">
-            <iframe
-              src={tallyUrl}
-              title="Evaluación integradora — Formulario Tally.so"
-              allowFullScreen
-            />
+            <span className="cert-date">{new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
           </div>
         </div>
       )}
