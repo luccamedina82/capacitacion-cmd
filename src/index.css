@@ -112,7 +112,8 @@ h1, h2, h3, h4 {
   color: var(--n-text);
 }
 
-h1 { font-size: clamp(2rem, 5vw, 3.1rem); font-weight: 800; letter-spacing: -0.03em; }
+h1,
+.hero-titulo { font-size: clamp(2rem, 5vw, 3.1rem); font-weight: 800; letter-spacing: -0.03em; }
 h2 { font-size: clamp(1.25rem, 2.6vw, 1.75rem); font-weight: 700; letter-spacing: -0.02em; }
 h3 { font-size: 1.0625rem; font-weight: 600; }
 

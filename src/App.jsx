@@ -13,6 +13,7 @@ import HandsOn          from './components/HandsOn.jsx'
 import Callout          from './components/Callout.jsx'
 import Acordeon         from './components/Acordeon.jsx'
 import NotionLogo       from './components/NotionLogo.jsx'
+import Intro            from './components/intro/Intro.jsx'
 import EvaluacionFinal  from './components/EvaluacionFinal.jsx'
 import Certificado      from './components/Certificado.jsx'
 import DashboardProgreso from './components/DashboardProgreso.jsx'
@@ -254,12 +255,13 @@ export default function App() {
       </header>
 
       <main id="contenido" tabIndex={-1}>
+      <Intro />
       {/* ══════════ HERO PAGE NOTION ══════════ */}
       <div className="hero">
         <div className="wrap">
           <div className="hero-inner">
             <span className="hero-emoji" aria-hidden="true"><BookOpen size={32} /></span>
-            <h1>Dejá de enterarte<br />tarde de las entregas</h1>
+            <h2 className="hero-titulo">Dejá de enterarte<br />tarde de las entregas</h2>
             <p className="bajada">
               Capacitación práctica intensiva para armar en Notion el sistema definitivo con el que
               vas a gestionar tus materias, apuntes, fechas de parciales y entregas en un solo lugar.
