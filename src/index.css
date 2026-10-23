@@ -2079,3 +2079,300 @@ button.section-card-header {
     scroll-behavior: auto !important;
   }
 }
+
+/* ══════════════════════════════════════════
+   FLUJO DEL CURSO: navegación, avance y bloqueo suave
+══════════════════════════════════════════ */
+
+/* El atributo hidden debe ganar siempre (el contenido plegado sigue montado) */
+[hidden] {
+  display: none !important;
+}
+
+/* Navegación del encabezado: sección activa resaltada */
+.pasos-nav a[aria-current="location"] {
+  background: var(--n-accent-soft);
+  color: var(--n-link);
+  font-weight: 600;
+}
+
+.marca {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* En anchos medios la etiqueta larga queda solo para lectores de pantalla */
+@media (max-width: 1200px) {
+  .notion-workspace-tag {
+    display: none;
+  }
+  .nav-txt {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+}
+
+/* Menú de módulos para pantallas angostas */
+.menu-modulos {
+  display: none;
+  position: relative;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.menu-modulos-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 6px 12px;
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  color: var(--n-text);
+  background: var(--n-bg);
+  border: 1px solid var(--n-border-med);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: background var(--dur-fast), border-color var(--dur-fast);
+}
+
+.menu-modulos-btn:hover {
+  background: var(--n-bg-hover);
+  border-color: var(--n-border-strong);
+}
+
+.menu-modulos-resumen {
+  color: var(--n-link);
+  font-weight: 700;
+}
+
+.menu-modulos-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: min(380px, calc(100vw - 24px));
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  padding: var(--space-2);
+  background: var(--n-bg);
+  border: 1px solid var(--n-border-strong);
+  border-radius: var(--r-md);
+}
+
+.menu-modulos-panel ul {
+  list-style: none;
+}
+
+.menu-modulos-panel a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--r-sm);
+  color: var(--n-text);
+  font-size: var(--fs-ui);
+  font-weight: 500;
+}
+
+.menu-modulos-panel a:hover {
+  background: var(--n-bg-hover);
+  opacity: 1;
+}
+
+.menu-modulos-panel a[aria-current="location"] {
+  background: var(--n-accent-soft);
+  color: var(--n-link);
+  font-weight: 600;
+}
+
+.menu-item-icono {
+  display: inline-flex;
+  width: 16px;
+  flex-shrink: 0;
+  color: var(--n-text-muted);
+}
+
+.menu-item-texto {
+  flex: 1;
+  min-width: 0;
+}
+
+.menu-item-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--fs-meta);
+  font-weight: 500;
+  color: var(--n-text-muted);
+  text-align: right;
+}
+
+@media (max-width: 900px) {
+  .menu-modulos {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .barra {
+    padding: 0 12px;
+    gap: var(--space-2);
+  }
+}
+
+/* Resumen de avance + dashboard dentro del hero */
+.progreso-resumen {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+  gap: var(--space-5);
+  align-items: center;
+  margin-top: var(--space-5);
+  padding: var(--space-5);
+  background: var(--n-bg-secondary);
+  border: 1px solid var(--n-border-med);
+  border-radius: var(--r-md);
+}
+
+.progreso-resumen h2 {
+  font-size: 1.125rem;
+  margin-bottom: var(--space-1);
+}
+
+.progreso-resumen-txt p {
+  font-size: var(--fs-ui);
+  color: var(--n-text-muted);
+  margin: 0;
+}
+
+.continuar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.progreso-resumen-txt .progreso-resumen-sig {
+  margin-top: var(--space-2);
+  font-size: var(--fs-meta);
+}
+
+@media (max-width: 760px) {
+  .progreso-resumen {
+    grid-template-columns: 1fr;
+    padding: var(--space-4);
+  }
+}
+
+/* Dashboard por piezas: cada pieza se enciende al aprobar su módulo */
+.dash-progreso {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.dash-pieza {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-2);
+  text-align: center;
+  background: var(--n-bg);
+  border: 1px dashed var(--n-border-strong);
+  border-radius: var(--r-md);
+  color: var(--n-text-muted);
+  transition:
+    background var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out);
+}
+
+.dash-pieza.encendida {
+  background: var(--n-green-bg);
+  border: 1px solid var(--n-green);
+  color: var(--n-green-text);
+}
+
+.dash-pieza-icono {
+  display: inline-flex;
+  transform: scale(0.9);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.dash-pieza.encendida .dash-pieza-icono {
+  transform: scale(1);
+}
+
+.dash-pieza-nombre {
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.dash-pieza-estado {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  display: inline-flex;
+}
+
+.dash-compacto .dash-pieza {
+  padding: var(--space-2);
+}
+
+.dash-certificado {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin: var(--space-5) 0;
+}
+
+@media (max-width: 640px) {
+  .dash-certificado {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Cuestionario bloqueado (bloqueo suave: el contenido sigue disponible) */
+.quiz-bloqueado {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--n-bg-secondary);
+  border: 1px dashed var(--n-border-strong);
+  border-radius: var(--r-md);
+}
+
+.quiz-bloqueado-icono {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--n-text-muted);
+}
+
+.quiz-bloqueado-texto strong {
+  display: block;
+  margin-bottom: 2px;
+  font-size: var(--fs-ui);
+  font-weight: 600;
+}
+
+.quiz-bloqueado-texto > span {
+  display: block;
+  font-size: var(--fs-meta);
+  color: var(--n-text-muted);
+  line-height: 1.5;
+}
+
+.quiz-bloqueado-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}

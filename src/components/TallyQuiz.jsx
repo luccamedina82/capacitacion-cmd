@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { CircleCheck } from 'lucide-react'
+import { CircleCheck, Lock } from 'lucide-react'
 import RepasoModal from './RepasoModal.jsx'
 import { PUNTAJE_MAXIMO, PUNTAJE_MINIMO } from '../data/tally.js'
 
@@ -37,11 +37,21 @@ function leerPuntaje(payload) {
  * @param {string}   formId     - ID del formulario (tally.so/r/<formId>)
  * @param {string}   titulo     - título accesible del iframe
  * @param {boolean}  aprobado   - si el cuestionario ya fue aprobado
+ * @param {boolean}  [bloqueado] - bloqueo suave: falta aprobar el cuestionario del módulo anterior
+ * @param {function} [onIrAnterior] - lleva al cuestionario que hay que aprobar primero
+ * @param {function} [onDesbloquearDev] - atajo solo para desarrollo
+ * @param {string}   [meta]     - qué se obtiene al aprobar (frase tras "para")
+ * @param {string}   [exito]    - mensaje al aprobar
  * @param {function} onAprobado
  * @param {string}   [videoId]  - id del elemento de video al que lleva el modal
  * @param {string}   [pdfId]    - id del elemento de PDF al que lleva el modal
  */
-export default function TallyQuiz({ formId, titulo, aprobado, onAprobado, videoId, pdfId }) {
+export default function TallyQuiz({
+  formId, titulo, aprobado, onAprobado, videoId, pdfId,
+  bloqueado = false, onIrAnterior, onDesbloquearDev,
+  meta = 'habilitar el siguiente cuestionario',
+  exito = 'se habilitó el siguiente cuestionario.',
+}) {
   const [puntaje, setPuntaje]       = useState(null)
   const [modalAbierto, setModal]    = useState(false)
   const [intento, setIntento]       = useState(0) // cambia la key del iframe para reiniciar el formulario
@@ -94,18 +104,44 @@ export default function TallyQuiz({ formId, titulo, aprobado, onAprobado, videoI
     <div className="quiz tally-quiz">
       <h3>¿Pasaste el nivel?</h3>
       <p className="tiempo">
-        Necesitás {PUNTAJE_MINIMO} de {PUNTAJE_MAXIMO} puntos (80 %) para desbloquear lo siguiente.
+        Necesitás {PUNTAJE_MINIMO} de {PUNTAJE_MAXIMO} puntos (80 %) para {meta}.
       </p>
 
-      <div className="tally-wrapper">
-        <iframe ref={iframeRef} key={intento} src={src} title={titulo} loading="lazy" />
-      </div>
+      {bloqueado ? (
+        <div className="quiz-bloqueado">
+          <span className="quiz-bloqueado-icono" aria-hidden="true"><Lock size={20} /></span>
+          <div className="quiz-bloqueado-texto">
+            <strong>Cuestionario bloqueado</strong>
+            <span>
+              Aprobá el cuestionario del módulo anterior para habilitar este.
+              Mientras tanto podés leer el contenido y ver el video de este módulo.
+            </span>
+            <div className="quiz-bloqueado-acciones">
+              {onIrAnterior && (
+                <button type="button" className="saltear" onClick={onIrAnterior}>
+                  Ir al cuestionario del módulo anterior
+                </button>
+              )}
+              {/* Atajo solo para desarrollo: no se incluye en el build de producción */}
+              {import.meta.env.DEV && onDesbloquearDev && (
+                <button type="button" className="saltear" onClick={onDesbloquearDev}>
+                  Habilitar para explorar (dev)
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="tally-wrapper">
+          <iframe ref={iframeRef} key={intento} src={src} title={titulo} loading="lazy" />
+        </div>
+      )}
 
       {/* Región viva persistente: anuncia el resultado a lectores de pantalla */}
       <div role="status" aria-live="polite">
       {aprobado && (
         <p className="veredicto aprobado">
-          <CircleCheck size={16} className="ico" aria-hidden="true" /> Nivel aprobado{puntaje !== null && puntaje >= PUNTAJE_MINIMO ? ` con ${puntaje}/${PUNTAJE_MAXIMO}` : ''}: se abrió el siguiente bloque.
+          <CircleCheck size={16} className="ico" aria-hidden="true" /> Nivel aprobado{puntaje !== null && puntaje >= PUNTAJE_MINIMO ? ` con ${puntaje}/${PUNTAJE_MAXIMO}` : ''}: {exito}
         </p>
       )}
       {!aprobado && puntaje !== null && puntaje < PUNTAJE_MINIMO && (

@@ -1,60 +1,41 @@
-import { useState, useCallback, useEffect } from 'react'
-import { Check, Lock, ChevronRight } from 'lucide-react'
+import { Check, Lock, ChevronRight, BookOpen } from 'lucide-react'
 
 /**
- * Sección plegable con diseño de tarjeta flotante estilo Notion.
- * - Bordes redondeados y sombras suaves (card-based UI)
- * - Triángulo rotante y chip de estado interactivo
- * - Estado bloqueado con banner de aviso y opción de desbloqueo
- * - Estado completado con feedback visual positivo
+ * Sección plegable (tarjeta plana). El estado abierto/cerrado lo controla App
+ * para poder abrirla desde "Continuar", la navegación y los enlaces con #ancla.
+ *
+ * El contenido siempre queda montado (solo se oculta con `hidden`): así el
+ * cuestionario embebido conserva las respuestas en curso al plegar la sección.
+ *
+ * Bloqueo suave: el contenido de todos los módulos está disponible; lo que se
+ * bloquea es el cuestionario (lo resuelve el contenido hijo con `estado`).
+ *
+ * @param {'aprobado'|'en-curso'|'bloqueado'} estado
+ * @param {boolean}  abierto
+ * @param {function} onToggle
  */
 export default function BloqueSeccion({
   id,
   num,
   titulo,
   intro,
-  bloqueado,
-  completado = false,
-  defaultAbierto = false,
-  globalExpand,
-  onDesbloquear,
+  estado,
+  abierto,
+  onToggle,
   children,
 }) {
-  const [abierto, setAbierto] = useState(defaultAbierto)
-  const [forzado, setForzado] = useState(false)
-
-  const estaBloqueado = bloqueado && !forzado
-
-  // Escuchar comandos globales de desplegar/plegar todo
-  useEffect(() => {
-    if (!globalExpand) return
-    if (globalExpand.cmd === 'all' && !estaBloqueado) setAbierto(true)
-    if (globalExpand.cmd === 'none') setAbierto(false)
-  }, [globalExpand, estaBloqueado])
-
-  const toggleCabecera = useCallback(() => {
-    if (estaBloqueado) return
-    setAbierto(v => !v)
-  }, [estaBloqueado])
-
-  const saltear = useCallback((e) => {
-    e.stopPropagation()
-    setForzado(true)
-    setAbierto(true)
-    onDesbloquear?.()
-  }, [onDesbloquear])
+  const completado = estado === 'aprobado'
 
   return (
     <section id={id} className="bloque-wrapper">
       <div
-        className={`section-card${estaBloqueado ? ' is-locked' : ''}${completado ? ' is-completed' : ''}${abierto ? ' is-open' : ''}`}
+        className={`section-card${completado ? ' is-completed' : ''}${abierto ? ' is-open' : ''}`}
       >
         <button
-          className={`section-card-header cabecera${estaBloqueado ? ' disabled' : ''}`}
-          aria-expanded={String(abierto)}
+          className="section-card-header cabecera"
+          aria-expanded={abierto}
           aria-controls={`cuerpo-${id}`}
-          aria-disabled={estaBloqueado ? 'true' : undefined}
-          onClick={toggleCabecera}
+          onClick={onToggle}
           type="button"
         >
           <div className="cab-txt">
@@ -64,15 +45,21 @@ export default function BloqueSeccion({
           </div>
 
           <div className="cab-lado">
-            {completado ? (
+            {estado === 'aprobado' && (
               <span className="chip completado"><Check size={14} aria-hidden="true" /> Aprobado</span>
-            ) : estaBloqueado ? (
-              <span className="chip cerrado"><Lock size={14} aria-hidden="true" /> Bloqueado</span>
-            ) : (
-              <span className="chip ok">{abierto ? 'Abierto' : 'Listo'}</span>
+            )}
+            {estado === 'en-curso' && (
+              <span className="chip ok">En curso</span>
+            )}
+            {estado === 'bloqueado' && (
+              <span className="chip cerrado">
+                <BookOpen size={14} aria-hidden="true" /> Disponible
+                <span className="sr-only">; cuestionario bloqueado</span>
+                <Lock size={12} aria-hidden="true" />
+              </span>
             )}
             <span
-              className={`flecha${abierto && !estaBloqueado ? ' expandido' : ''}`}
+              className={`flecha${abierto ? ' expandido' : ''}`}
               aria-hidden="true"
             >
               <ChevronRight size={16} />
@@ -80,34 +67,12 @@ export default function BloqueSeccion({
           </div>
         </button>
 
-        {/* Banner amigable cuando está bloqueado */}
-        {estaBloqueado && (
-          <div className="desbloqueo-banner">
-            <div className="desbloqueo-content">
-              <span className="desbloqueo-icon" aria-hidden="true"><Lock size={20} /></span>
-              <div className="desbloqueo-texto">
-                <strong>Sección bloqueada</strong>
-                <span>Aprobá el cuestionario del módulo anterior (8/10 o más) para desbloquear este contenido.</span>
-              </div>
-            </div>
-            {/* Atajo solo para desarrollo: no se incluye en el build de producción */}
-            {import.meta.env.DEV && (
-              <button className="saltear" type="button" onClick={saltear}>
-                Desbloquear para explorar (dev)
-              </button>
-            )}
+        <div hidden={!abierto}>
+          <div className="section-card-divider" />
+          <div className="section-card-body cuerpo-bloque" id={`cuerpo-${id}`}>
+            {children}
           </div>
-        )}
-
-        {/* Contenido si está abierto y no bloqueado */}
-        {abierto && !estaBloqueado && (
-          <>
-            <div className="section-card-divider" />
-            <div className="section-card-body cuerpo-bloque" id={`cuerpo-${id}`}>
-              {children}
-            </div>
-          </>
-        )}
+        </div>
       </div>
     </section>
   )

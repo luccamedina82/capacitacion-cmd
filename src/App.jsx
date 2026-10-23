@@ -1,7 +1,8 @@
 import { useState, useCallback, useEffect } from 'react'
+import { flushSync } from 'react-dom'
 import {
   GraduationCap, BookOpen, Clock, Signal, CircleCheck, Target, ClipboardList,
-  ChevronsUpDown, ChevronsDownUp, Flag, Lock, Check,
+  ChevronsUpDown, ChevronsDownUp, Flag, Lock, Check, Play,
 } from 'lucide-react'
 import MetaCheck        from './components/MetaCheck.jsx'
 import TallyQuiz        from './components/TallyQuiz.jsx'
@@ -13,17 +14,31 @@ import Callout          from './components/Callout.jsx'
 import Acordeon         from './components/Acordeon.jsx'
 import NotionLogo       from './components/NotionLogo.jsx'
 import EvaluacionFinal  from './components/EvaluacionFinal.jsx'
+import Certificado      from './components/Certificado.jsx'
+import DashboardProgreso from './components/DashboardProgreso.jsx'
+import MenuModulos      from './components/MenuModulos.jsx'
 import { SECCIONES }    from './data/modulos.js'
 import { TALLY_FORMS }  from './data/tally.js'
+import {
+  CLAVES, leerProgreso, guardarProgreso, estadoModulo, primerPendiente,
+} from './lib/progreso.js'
 
-const STORAGE_APROBADOS = 'capacitacion-cmd:aprobados'
+const IDS_NAVEGABLES = ['encuesta', ...SECCIONES.map(s => s.id), 'cierre']
+const esModulo = id => SECCIONES.some(s => s.id === id)
 
-function leerAprobados() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_APROBADOS)) ?? {}
-  } catch {
-    return {}
-  }
+/** Id de sección indicado en la URL (#sec3), o null si no corresponde a ninguna. */
+function idDesdeHash() {
+  const id = window.location.hash.slice(1)
+  return IDS_NAVEGABLES.includes(id) ? id : null
+}
+
+/** Lleva la vista a la sección y mueve el foco a su cabecera (respeta reduced motion). */
+function desplazarA(id) {
+  const el = document.getElementById(id)
+  if (!el) return
+  const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  el.scrollIntoView({ behavior: sinMovimiento ? 'auto' : 'smooth', block: 'start' })
+  el.querySelector('button.section-card-header')?.focus({ preventScroll: true })
 }
 
 const METAS_INICIALES = {
@@ -36,34 +51,107 @@ const METAS_INICIALES = {
 }
 
 export default function App() {
-  const [metas,        setMetas]        = useState(METAS_INICIALES)
-  const [aprobados,    setAprobados]    = useState(leerAprobados)
-  const [encuesta,     setEncuesta]     = useState({ e1: null, e2: null, e3: null })
-  const [globalExpand, setGlobalExpand] = useState(null)
+  const [metas,        setMetas]        = useState(() => ({ ...METAS_INICIALES, ...leerProgreso(CLAVES.metas, {}) }))
+  const [aprobados,    setAprobados]    = useState(() => leerProgreso(CLAVES.aprobados, {}))
+  const [encuesta,     setEncuesta]     = useState(() => ({ e1: null, e2: null, e3: null, ...leerProgreso(CLAVES.encuesta, {}) }))
+  const [nombre,       setNombre]       = useState(() => leerProgreso(CLAVES.nombre, ''))
+  const [ultima,       setUltima]       = useState(() => leerProgreso(CLAVES.ultima, ''))
+  const [certificado,  setCertificado]  = useState(() => leerProgreso(CLAVES.certificado, {}))
+  // Secciones abiertas: por defecto, la indicada en la URL o el primer módulo pendiente
+  const [abiertas,     setAbiertas]     = useState(() => {
+    const id = idDesdeHash() ?? primerPendiente(SECCIONES, leerProgreso(CLAVES.aprobados, {}))?.id
+    return id && esModulo(id) ? { [id]: true } : {}
+  })
+  const [activa,       setActiva]       = useState('')
   const [forzarCierre, setForzarCierre] = useState(false)
   const [anuncio,      setAnuncio]      = useState('') // mensaje para la región aria-live
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_APROBADOS, JSON.stringify(aprobados))
-  }, [aprobados])
+  useEffect(() => { guardarProgreso(CLAVES.aprobados, aprobados) },   [aprobados])
+  useEffect(() => { guardarProgreso(CLAVES.metas, metas) },           [metas])
+  useEffect(() => { guardarProgreso(CLAVES.encuesta, encuesta) },     [encuesta])
+  useEffect(() => { guardarProgreso(CLAVES.nombre, nombre) },         [nombre])
+  useEffect(() => { guardarProgreso(CLAVES.ultima, ultima) },         [ultima])
+  useEffect(() => { guardarProgreso(CLAVES.certificado, certificado) }, [certificado])
 
   // Métricas de progreso
   const totalSecciones      = SECCIONES.length
   const seccionesAprobadas  = SECCIONES.filter(s => aprobados[s.id]).length
   const progresoPorcentaje  = Math.round((seccionesAprobadas / totalSecciones) * 100)
 
+  // Abre la sección (si es un módulo), actualiza la URL opcionalmente y lleva la vista hasta ella
+  const abrirYDesplazar = useCallback((id) => {
+    flushSync(() => {
+      if (esModulo(id)) {
+        setAbiertas(p => ({ ...p, [id]: true }))
+        setUltima(id)
+      }
+    })
+    desplazarA(id)
+  }, [])
+
+  const irA = useCallback((id, e) => {
+    e?.preventDefault()
+    abrirYDesplazar(id)
+    if (window.location.hash !== `#${id}`) window.history.pushState(null, '', `#${id}`)
+  }, [abrirYDesplazar])
+
+  // Carga con #secN y navegación con el historial del navegador
+  useEffect(() => {
+    const inicial = idDesdeHash()
+    if (inicial) desplazarA(inicial)
+    const onHash = () => {
+      const id = idDesdeHash()
+      if (id) abrirYDesplazar(id)
+    }
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [abrirYDesplazar])
+
+  // Sección activa para resaltar en la navegación
+  useEffect(() => {
+    const visibles = new Set()
+    const observador = new IntersectionObserver((entradas) => {
+      for (const en of entradas) {
+        if (en.isIntersecting) visibles.add(en.target.id)
+        else visibles.delete(en.target.id)
+      }
+      const primera = IDS_NAVEGABLES.find(id => visibles.has(id))
+      if (primera) setActiva(primera)
+    }, { rootMargin: '-72px 0px -60% 0px' })
+    IDS_NAVEGABLES.forEach(id => {
+      const el = document.getElementById(id)
+      if (el) observador.observe(el)
+    })
+    return () => observador.disconnect()
+  }, [])
+
+  const toggleSeccion = (id) => {
+    if (!abiertas[id]) setUltima(id)
+    setAbiertas(p => ({ ...p, [id]: !p[id] }))
+  }
+
+  // "Continuar donde dejaste": la última sección visitada si sigue pendiente; si no, el primer módulo pendiente
+  const pendienteUltima = SECCIONES.find(sec => sec.id === ultima && !aprobados[sec.id])
+  const siguiente       = pendienteUltima ?? primerPendiente(SECCIONES, aprobados)
+  const hayAvance       = seccionesAprobadas > 0 || Boolean(ultima)
+  const continuar       = () => irA(siguiente ? siguiente.id : 'cierre')
+
   const toggleMeta  = useCallback(k  => setMetas(p => ({ ...p, [k]: !p[k] })), [])
   const aprobarQuiz = useCallback(id => {
     setAprobados(p => ({ ...p, [id]: true }))
     const idx = SECCIONES.findIndex(s => s.id === id)
+    if (id === 'final') {
+      const ahora = new Date().toISOString()
+      setCertificado(c => (c.fecha ? c : { fecha: ahora }))
+    }
     setAnuncio(idx >= 0
-      ? `Módulo ${idx + 1} aprobado.${idx < SECCIONES.length - 1 ? ' Se desbloqueó el siguiente.' : ' Se desbloqueó el cierre.'}`
-      : 'Evaluación final aprobada.')
+      ? `Módulo ${idx + 1} aprobado.${idx < SECCIONES.length - 1 ? ' Se habilitó el cuestionario del siguiente módulo.' : ' Se desbloqueó el cierre.'}`
+      : 'Evaluación final aprobada. Tu certificado está disponible.')
   }, [])
   const toggleEnc   = useCallback((p, op) =>
     setEncuesta(prev => ({ ...prev, [p]: prev[p] === op ? null : op })), [])
-  const expandAll   = useCallback(() => setGlobalExpand({ cmd: 'all',  ts: Date.now() }), [])
-  const collapseAll = useCallback(() => setGlobalExpand({ cmd: 'none', ts: Date.now() }), [])
+  const expandAll   = useCallback(() => setAbiertas(Object.fromEntries(SECCIONES.map(s => [s.id, true]))), [])
+  const collapseAll = useCallback(() => setAbiertas({}), [])
 
   // Se invoca como función (no como componente) para no remontar los botones en cada render
   const opcionesEncuesta = (preg, ops, etiqueta) => (
@@ -81,7 +169,17 @@ export default function App() {
     </div>
   )
 
-  const cierreDesbloqueado = Boolean(aprobados.sec6 || forzarCierre)
+  const cierreDesbloqueado = Boolean(SECCIONES.every(s => aprobados[s.id]) || forzarCierre)
+
+  const itemsMenu = [
+    { id: 'encuesta', etiqueta: 'Antes de empezar', icono: 'encuesta' },
+    ...SECCIONES.map((sec, i) => ({
+      id: sec.id,
+      etiqueta: `${i + 1} · ${sec.corto}`,
+      estado: estadoModulo(SECCIONES, aprobados, i),
+    })),
+    { id: 'cierre', etiqueta: 'Cierre y certificado', icono: 'cierre', estado: cierreDesbloqueado ? 'cierre-listo' : 'cierre-bloqueado' },
+  ]
 
   return (
     <>
@@ -105,19 +203,42 @@ export default function App() {
             Comunicación Multimedial · 6 Módulos
           </span>
 
-          <nav className="pasos-nav">
-            <a href="#encuesta">Antes de empezar</a>
+          <nav className="pasos-nav" aria-label="Módulos del curso">
+            <a
+              href="#encuesta"
+              aria-current={activa === 'encuesta' ? 'location' : undefined}
+              onClick={e => irA('encuesta', e)}
+            >
+              Antes de empezar
+            </a>
             {SECCIONES.map((sec, i) => (
-              <a key={sec.id} href={`#${sec.id}`}>
-                Sec {i + 1}
-                {aprobados[sec.id] && <Check size={14} role="img" aria-label="aprobada" />}
+              <a
+                key={sec.id}
+                href={`#${sec.id}`}
+                aria-current={activa === sec.id ? 'location' : undefined}
+                onClick={e => irA(sec.id, e)}
+              >
+                <span className="nav-num">{i + 1}</span>
+                <span className="nav-txt"> · {sec.corto}</span>
+                {aprobados[sec.id] && <Check size={14} role="img" aria-label="aprobado" />}
               </a>
             ))}
-            <a href="#cierre">
+            <a
+              href="#cierre"
+              aria-current={activa === 'cierre' ? 'location' : undefined}
+              onClick={e => irA('cierre', e)}
+            >
               Cierre
               {cierreDesbloqueado && <Check size={14} role="img" aria-label="desbloqueado" />}
             </a>
           </nav>
+
+          <MenuModulos
+            items={itemsMenu}
+            activa={activa}
+            resumen={`${seccionesAprobadas}/${totalSecciones}`}
+            onIr={irA}
+          />
         </div>
         <div
           className="medidor"
@@ -161,6 +282,26 @@ export default function App() {
               </div>
             </div>
 
+            <div className="progreso-resumen">
+              <div className="progreso-resumen-txt">
+                <h2>Tu dashboard</h2>
+                <p>
+                  {seccionesAprobadas} de {totalSecciones} piezas armadas. Cada módulo que aprobás
+                  enciende una pieza.
+                </p>
+                <button type="button" className="corregir continuar-btn" onClick={continuar}>
+                  <Play size={16} aria-hidden="true" />
+                  {hayAvance ? 'Continuar donde dejaste' : 'Empezar por el módulo 1'}
+                </button>
+                <p className="progreso-resumen-sig">
+                  {siguiente
+                    ? `Siguiente: módulo ${SECCIONES.indexOf(siguiente) + 1} · ${siguiente.corto}`
+                    : 'Completaste los 6 módulos: te espera el cierre.'}
+                </p>
+              </div>
+              <DashboardProgreso aprobados={aprobados} />
+            </div>
+
             <div className="notion-callout">
               <span className="notion-callout-emoji" aria-hidden="true"><Target size={24} /></span>
               <div className="notion-callout-body">
@@ -169,7 +310,7 @@ export default function App() {
                   Marcá lo que ya sabés hacer. El resto es lo que vas a dominar módulo a módulo a lo largo de la capacitación:
                 </p>
                 <MetaCheck
-                  texto="Módulo 1: Dominar el menú de bloques con la barra invertida (/) y anidar páginas limpiamente"
+                  texto="Módulo 1: Dominar el menú de bloques con la barra (/) y anidar páginas limpiamente"
                   marcado={metas.meta_bloques}
                   onChange={() => toggleMeta('meta_bloques')}
                 />
@@ -246,9 +387,9 @@ export default function App() {
           {/* ── Barra de controles globales ── */}
           <div className="barra-plan">
             <div className="barra-plan-info">
-              <span className="barra-plan-label">Programa académico secuencial:</span>
+              <span className="barra-plan-label">Tu avance:</span>
               <span className="barra-plan-pill">
-                {seccionesAprobadas} de {totalSecciones} secciones desbloqueadas
+                {seccionesAprobadas} de {totalSecciones} módulos aprobados
               </span>
             </div>
             <div className="barra-plan-actions">
@@ -263,11 +404,12 @@ export default function App() {
 
           {/* ── 6 SECCIONES OFICIALES ── */}
           {SECCIONES.map((sec, index) => {
-            // Lógica secuencial:
-            // La sección 1 (index 0) siempre está desbloqueada.
-            // Las secciones siguientes se desbloquean si el quiz de la anterior fue aprobado.
-            const bloqueado = index === 0 ? false : !aprobados[SECCIONES[index - 1].id]
-            const completado = Boolean(aprobados[sec.id])
+            // Bloqueo suave: todo el contenido está disponible; el cuestionario de un módulo
+            // se habilita al aprobar el del módulo anterior.
+            const estado     = estadoModulo(SECCIONES, aprobados, index)
+            const completado = estado === 'aprobado'
+            const bloqueado  = estado === 'bloqueado'
+            const esUltimo   = index === SECCIONES.length - 1
 
             return (
               <BloqueSeccion
@@ -275,15 +417,9 @@ export default function App() {
                 id={sec.id}
                 num={sec.num}
                 titulo={sec.titulo}
-                bloqueado={bloqueado}
-                completado={completado}
-                defaultAbierto={index === 0}
-                globalExpand={globalExpand}
-                onDesbloquear={() => {
-                  if (index > 0) {
-                    aprobarQuiz(SECCIONES[index - 1].id)
-                  }
-                }}
+                estado={estado}
+                abierto={Boolean(abiertas[sec.id])}
+                onToggle={() => toggleSeccion(sec.id)}
               >
                 <div className="bloque">
                   <div className="bloque-principal">
@@ -318,12 +454,17 @@ export default function App() {
                       url={sec.pdf.url}
                     />
 
-                    {/* 5. Cuestionario Tally: 8/10 o más desbloquea la siguiente sección */}
+                    {/* 5. Cuestionario Tally: 8/10 o más habilita el cuestionario siguiente */}
                     <TallyQuiz
                       formId={TALLY_FORMS[sec.id]}
                       titulo={`Cuestionario — ${sec.titulo}`}
                       aprobado={completado}
+                      bloqueado={bloqueado}
+                      onIrAnterior={index > 0 ? () => irA(SECCIONES[index - 1].id) : undefined}
+                      onDesbloquearDev={index > 0 ? () => aprobarQuiz(SECCIONES[index - 1].id) : undefined}
                       onAprobado={() => aprobarQuiz(sec.id)}
+                      meta={esUltimo ? 'habilitar el cierre del curso' : undefined}
+                      exito={esUltimo ? 'se habilitó el cierre del curso.' : undefined}
                       videoId={`video-${sec.id}`}
                       pdfId={`pdf-${sec.id}`}
                     />
@@ -335,7 +476,7 @@ export default function App() {
                       <div className="caja-lat-header">
                         <h3>Recursos del módulo</h3>
                         <span className={`caja-lat-badge ${completado ? 'ok' : bloqueado ? 'lock' : 'active'}`}>
-                          {completado ? 'Aprobado' : bloqueado ? 'Bloqueado' : 'En curso'}
+                          {completado ? 'Aprobado' : bloqueado ? 'Cuestionario bloqueado' : 'En curso'}
                         </span>
                       </div>
                       <ul>
@@ -380,7 +521,7 @@ export default function App() {
                     <span className="desbloqueo-icon" aria-hidden="true"><Lock size={20} /></span>
                     <div className="desbloqueo-texto">
                       <strong>Cierre y evaluación final bloqueados</strong>
-                      <span>Esta sección final se habilita al completar y aprobar los quizzes de los 6 módulos.</span>
+                      <span>Esta sección final se habilita al aprobar los cuestionarios de los 6 módulos.</span>
                     </div>
                   </div>
                   {/* Atajo solo para desarrollo: no se incluye en el build de producción */}
@@ -427,8 +568,18 @@ export default function App() {
                       {/* Evaluación Integradora */}
                       <EvaluacionFinal
                         tallyAprobado={Boolean(aprobados.final)}
-                        onTallyAprobado={() => aprobarQuiz('final')}
+                        onAprobado={() => aprobarQuiz('final')}
                       />
+
+                      {/* Certificado: hijo directo de .cuerpo-cierre (la hoja de impresión lo necesita) */}
+                      {aprobados.final && (
+                        <Certificado
+                          nombre={nombre}
+                          onNombre={setNombre}
+                          fecha={certificado.fecha}
+                          aprobados={aprobados}
+                        />
+                      )}
                     </div>
                   </div>
                 </>
@@ -450,7 +601,7 @@ export default function App() {
             <span style={{ marginLeft: 'auto' }}>
               <span className="notion-badge">
                 <NotionLogo size={12} color="currentColor" />
-                Hecho con estética oficial de Notion
+                Inspirado en la interfaz de Notion · no afiliado a Notion Labs
               </span>
             </span>
           </div>
