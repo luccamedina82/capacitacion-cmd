@@ -1,5 +1,8 @@
+import { Clock } from 'lucide-react'
+import Callout from './Callout.jsx'
+
 /**
- * Bloque Hands-on con lista numerada y checkpoints opcionales.
+ * Bloque Hands-on (callout "Práctica") con lista numerada y checkpoints opcionales.
  * @param {string}   titulo
  * @param {string}   tiempo
  * @param {string[]} pasos
@@ -7,9 +10,11 @@
  */
 export default function HandsOn({ titulo, tiempo, pasos, children }) {
   return (
-    <div className="hands">
+    <Callout variante="practica" className="hands">
       <h3>{titulo}</h3>
-      <p className="tiempo">{tiempo}</p>
+      <p className="tiempo">
+        <Clock size={14} className="ico" aria-hidden="true" /> {tiempo}
+      </p>
       <ol>
         {pasos.map((paso, i) => (
           <li key={i} dangerouslySetInnerHTML={{ __html: paso }} />
@@ -21,6 +26,6 @@ export default function HandsOn({ titulo, tiempo, pasos, children }) {
           {children}
         </div>
       )}
-    </div>
+    </Callout>
   )
 }
