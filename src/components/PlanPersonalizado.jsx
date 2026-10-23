@@ -14,10 +14,12 @@ export default function PlanPersonalizado({ plan, onIr }) {
   const titulo = id => SECCIONES.find(s => s.id === id)?.titulo ?? ''
 
   return (
-    <div aria-live="polite">
+    <div>
+      <p className="sr-only" role="status" aria-live="polite">
+        {plan ? 'Tu plan personalizado está listo.' : ''}
+      </p>
       {plan && (
         <motion.section
-          key="plan"
           className="plan glass glass--content"
           aria-labelledby="plan-titulo"
           initial={sinMovimiento ? false : { opacity: 0, y: 12 }}

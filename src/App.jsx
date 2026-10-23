@@ -1,6 +1,4 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { flushSync } from 'react-dom'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ChevronsUpDown, ChevronsDownUp, Play } from 'lucide-react'
 import ObjetivosPrograma from './components/ObjetivosPrograma.jsx'
 import TallyQuiz        from './components/TallyQuiz.jsx'
@@ -42,12 +40,6 @@ function desplazarA(id) {
   el.querySelector('button.section-card-header')?.focus({ preventScroll: true })
 }
 
-/** Ejecuta una acción al montarse la pantalla del curso (y devuelve su limpieza). */
-function AlMontar({ accion }) {
-  useEffect(() => accion(), []) // eslint-disable-line
-  return null
-}
-
 export default function App() {
   const [aprobados,    setAprobados]    = useState(() => leerProgreso(CLAVES.aprobados, {}))
   const [encuesta,     setEncuesta]     = useState(() => ({ e1: null, e2: null, e3: null, ...leerProgreso(CLAVES.encuesta, {}) }))
@@ -71,7 +63,7 @@ export default function App() {
     return conAvance ? 'curso' : 'portada'
   })
   const destinoPendiente = useRef(null) // sección a la que ir al montar el curso
-  const sinMovimiento = Boolean(useReducedMotion())
+  const primeraVista = useRef(true)     // evita robar el foco en la carga inicial
 
   useEffect(() => { guardarProgreso(CLAVES.aprobados, aprobados) },   [aprobados])
   useEffect(() => { guardarProgreso(CLAVES.encuesta, encuesta) },     [encuesta])
@@ -86,14 +78,13 @@ export default function App() {
   const progresoPorcentaje  = Math.round((seccionesAprobadas / totalSecciones) * 100)
 
   // Abre la sección (si es un módulo), actualiza la URL opcionalmente y lleva la vista hasta ella
+  // El desplazamiento y el foco esperan dos frames para que la sección ya esté abierta en el DOM
   const abrirYDesplazar = useCallback((id) => {
-    flushSync(() => {
-      if (esModulo(id)) {
-        setAbiertas(p => ({ ...p, [id]: true }))
-        setUltima(id)
-      }
-    })
-    desplazarA(id)
+    if (esModulo(id)) {
+      setAbiertas(p => ({ ...p, [id]: true }))
+      setUltima(id)
+    }
+    requestAnimationFrame(() => requestAnimationFrame(() => desplazarA(id)))
   }, [])
 
   const irA = useCallback((id, e) => {
@@ -118,8 +109,8 @@ export default function App() {
     return () => window.removeEventListener('hashchange', onHash)
   }, [abrirYDesplazar, vista])
 
-  // Al montarse el curso: lleva la vista al destino (o arriba), enfoca el h1 y observa la sección activa
-  const alMontarCurso = () => {
+  // Al mostrarse el curso: lleva la vista al destino (o arriba), enfoca el h1 y observa la sección activa
+  const alMostrarCurso = () => {
     const id = destinoPendiente.current ?? idDesdeHash()
     destinoPendiente.current = null
     if (id) {
@@ -145,6 +136,18 @@ export default function App() {
     })
     return () => observador.disconnect()
   }
+
+  // El curso queda montado (conserva foco y respuestas de Tally); solo se oculta la pantalla inactiva
+  useEffect(() => {
+    if (vista === 'curso') return alMostrarCurso()
+    if (!primeraVista.current) {
+      window.scrollTo({ top: 0, behavior: 'auto' })
+      document.getElementById('portada-titulo')?.focus({ preventScroll: true })
+    }
+    return undefined
+  }, [vista]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => { primeraVista.current = false }, [])
 
   const entrar = (destino = null) => {
     destinoPendiente.current = destino
@@ -221,22 +224,15 @@ export default function App() {
       {/* Región aria-live: anuncia aprobaciones a lectores de pantalla */}
       <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{anuncio}</div>
 
-      <AnimatePresence mode="wait">
-        {vista === 'portada' ? (
-          <Portada
-            key="portada"
+      <div className="vista" hidden={vista !== 'portada'}>
+        <Portada
             onEntrar={() => entrar()}
             onContinuar={hayAvance ? () => entrar(siguiente ? siguiente.id : 'cierre') : undefined}
             textoContinuar={hayAvance && siguiente ? `Módulo ${SECCIONES.indexOf(siguiente) + 1} · ${siguiente.corto}` : undefined}
-          />
-        ) : (
-          <motion.div
-            key="curso"
-            initial={sinMovimiento ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <AlMontar accion={alMontarCurso} />
+        />
+      </div>
+
+      <div className="vista" hidden={vista !== 'curso'}>
           <a className="skip-link" href="#contenido">Saltar al contenido</a>
 
           {/* ══════════ HEADER NOTION STICKY ══════════ */}
@@ -619,9 +615,7 @@ export default function App() {
               </div>
             </div>
           </footer>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </div>
     </>
   )
 }

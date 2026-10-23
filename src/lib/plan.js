@@ -31,9 +31,9 @@ function porNivel(e3) {
   }
   return {
     inicio: 'sec3',
-    resumen: 'Ya tenés nivel intermedio en Notion',
+    resumen: 'Ya tenés nivel intermedio en Notion, así que podés repasar rápido los módulos 1 y 2',
     items: [
-      ['sec5', 'Podés repasar rápido los módulos 1 y 2: sumá filtros y orden para ver solo lo urgente.'],
+      ['sec5', 'Sumá filtros y orden para ver solo lo urgente de tu cursada.'],
       ['sec6', 'Cerrá el circuito armando tu Dashboard con bases de datos vinculadas.'],
     ],
   }
@@ -88,7 +88,8 @@ export function calcularPlan(encuesta) {
   const detalle = []
   if (e1 === 'No las anoto') detalle.push('no anotás tus fechas')
   else if (e1 === 'Otra app') detalle.push('anotás tus fechas en otra app')
-  else detalle.push(`anotás tus fechas en ${e1 === 'Papel o agenda' ? 'papel o agenda' : 'el calendario del celular'}`)
+  else if (e1 === 'Papel o agenda') detalle.push('anotás tus fechas en papel o agenda')
+  else if (e1 === 'Calendario del celular') detalle.push('anotás tus fechas en el calendario del celular')
   if (e2 === 'Ninguna') detalle.push('no te enteraste tarde de nada el último mes')
   else detalle.push(`te enteraste tarde de una entrega o examen (${e2.toLowerCase()})`)
 

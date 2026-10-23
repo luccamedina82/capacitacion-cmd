@@ -2783,12 +2783,13 @@ button.section-card-header {
 
 /* Menú móvil: hoja de vidrio */
 .menu-modulos-panel {
-  background: var(--glass-tint);
+  /* Sin backdrop-filter propio: dentro del header (que ya desenfoca) quedaba plano */
+  background: rgba(255, 255, 255, 0.92);
   border: 0;
   border-radius: 24px;
   box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .menu-modulos-panel a { border-radius: 16px; }

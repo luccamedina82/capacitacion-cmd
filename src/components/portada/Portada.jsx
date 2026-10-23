@@ -85,12 +85,11 @@ export default function Portada({ onEntrar, onContinuar, textoContinuar }) {
       })
 
   return (
-    <motion.section
+    <motion.main
       ref={raizRef}
       id="portada"
       className="portada"
       aria-labelledby="portada-titulo"
-      exit={{ opacity: 0, transition: { duration: sinMovimiento ? 0 : 0.4 } }}
     >
       {/* Filtro SVG de refracción: solo se referencia desde .con-lente */}
       <svg className="portada-defs" width="0" height="0" aria-hidden="true" focusable="false">
@@ -112,7 +111,7 @@ export default function Portada({ onEntrar, onContinuar, textoContinuar }) {
           <motion.span className="portada-kicker" {...entrada(0.05)}>
             <span aria-hidden="true">📚</span> Comunicación Multimedial · Capacitación Notion
           </motion.span>
-          <motion.h1 id="portada-titulo" {...entrada(0.12)}>
+          <motion.h1 id="portada-titulo" tabIndex={-1} {...entrada(0.12)}>
             Dejá de enterarte<br />tarde de las entregas
           </motion.h1>
           <motion.p className="portada-sub" {...entrada(0.2)}>
@@ -156,6 +155,6 @@ export default function Portada({ onEntrar, onContinuar, textoContinuar }) {
           <Flotantes px={px} py={py} estatico={sinMovimiento} />
         </div>
       </div>
-    </motion.section>
+    </motion.main>
   )
 }
