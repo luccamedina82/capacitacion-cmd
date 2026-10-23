@@ -2376,3 +2376,152 @@ button.section-card-header {
   gap: var(--space-2);
   margin-top: var(--space-3);
 }
+
+/* ══════════════════════════════════════════
+   CIERRE: aviso inline, PDF y certificado
+══════════════════════════════════════════ */
+
+/* Aviso accesible cuando faltan respuestas (reemplaza al alert) */
+.eval-aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding: var(--space-3) var(--space-4);
+  background: var(--n-yellow-bg);
+  border: 1px solid var(--n-yellow);
+  border-left-width: 4px;
+  border-radius: var(--r-sm);
+  color: var(--n-amber-text);
+  font-size: var(--fs-ui);
+  font-weight: 500;
+}
+
+/* Enlace secundario para abrir el PDF en una pestaña nueva */
+.recurso-pdf-abrir {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin-top: var(--space-1);
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  color: var(--n-link);
+}
+
+/* Controles del certificado (no se imprimen) */
+.cert-controles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-4);
+  margin-top: 28px;
+}
+
+.cert-imprimir {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.cert-imprimir:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cert-ayuda {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--fs-meta);
+  color: var(--n-text-muted);
+}
+
+.certificado-notion-card {
+  margin-top: var(--space-4);
+}
+
+.cert-otorga {
+  margin: 0;
+  font-size: var(--fs-ui);
+  color: var(--n-text-muted);
+}
+
+.cert-nombre {
+  margin: var(--space-1) 0 var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--n-border-strong);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+/* ══════════════════════════════════════════
+   IMPRESIÓN: solo el certificado, en A4
+══════════════════════════════════════════ */
+@page {
+  size: A4;
+  margin: 16mm;
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  header,
+  footer,
+  .skip-link,
+  .hero,
+  .sections-stack > :not(#cierre) {
+    display: none !important;
+  }
+
+  .sections-stack {
+    padding: 0;
+    gap: 0;
+  }
+
+  .wrap {
+    max-width: none;
+    padding: 0;
+  }
+
+  #cierre .section-card {
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    overflow: visible;
+  }
+
+  #cierre .section-card-header,
+  #cierre .section-card-divider {
+    display: none !important;
+  }
+
+  #cierre .section-card-body {
+    padding: 0;
+    animation: none;
+  }
+
+  /* Del cierre se conserva únicamente la tarjeta del certificado */
+  .cuerpo-cierre > :not(.certificado-notion-card) {
+    display: none !important;
+  }
+
+  .certificado-notion-card {
+    margin: 0;
+    padding: 12mm;
+    border: 1px solid var(--n-text);
+    border-top: 6px solid var(--n-yellow);
+    border-radius: 0;
+    break-inside: avoid;
+  }
+
+  .certificado-notion-card,
+  .dash-pieza {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

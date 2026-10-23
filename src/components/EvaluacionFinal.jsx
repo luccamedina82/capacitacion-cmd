@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { ClipboardCheck, Target, ArrowRight, CircleCheck, CircleX, Info, GraduationCap } from 'lucide-react'
+import { ClipboardCheck, Target, ArrowRight, CircleCheck, CircleX, Info } from 'lucide-react'
 import TallyQuiz from './TallyQuiz.jsx'
 import Callout from './Callout.jsx'
 import { TALLY_FORMS } from '../data/tally.js'
@@ -154,17 +154,18 @@ const CASOS_EVALUACION = [
 
 /**
  * @param {boolean}  tallyAprobado   - si el Tally integrador ya fue aprobado (persistido en App)
- * @param {function} onTallyAprobado
+ * @param {function} onAprobado      - se llama al aprobar el Tally o las situaciones (>= 80 %)
  */
-export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado }) {
+export default function EvaluacionFinal({ tallyAprobado = false, onAprobado }) {
   const [tab, setTab] = useState('tally') // 'tally' | 'situaciones'
   const [respuestas, setRespuestas] = useState({})
   const [enviado, setEnviado] = useState(false)
-  const [nombreAlumno, setNombreAlumno] = useState('')
+  const [aviso, setAviso] = useState('') // feedback accesible cuando faltan respuestas
 
   const handleSeleccionar = useCallback((casoId, op) => {
     if (enviado) return
     setRespuestas(prev => ({ ...prev, [casoId]: op }))
+    setAviso('')
   }, [enviado])
 
   const totalPreguntas = CASOS_EVALUACION.length
@@ -172,19 +173,23 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
   const correctas = CASOS_EVALUACION.filter(c => respuestas[c.id] === c.correcta).length
   const porcentaje = Math.round((correctas / totalPreguntas) * 100)
   const aprobado = enviado && porcentaje >= 80
-  const certificado = aprobado || tallyAprobado
 
   const corregir = () => {
     if (respondidas < totalPreguntas) {
-      alert(`Por favor responde todas las situaciones antes de evaluar (${respondidas}/${totalPreguntas} respondidas).`)
+      const faltan = totalPreguntas - respondidas
+      const pendientes = faltan === 1 ? 'Falta 1 situación' : `Faltan ${faltan} situaciones`
+      setAviso(`${pendientes} por responder antes de evaluar (${respondidas} de ${totalPreguntas} respondidas).`)
       return
     }
+    setAviso('')
     setEnviado(true)
+    if (correctas / totalPreguntas >= 0.8) onAprobado?.()
   }
 
   const reiniciar = () => {
     setRespuestas({})
     setEnviado(false)
+    setAviso('')
   }
 
   return (
@@ -300,13 +305,21 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
           {/* Botones de acción y resultado */}
           <div className="eval-actions-bar" aria-live="polite">
             {!enviado ? (
-              <button
-                type="button"
-                className="corregir eval-submit-btn"
-                onClick={corregir}
-              >
-                Evaluar mis respuestas ({respondidas}/{totalPreguntas})
-              </button>
+              <>
+                <button
+                  type="button"
+                  className="corregir eval-submit-btn"
+                  onClick={corregir}
+                  aria-describedby={aviso ? 'eval-aviso' : undefined}
+                >
+                  Evaluar mis respuestas ({respondidas}/{totalPreguntas})
+                </button>
+                {aviso && (
+                  <p id="eval-aviso" className="eval-aviso" role="alert">
+                    <Info size={16} className="ico" aria-hidden="true" /> {aviso}
+                  </p>
+                )}
+              </>
             ) : (
               <div className="eval-resultado-panel">
                 <div className={`eval-score-badge ${aprobado ? 'score-aprobado' : 'score-reintentar'}`}>
@@ -351,41 +364,10 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
             formId={TALLY_FORMS.final}
             titulo="Evaluación integradora — Formulario Tally.so"
             aprobado={tallyAprobado}
-            onAprobado={onTallyAprobado}
+            onAprobado={onAprobado}
+            meta="obtener tu certificado"
+            exito="ya podés descargar tu certificado."
           />
-        </div>
-      )}
-
-      {/* Certificado Notion cuando aprueba cualquiera de las dos evaluaciones */}
-      {certificado && (
-        <div className="certificado-notion-card">
-          <div className="cert-header">
-            <span className="cert-emoji" aria-hidden="true"><GraduationCap size={44} /></span>
-            <div>
-              <span className="cert-kicker">Capacitación Comunicación Multimedial · 2026</span>
-              <h3>Certificado de Finalización de Sistema en Notion</h3>
-            </div>
-          </div>
-          <p className="cert-body">
-            Este certificado avala que has completado el diseño de tu sistema académico personal
-            en Notion: configuración de página, bases de datos con vistas cruzadas (calendario, tablero, tabla),
-            filtros inteligentes y relaciones entre asignaturas y entregas.
-          </p>
-          <div className="cert-footer">
-            <div className="cert-campo">
-              <label htmlFor="cert-nombre">Nombre completo</label>
-              <input
-                id="cert-nombre"
-                type="text"
-                className="cert-input-name"
-                placeholder="Escribí tu nombre completo"
-                autoComplete="name"
-                value={nombreAlumno}
-                onChange={e => setNombreAlumno(e.target.value)}
-              />
-            </div>
-            <span className="cert-date">{new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-          </div>
         </div>
       )}
     </div>
