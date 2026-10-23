@@ -67,6 +67,7 @@
 
   /* Capas */
   --z-header: 200;
+  --header-h: 72px; /* header sticky (52px) + barra de progreso + aire */
   --z-skip:   300;
 
   /* Tipografía */
@@ -90,7 +91,7 @@ html {
 
 /* Los destinos de ancla quedan debajo del header sticky (52px + barra de progreso) */
 [id] {
-  scroll-margin-top: 72px;
+  scroll-margin-top: var(--header-h);
 }
 
 body {
@@ -145,7 +146,7 @@ code {
 /* ══════════════════════════════════════════
    HEADER STICKY NOTION
 ══════════════════════════════════════════ */
-header {
+.app-header {
   position: sticky;
   top: 0;
   z-index: var(--z-header);
@@ -1275,7 +1276,7 @@ details .cuerpo {
 /* Sidebar / Lateral */
 aside.lateral {
   position: sticky;
-  top: 72px;
+  top: var(--header-h);
 }
 
 aside.lateral .caja-lat {
@@ -2471,7 +2472,8 @@ button.section-card-header {
     background: #fff;
   }
 
-  header,
+  .app-header,
+  .intro-curso,
   footer,
   .skip-link,
   .hero,

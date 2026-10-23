@@ -3,7 +3,7 @@
    Reutiliza los tokens de :root (index.css) con fallback propio.
    ============================================================ */
 
-.intro {
+.intro-curso {
   --i-text: var(--n-text, #37352F);
   --i-bg: var(--n-bg, #FFFFFF);
   --i-bg-2: var(--n-bg-secondary, #F7F6F3);
@@ -20,12 +20,13 @@
   --i-gris-bg: #EDECE8;
   --i-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
+  position: relative;
   background: var(--i-bg);
   color: var(--i-text);
   border-bottom: 1px solid var(--i-border-soft);
 }
 
-.intro a:focus-visible {
+.intro-curso a:focus-visible {
   outline: 2px solid var(--i-link);
   outline-offset: 2px;
 }
@@ -50,10 +51,10 @@
 
 /* ── Saltar intro (visible al enfocar) ── */
 .intro-saltar {
-  position: absolute;
+  position: fixed;
   top: 8px;
   left: 8px;
-  z-index: 300;
+  z-index: calc(var(--z-header, 200) + 100);
   padding: 8px 14px;
   background: var(--i-bg);
   color: var(--i-link);
@@ -66,13 +67,13 @@
 .intro-saltar:focus-visible { transform: translateY(0); }
 
 /* ── Tipografia compartida ── */
-.intro h1 {
+.intro-curso h1 {
   font-size: clamp(2rem, 4.6vw, 3rem);
   font-weight: 800;
   letter-spacing: -0.035em;
   line-height: 1.12;
 }
-.intro h2 {
+.intro-curso h2 {
   font-size: clamp(1.4rem, 2.8vw, 1.9rem);
   font-weight: 700;
   letter-spacing: -0.025em;
@@ -255,9 +256,9 @@
 .intro-pista { height: 230vh; }
 .intro-escenario {
   position: sticky;
-  top: 72px;
+  top: var(--header-h, 72px);
   height: calc(100vh - 88px);
-  min-height: 560px;
+  min-height: min(560px, calc(100dvh - 96px));
   max-height: 680px;
   display: flex;
   flex-direction: column;

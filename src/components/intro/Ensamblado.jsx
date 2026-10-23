@@ -30,7 +30,7 @@ const PIEZAS = [
 ]
 const VENTANA = 0.22
 
-const CONSULTA_COMPACTA = '(max-width: 700px)'
+const CONSULTA_COMPACTA = '(max-width: 700px), (max-height: 600px)'
 function suscribir(cb) {
   const mq = window.matchMedia(CONSULTA_COMPACTA)
   mq.addEventListener('change', cb)
@@ -64,13 +64,13 @@ function Tablero({ children, className = '' }) {
 
 function Encabezado() {
   return (
-    <header className="intro-bloque-cab">
+    <div className="intro-bloque-cab">
       <h2 id="intro-ensamblado-titulo">Así queda tu sistema al terminar</h2>
       <p className="intro-sub">
         Cada módulo suma una pieza. Mirá cómo se arma el dashboard mientras bajás.
       </p>
       <p className="intro-sr-only">{DESCRIPCION_DASHBOARD}</p>
-    </header>
+    </div>
   )
 }
 

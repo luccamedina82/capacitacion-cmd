@@ -190,7 +190,7 @@ export default function App() {
       <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{anuncio}</div>
 
       {/* ══════════ HEADER NOTION STICKY ══════════ */}
-      <header>
+      <header className="app-header">
         <div className="barra">
           <span className="marca">
             <span className="marca-icon">
@@ -255,7 +255,7 @@ export default function App() {
       </header>
 
       <main id="contenido" tabIndex={-1}>
-      <Intro />
+      <Intro onIrA={irA} destinoProgreso={siguiente ? siguiente.id : 'cierre'} />
       {/* ══════════ HERO PAGE NOTION ══════════ */}
       <div className="hero">
         <div className="wrap">

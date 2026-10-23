@@ -11,15 +11,15 @@ const MODULOS = [
   { icono: LayoutDashboard, aporta: 'El hub que lo reúne todo' },
 ]
 
-export default function MapaCurso() {
+export default function MapaCurso({ onIrA }) {
   const reducido = Boolean(useReducedMotion())
 
   return (
     <section className="intro-mapa" aria-labelledby="intro-mapa-titulo">
-      <header className="intro-bloque-cab">
+      <div className="intro-bloque-cab">
         <h2 id="intro-mapa-titulo">Seis módulos, una pieza cada uno</h2>
         <p className="intro-sub">Elegí por dónde seguir o recorrelos en orden.</p>
-      </header>
+      </div>
       <ol className="intro-mapa-lista">
         {SECCIONES.map((sec, i) => {
           const { icono: Icono, aporta } = MODULOS[i]
@@ -33,7 +33,7 @@ export default function MapaCurso() {
               }
           return (
             <m.li key={sec.id} {...animacion}>
-              <a className="intro-modulo" href={`#${sec.id}`}>
+              <a className="intro-modulo" href={`#${sec.id}`} onClick={e => onIrA?.(sec.id, e)}>
                 <span className="intro-modulo-cab">
                   <span className="intro-modulo-num">Módulo {i + 1}</span>
                   <Icono size={18} aria-hidden="true" />
