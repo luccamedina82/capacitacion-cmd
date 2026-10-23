@@ -45,6 +45,7 @@ export default function VideoPlaceholder({ titulo, duracion, src, id }) {
             tabIndex={tieneVideo ? 0 : undefined}
             onKeyDown={e => {
               if (tieneVideo && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault() // evita que Espacio haga scroll de la página
                 setReproduciendo(true)
               }
             }}

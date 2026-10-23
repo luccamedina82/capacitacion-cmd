@@ -101,24 +101,27 @@ export default function TallyQuiz({ formId, titulo, aprobado, onAprobado, videoI
         <iframe ref={iframeRef} key={intento} src={src} title={titulo} loading="lazy" />
       </div>
 
+      {/* Región viva persistente: anuncia el resultado a lectores de pantalla */}
+      <div role="status" aria-live="polite">
       {aprobado && (
-        <p className="veredicto aprobado" role="status">
+        <p className="veredicto aprobado">
           <CircleCheck size={16} className="ico" aria-hidden="true" /> Nivel aprobado{puntaje !== null && puntaje >= PUNTAJE_MINIMO ? ` con ${puntaje}/${PUNTAJE_MAXIMO}` : ''}: se abrió el siguiente bloque.
         </p>
       )}
       {!aprobado && puntaje !== null && puntaje < PUNTAJE_MINIMO && (
-        <div className="veredicto error" role="status">
+        <div className="veredicto error">
           Obtuviste {puntaje}/{PUNTAJE_MAXIMO}. Necesitás {PUNTAJE_MINIMO} o más para avanzar.{' '}
           <button type="button" className="saltear" onClick={reintentar}>Reintentar</button>
         </div>
       )}
       {!aprobado && sinPuntaje && (
-        <div className="veredicto error" role="status">
+        <div className="veredicto error">
           Recibimos tus respuestas, pero no pudimos leer el puntaje de este cuestionario.
           Avisale al equipo de la capacitación.{' '}
           <button type="button" className="saltear" onClick={reintentar}>Reintentar</button>
         </div>
       )}
+      </div>
 
       <RepasoModal
         abierto={modalAbierto}

@@ -86,7 +86,11 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 72px; /* alto del header sticky */
+}
+
+/* Los destinos de ancla quedan debajo del header sticky (52px + barra de progreso) */
+[id] {
+  scroll-margin-top: 72px;
 }
 
 body {
@@ -1511,6 +1515,7 @@ aside.lateral li::before {
 }
 
 .caso-opcion-btn {
+  position: relative; /* ancla el radio oculto */
   font-family: var(--font-ui);
   display: flex;
   align-items: flex-start;
@@ -1525,9 +1530,31 @@ aside.lateral li::before {
   width: 100%;
 }
 
-.caso-opcion-btn:hover:not(:disabled) {
+.caso-opcion-btn:hover:not(.deshabilitada) {
   background: var(--n-bg-hover);
   border-color: var(--n-border-strong);
+}
+
+.caso-opcion-btn.deshabilitada {
+  cursor: default;
+}
+
+.caso-opcion-btn:focus-within {
+  outline: 2px solid var(--n-accent);
+  outline-offset: 2px;
+}
+
+.opcion-estado {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.opcion-correcta .opcion-estado {
+  color: var(--n-green-text);
+}
+
+.opcion-fallada .opcion-estado {
+  color: var(--n-red-text);
 }
 
 .opcion-badge {
@@ -1654,7 +1681,7 @@ aside.lateral li::before {
   min-width: 240px;
 }
 
-.eval-resultado-texto h4 {
+.eval-resultado-texto h3 {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -1728,6 +1755,18 @@ aside.lateral li::before {
   border-top: 1px solid var(--n-border);
   padding-top: 20px;
   flex-wrap: wrap;
+}
+
+.cert-campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.cert-campo label {
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  color: var(--n-text-muted);
 }
 
 .cert-input-name {
@@ -1953,10 +1992,90 @@ footer {
   }
 }
 
-/* ── Accesibilidad: Reduced Motion ── */
+/* ══════════════════════════════════════════
+   ACCESIBILIDAD
+══════════════════════════════════════════ */
+
+/* Foco visible para teclado: anillo de 2px con separación de 2px */
+:focus-visible {
+  outline: 2px solid var(--n-accent);
+  outline-offset: 2px;
+}
+
+/* Dentro de contenedores con overflow:hidden el anillo va hacia adentro */
+button.section-card-header:focus-visible,
+.caso-opcion-btn:focus-within {
+  outline-offset: -2px;
+}
+
+/* Texto solo para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Enlace para saltar la cabecera: aparece solo con el foco */
+.skip-link {
+  position: fixed;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: var(--z-skip);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--r-sm);
+  background: var(--n-text);
+  color: #fff;
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+#contenido:focus {
+  outline: none; /* destino programático del skip link, no un control */
+}
+
+/* Objetivos táctiles de al menos 44px */
+.pasos-nav a,
+.saltear,
+.barra-plan-actions button,
+.ops button,
+.meta,
+.ops-q button,
+.corregir,
+.eval-tab-btn,
+.caso-opcion-btn,
+.recurso-pdf-btn,
+button.section-card-header {
+  min-height: 44px;
+}
+
+.pasos-nav a,
+.saltear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+}
+
+/* Reduced motion: mismo contenido y estado, sin animación */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *, *::before, *::after {
-    transition: none !important;
-    animation: none !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
   }
 }

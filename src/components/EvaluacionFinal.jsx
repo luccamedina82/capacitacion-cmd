@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { ClipboardCheck, Target, ArrowRight, CircleCheck, Info, GraduationCap } from 'lucide-react'
+import { ClipboardCheck, Target, ArrowRight, CircleCheck, CircleX, Info, GraduationCap } from 'lucide-react'
 import TallyQuiz from './TallyQuiz.jsx'
 import Callout from './Callout.jsx'
 import { TALLY_FORMS } from '../data/tally.js'
@@ -193,6 +193,7 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
         <button
           type="button"
           className={`eval-tab-btn${tab === 'tally' ? ' active' : ''}`}
+          aria-pressed={tab === 'tally'}
           onClick={() => setTab('tally')}
         >
           <ClipboardCheck size={16} aria-hidden="true" /> Evaluación final
@@ -201,6 +202,7 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
         <button
           type="button"
           className={`eval-tab-btn${tab === 'situaciones' ? ' active' : ''}`}
+          aria-pressed={tab === 'situaciones'}
           onClick={() => setTab('situaciones')}
         >
           <Target size={16} aria-hidden="true" /> Situaciones reales de estudio ({respondidas}/{totalPreguntas})
@@ -238,12 +240,12 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
                     <p>{caso.contexto}</p>
                   </div>
 
-                  <p className="caso-pregunta">
+                  <p className="caso-pregunta" id={`caso-pregunta-${caso.id}`}>
                     <ArrowRight size={18} className="ico" aria-hidden="true" />
                     <span>{caso.pregunta}</span>
                   </p>
 
-                  <div className="caso-opciones">
+                  <div className="caso-opciones" role="radiogroup" aria-labelledby={`caso-pregunta-${caso.id}`}>
                     {caso.opciones.map(op => {
                       const seleccionada = elegida === op.op
                       let estiloOpcion = ''
@@ -253,16 +255,34 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
                       }
 
                       return (
-                        <button
+                        <label
                           key={op.op}
-                          type="button"
-                          className={`caso-opcion-btn${seleccionada ? ' seleccionada' : ''}${estiloOpcion}`}
-                          onClick={() => handleSeleccionar(caso.id, op.op)}
-                          disabled={enviado}
+                          className={`caso-opcion-btn${seleccionada ? ' seleccionada' : ''}${estiloOpcion}${enviado ? ' deshabilitada' : ''}`}
                         >
-                          <span className="opcion-badge">{op.op.toUpperCase()}</span>
+                          <input
+                            type="radio"
+                            className="sr-only"
+                            name={`caso-${caso.id}`}
+                            value={op.op}
+                            checked={seleccionada}
+                            disabled={enviado}
+                            onChange={() => handleSeleccionar(caso.id, op.op)}
+                          />
+                          <span className="opcion-badge" aria-hidden="true">{op.op.toUpperCase()}</span>
                           <span className="opcion-texto">{op.texto}</span>
-                        </button>
+                          {estiloOpcion === ' opcion-correcta' && (
+                            <>
+                              <CircleCheck size={18} className="opcion-estado" aria-hidden="true" />
+                              <span className="sr-only">Respuesta correcta</span>
+                            </>
+                          )}
+                          {estiloOpcion === ' opcion-fallada' && (
+                            <>
+                              <CircleX size={18} className="opcion-estado" aria-hidden="true" />
+                              <span className="sr-only">Tu respuesta, incorrecta</span>
+                            </>
+                          )}
+                        </label>
                       )
                     })}
                   </div>
@@ -278,7 +298,7 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
           </div>
 
           {/* Botones de acción y resultado */}
-          <div className="eval-actions-bar">
+          <div className="eval-actions-bar" aria-live="polite">
             {!enviado ? (
               <button
                 type="button"
@@ -297,16 +317,16 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
                 <div className="eval-resultado-texto">
                   {aprobado ? (
                     <>
-                      <h4>
+                      <h3>
                         <CircleCheck size={20} aria-hidden="true" /> ¡Excelente! Aprobaste la evaluación integradora
-                      </h4>
+                      </h3>
                       <p>Demostraste un dominio sólido del modelo mental de bloques, bases de datos y vistas de Notion.</p>
                     </>
                   ) : (
                     <>
-                      <h4>
+                      <h3>
                         <Info size={20} aria-hidden="true" /> Necesitás 80 % o más para certificar (actual: {porcentaje} %)
-                      </h4>
+                      </h3>
                       <p>Revisá las situaciones marcadas en rojo, leé la explicación sugerida y volvé a intentar.</p>
                     </>
                   )}
@@ -352,13 +372,18 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
             filtros inteligentes y relaciones entre asignaturas y entregas.
           </p>
           <div className="cert-footer">
-            <input
-              type="text"
-              className="cert-input-name"
-              placeholder="Escribí tu nombre completo..."
-              value={nombreAlumno}
-              onChange={e => setNombreAlumno(e.target.value)}
-            />
+            <div className="cert-campo">
+              <label htmlFor="cert-nombre">Nombre completo</label>
+              <input
+                id="cert-nombre"
+                type="text"
+                className="cert-input-name"
+                placeholder="Escribí tu nombre completo"
+                autoComplete="name"
+                value={nombreAlumno}
+                onChange={e => setNombreAlumno(e.target.value)}
+              />
+            </div>
             <span className="cert-date">{new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
           </div>
         </div>

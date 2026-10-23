@@ -41,32 +41,38 @@ export default function App() {
   const [encuesta,     setEncuesta]     = useState({ e1: null, e2: null, e3: null })
   const [globalExpand, setGlobalExpand] = useState(null)
   const [forzarCierre, setForzarCierre] = useState(false)
+  const [anuncio,      setAnuncio]      = useState('') // mensaje para la región aria-live
 
   useEffect(() => {
     localStorage.setItem(STORAGE_APROBADOS, JSON.stringify(aprobados))
   }, [aprobados])
 
   // Métricas de progreso
-  const totalMetas          = Object.keys(METAS_INICIALES).length
-  const metasMarcadas       = Object.values(metas).filter(Boolean).length
   const totalSecciones      = SECCIONES.length
   const seccionesAprobadas  = SECCIONES.filter(s => aprobados[s.id]).length
   const progresoPorcentaje  = Math.round((seccionesAprobadas / totalSecciones) * 100)
 
   const toggleMeta  = useCallback(k  => setMetas(p => ({ ...p, [k]: !p[k] })), [])
-  const aprobarQuiz = useCallback(id => setAprobados(p => ({ ...p, [id]: true })), [])
+  const aprobarQuiz = useCallback(id => {
+    setAprobados(p => ({ ...p, [id]: true }))
+    const idx = SECCIONES.findIndex(s => s.id === id)
+    setAnuncio(idx >= 0
+      ? `Módulo ${idx + 1} aprobado.${idx < SECCIONES.length - 1 ? ' Se desbloqueó el siguiente.' : ' Se desbloqueó el cierre.'}`
+      : 'Evaluación final aprobada.')
+  }, [])
   const toggleEnc   = useCallback((p, op) =>
     setEncuesta(prev => ({ ...prev, [p]: prev[p] === op ? null : op })), [])
   const expandAll   = useCallback(() => setGlobalExpand({ cmd: 'all',  ts: Date.now() }), [])
   const collapseAll = useCallback(() => setGlobalExpand({ cmd: 'none', ts: Date.now() }), [])
 
-  const OpEnc = ({ preg, ops }) => (
-    <div className="ops">
+  // Se invoca como función (no como componente) para no remontar los botones en cada render
+  const opcionesEncuesta = (preg, ops, etiqueta) => (
+    <div className="ops" role="group" aria-label={etiqueta}>
       {ops.map(op => (
         <button
           key={op}
           type="button"
-          aria-pressed={String(encuesta[preg] === op)}
+          aria-pressed={encuesta[preg] === op}
           onClick={() => toggleEnc(preg, op)}
         >
           {op}
@@ -79,6 +85,11 @@ export default function App() {
 
   return (
     <>
+      <a className="skip-link" href="#contenido">Saltar al contenido</a>
+
+      {/* Región aria-live: anuncia aprobaciones a lectores de pantalla */}
+      <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{anuncio}</div>
+
       {/* ══════════ HEADER NOTION STICKY ══════════ */}
       <header>
         <div className="barra">
@@ -108,11 +119,20 @@ export default function App() {
             </a>
           </nav>
         </div>
-        <div className="medidor">
-          <span style={{ width: `${Math.max(4, progresoPorcentaje)}%` }} />
+        <div
+          className="medidor"
+          role="progressbar"
+          aria-label="Progreso del curso"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={progresoPorcentaje}
+          aria-valuetext={`${seccionesAprobadas} de ${totalSecciones} módulos aprobados`}
+        >
+          <span style={{ width: `${progresoPorcentaje}%` }} />
         </div>
       </header>
 
+      <main id="contenido" tabIndex={-1}>
       {/* ══════════ HERO PAGE NOTION ══════════ */}
       <div className="hero">
         <div className="wrap">
@@ -209,15 +229,15 @@ export default function App() {
               <div className="section-card-body">
                 <div className="pregunta">
                   <p>¿Dónde anotás hoy las fechas de parciales y entregas?</p>
-                  <OpEnc preg="e1" ops={['Papel o agenda', 'Calendario del celular', 'No las anoto', 'Otra app']} />
+                  {opcionesEncuesta('e1', ['Papel o agenda', 'Calendario del celular', 'No las anoto', 'Otra app'], 'Dónde anotás las fechas de parciales y entregas')}
                 </div>
                 <div className="pregunta">
                   <p>En el último mes, ¿cuántas veces te enteraste tarde de una entrega o examen?</p>
-                  <OpEnc preg="e2" ops={['Ninguna', 'Una o dos veces', 'Varias veces', 'Perdí la cuenta']} />
+                  {opcionesEncuesta('e2', ['Ninguna', 'Una o dos veces', 'Varias veces', 'Perdí la cuenta'], 'Veces que te enteraste tarde de una entrega o examen')}
                 </div>
                 <div className="pregunta">
                   <p>¿Usaste Notion alguna vez?</p>
-                  <OpEnc preg="e3" ops={['Nunca', 'La abrí y me abrumó', 'La uso para notas simples', 'Nivel intermedio']} />
+                  {opcionesEncuesta('e3', ['Nunca', 'La abrí y me abrumó', 'La uso para notas simples', 'Nivel intermedio'], 'Experiencia previa con Notion')}
                 </div>
               </div>
             </div>
@@ -418,6 +438,7 @@ export default function App() {
 
         </div>{/* /sections-stack */}
       </div>{/* /wrap */}
+      </main>
 
       {/* ══════════ FOOTER NOTION ══════════ */}
       <footer>
