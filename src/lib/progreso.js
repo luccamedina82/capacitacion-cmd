@@ -12,6 +12,7 @@ export const CLAVES = {
   nombre:      'capacitacion-cmd:nombre',
   ultima:      'capacitacion-cmd:ultima',
   certificado: 'capacitacion-cmd:certificado',
+  vista:       'capacitacion-cmd:vista',
 }
 
 export function leerProgreso(clave, porDefecto) {
