@@ -3,10 +3,11 @@
  *
  * @param {string} titulo - título del PDF
  * @param {string} url    - enlace al archivo (ej: "/pdfs/guia-1.pdf")
+ * @param {string} [id]   - ancla para navegar al recurso (ej: desde el modal de repaso)
  */
-export default function RecursoPdf({ titulo, url }) {
+export default function RecursoPdf({ titulo, url, id }) {
   return (
-    <div className="recurso-pdf-wrapper">
+    <div className="recurso-pdf-wrapper" id={id} tabIndex={id ? -1 : undefined}>
       <a
         href={url}
         download

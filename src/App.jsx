@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import MetaCheck        from './components/MetaCheck.jsx'
-import Quiz             from './components/Quiz.jsx'
+import TallyQuiz        from './components/TallyQuiz.jsx'
 import BloqueSeccion    from './components/BloqueSeccion.jsx'
 import VideoPlaceholder from './components/VideoPlaceholder.jsx'
 import RecursoPdf       from './components/RecursoPdf.jsx'
@@ -9,6 +9,17 @@ import Acordeon         from './components/Acordeon.jsx'
 import NotionLogo       from './components/NotionLogo.jsx'
 import EvaluacionFinal  from './components/EvaluacionFinal.jsx'
 import { SECCIONES }    from './data/modulos.js'
+import { TALLY_FORMS }  from './data/tally.js'
+
+const STORAGE_APROBADOS = 'capacitacion-cmd:aprobados'
+
+function leerAprobados() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_APROBADOS)) ?? {}
+  } catch {
+    return {}
+  }
+}
 
 const METAS_INICIALES = {
   meta_bloques:   false, // Sec 1
@@ -21,10 +32,14 @@ const METAS_INICIALES = {
 
 export default function App() {
   const [metas,        setMetas]        = useState(METAS_INICIALES)
-  const [aprobados,    setAprobados]    = useState({})
+  const [aprobados,    setAprobados]    = useState(leerAprobados)
   const [encuesta,     setEncuesta]     = useState({ e1: null, e2: null, e3: null })
   const [globalExpand, setGlobalExpand] = useState(null)
   const [forzarCierre, setForzarCierre] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_APROBADOS, JSON.stringify(aprobados))
+  }, [aprobados])
 
   // Métricas de progreso
   const totalMetas          = Object.keys(METAS_INICIALES).length
@@ -247,6 +262,7 @@ export default function App() {
 
                     {/* 2. Contenedor para el video */}
                     <VideoPlaceholder
+                      id={`video-${sec.id}`}
                       src={sec.videoSrc}
                       titulo={sec.videoTitulo}
                       duracion={sec.videoDuracion}
@@ -265,15 +281,19 @@ export default function App() {
 
                     {/* 4. Botón de descarga para el Recurso PDF */}
                     <RecursoPdf
+                      id={`pdf-${sec.id}`}
                       titulo={sec.pdf.titulo}
                       url={sec.pdf.url}
                     />
 
-                    {/* 5. Quiz interactivo con 2 preguntas para desbloquear siguiente sección */}
-                    <Quiz
-                      quizId={sec.id}
-                      preguntas={sec.quiz}
+                    {/* 5. Cuestionario Tally: 8/10 o más desbloquea la siguiente sección */}
+                    <TallyQuiz
+                      formId={TALLY_FORMS[sec.id]}
+                      titulo={`Cuestionario — ${sec.titulo}`}
+                      aprobado={completado}
                       onAprobado={() => aprobarQuiz(sec.id)}
+                      videoId={`video-${sec.id}`}
+                      pdfId={`pdf-${sec.id}`}
                     />
                   </div>
 
@@ -329,13 +349,16 @@ export default function App() {
                       <span>Esta sección final se habilita al completar y aprobar los quizzes de los 6 módulos.</span>
                     </div>
                   </div>
-                  <button
-                    className="saltear"
-                    type="button"
-                    onClick={() => setForzarCierre(true)}
-                  >
-                    Desbloquear Cierre para explorar
-                  </button>
+                  {/* Atajo solo para desarrollo: no se incluye en el build de producción */}
+                  {import.meta.env.DEV && (
+                    <button
+                      className="saltear"
+                      type="button"
+                      onClick={() => setForzarCierre(true)}
+                    >
+                      Desbloquear Cierre para explorar (dev)
+                    </button>
+                  )}
                 </div>
               ) : (
                 <>
@@ -368,7 +391,10 @@ export default function App() {
                       </p>
 
                       {/* Evaluación Integradora */}
-                      <EvaluacionFinal />
+                      <EvaluacionFinal
+                        tallyAprobado={Boolean(aprobados.final)}
+                        onTallyAprobado={() => aprobarQuiz('final')}
+                      />
                     </div>
                   </div>
                 </>

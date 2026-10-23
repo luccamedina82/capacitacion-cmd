@@ -13,14 +13,15 @@ function getYouTubeId(url) {
  * @param {string} titulo - título descriptivo del video
  * @param {string} duracion - duración (ej: "2:09")
  * @param {string} src - URL de YouTube (ej: "https://youtu.be/...")
+ * @param {string} [id] - ancla para navegar al video (ej: desde el modal de repaso)
  */
-export default function VideoPlaceholder({ titulo, duracion, src }) {
+export default function VideoPlaceholder({ titulo, duracion, src, id }) {
   const [reproduciendo, setReproduciendo] = useState(false)
   const youtubeId = getYouTubeId(src)
   const tieneVideo = Boolean(youtubeId)
 
   return (
-    <div className="video-card-container">
+    <div className="video-card-container" id={id} tabIndex={id ? -1 : undefined}>
       <div className="video">
         {reproduciendo && youtubeId ? (
           <div className="video-player-wrapper">

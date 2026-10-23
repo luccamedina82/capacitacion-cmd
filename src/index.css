@@ -1877,30 +1877,9 @@ aside.lateral li::before {
   font-weight: 500;
 }
 
-/* Tally Config & Iframe */
-.tally-config-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-  background: var(--n-bg);
-  border: 1px solid var(--n-border-med);
-  border-radius: var(--r-md);
-  padding: 8px 14px;
-}
-
-.tally-config-icon {
-  font-size: 16px;
-}
-
-.tally-url-input {
-  flex: 1;
-  border: 0;
-  background: transparent;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--n-text);
-  outline: none;
+/* Tally Iframe */
+.tally-quiz .tally-wrapper {
+  box-shadow: none;
 }
 
 .tally-wrapper {
@@ -1916,6 +1895,50 @@ aside.lateral li::before {
   min-height: 600px;
   border: 0;
   display: block;
+}
+
+/* Modal de repaso (puntaje insuficiente) */
+.repaso-modal {
+  max-width: 440px;
+  width: calc(100% - 32px);
+  margin: auto;
+  padding: 28px 26px 24px;
+  border: 1px solid var(--n-border-med);
+  border-radius: var(--r-lg);
+  background: var(--n-bg);
+  color: var(--n-text);
+  box-shadow: var(--card-shadow);
+  text-align: center;
+}
+
+.repaso-modal::backdrop {
+  background: rgba(15, 15, 15, 0.45);
+}
+
+.repaso-modal-emoji {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.repaso-modal h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.repaso-modal p {
+  font-size: 13px;
+  color: var(--n-text-muted);
+  line-height: 1.55;
+  margin-bottom: 20px;
+}
+
+.repaso-modal-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
 }
 
 /* ══════════════════════════════════════════
