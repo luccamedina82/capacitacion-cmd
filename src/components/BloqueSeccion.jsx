@@ -11,6 +11,7 @@ import { Lock, ChevronRight } from 'lucide-react'
  * bloquea es el cuestionario (lo resuelve el contenido hijo con `estado`).
  *
  * @param {'aprobado'|'en-curso'|'bloqueado'} estado
+ * @param {boolean}  recomendado - módulo sugerido por el plan personalizado
  * @param {boolean}  abierto
  * @param {function} onToggle
  */
@@ -20,6 +21,7 @@ export default function BloqueSeccion({
   titulo,
   intro,
   estado,
+  recomendado = false,
   abierto,
   onToggle,
   children,
@@ -45,6 +47,9 @@ export default function BloqueSeccion({
           </div>
 
           <div className="cab-lado">
+            {recomendado && (
+              <span className="chip recomendado"><span aria-hidden="true">★</span> Recomendado para vos</span>
+            )}
             {estado === 'aprobado' && (
               <span className="chip completado"><span aria-hidden="true">✓</span> Aprobado</span>
             )}

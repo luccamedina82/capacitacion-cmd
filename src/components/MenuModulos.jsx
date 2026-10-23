@@ -5,7 +5,7 @@ import { Menu, X, Lock } from 'lucide-react'
  * Navegación compacta para pantallas angostas (< 900px).
  * Botón con el avance ("2/6") que abre un panel con todos los módulos y su estado.
  *
- * @param {Array}    items    - [{ id, etiqueta, estado?: 'aprobado'|'en-curso'|'bloqueado'|'cierre-listo' }]
+ * @param {Array}    items    - [{ id, etiqueta, estado?: 'aprobado'|'en-curso'|'bloqueado'|'cierre-listo', recomendado?: boolean }]
  * @param {string}   activa   - id de la sección visible actualmente
  * @param {string}   resumen  - texto del botón, ej. "2/6"
  * @param {function} onIr     - (id, evento) navega a la sección
@@ -67,6 +67,9 @@ export default function MenuModulos({ items, activa, resumen, onIr }) {
                   </span>
                   <span className="menu-item-texto">{item.etiqueta}</span>
                   <span className="menu-item-estado">
+                    {item.recomendado && (
+                      <span className="chip recomendado"><span aria-hidden="true">★</span> Recomendado</span>
+                    )}
                     {item.estado === 'aprobado' && (
                       <><span aria-hidden="true">✓</span> Aprobado</>
                     )}

@@ -8,6 +8,7 @@ import BloqueSeccion    from './components/BloqueSeccion.jsx'
 import VideoPlaceholder from './components/VideoPlaceholder.jsx'
 import RecursoPdf       from './components/RecursoPdf.jsx'
 import HandsOn          from './components/HandsOn.jsx'
+import PlanPersonalizado from './components/PlanPersonalizado.jsx'
 import Callout          from './components/Callout.jsx'
 import Acordeon         from './components/Acordeon.jsx'
 import NotionLogo       from './components/NotionLogo.jsx'
@@ -17,6 +18,7 @@ import Certificado      from './components/Certificado.jsx'
 import DashboardProgreso from './components/DashboardProgreso.jsx'
 import MenuModulos      from './components/MenuModulos.jsx'
 import { SECCIONES }    from './data/modulos.js'
+import { calcularPlan } from './lib/plan.js'
 import { TALLY_FORMS }  from './data/tally.js'
 import {
   CLAVES, leerProgreso, guardarProgreso, estadoModulo, primerPendiente,
@@ -210,6 +212,9 @@ export default function App() {
     </div>
   )
 
+  const plan         = calcularPlan(encuesta)
+  const recomendados = plan?.recomendados ?? []
+
   const cierreDesbloqueado = Boolean(SECCIONES.every(s => aprobados[s.id]) || forzarCierre)
 
   const itemsMenu = [
@@ -218,6 +223,7 @@ export default function App() {
       id: sec.id,
       etiqueta: `${i + 1} · ${sec.corto}`,
       estado: estadoModulo(SECCIONES, aprobados, i),
+      recomendado: recomendados.includes(sec.id),
     })),
     { id: 'cierre', etiqueta: 'Cierre y certificado', icono: 'cierre', estado: cierreDesbloqueado ? 'cierre-listo' : 'cierre-bloqueado' },
   ]
@@ -278,6 +284,7 @@ export default function App() {
                     <span className="nav-num">{i + 1}</span>
                     <span className="nav-txt"> · {sec.corto}</span>
                     {aprobados[sec.id] && <span role="img" aria-label="aprobado">✓</span>}
+                    {recomendados.includes(sec.id) && <span role="img" aria-label="recomendado para vos" className="nav-reco">★</span>}
                   </a>
                 ))}
                 <a
@@ -437,6 +444,7 @@ export default function App() {
                       <p>¿Usaste Notion alguna vez?</p>
                       {opcionesEncuesta('e3', ['Nunca', 'La abrí y me abrumó', 'La uso para notas simples', 'Nivel intermedio'], 'Experiencia previa con Notion')}
                     </div>
+                    <PlanPersonalizado plan={plan} onIr={irA} />
                   </div>
                 </div>
               </section>
@@ -475,6 +483,7 @@ export default function App() {
                     num={sec.num}
                     titulo={sec.titulo}
                     estado={estado}
+                    recomendado={recomendados.includes(sec.id)}
                     abierto={Boolean(abiertas[sec.id])}
                     onToggle={() => toggleSeccion(sec.id)}
                   >

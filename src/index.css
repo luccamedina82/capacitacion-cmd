@@ -2928,3 +2928,93 @@ button.section-card-header {
     print-color-adjust: exact;
   }
 }
+
+/* ══════════════════════════════════════════
+   PLAN PERSONALIZADO (resultado del diagnóstico)
+══════════════════════════════════════════ */
+.chip.recomendado {
+  background: rgba(255, 244, 214, 0.9);
+  border-color: rgba(217, 119, 6, 0.3);
+  color: #8a4b00;
+}
+
+.plan {
+  margin-top: var(--space-3, 16px);
+  padding: 20px 22px;
+  border-radius: 20px;
+}
+
+.plan h3 {
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+
+.plan h4 {
+  font-size: 0.9rem;
+  margin: 18px 0 8px;
+}
+
+.plan-resumen {
+  font-size: 13.5px;
+  color: var(--n-text-muted);
+  line-height: 1.6;
+}
+
+.plan-inicio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--n-accent-soft);
+}
+
+.plan-inicio p {
+  font-size: 14px;
+  margin: 0;
+}
+
+.plan-inicio .corregir {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.plan-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.plan-lista li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--n-border);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.plan-modulo {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.plan-motivo {
+  font-size: 13px;
+  color: var(--n-text-muted);
+  line-height: 1.5;
+}
+
+.nav-reco {
+  margin-left: 4px;
+  color: #b45309;
+  font-size: 11px;
+}
