@@ -20,8 +20,12 @@ export default function RepasoModal({ abierto, puntaje, videoId, pdfId, onReinte
     onReintentar()
     const destino = document.getElementById(id)
     if (!destino) return
-    destino.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    destino.focus({ preventScroll: true })
+    // Si el destino está en una pestaña oculta del módulo, primero se muestra esa pestaña
+    destino.closest('[role="tabpanel"]')?.dispatchEvent(new CustomEvent('activar-paso', { bubbles: true }))
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      destino.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      destino.focus({ preventScroll: true })
+    }))
   }
 
   return (

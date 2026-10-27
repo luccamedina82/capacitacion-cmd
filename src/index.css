@@ -9,6 +9,8 @@
 
 /* ── Tokens de diseño Notion ── */
 :root {
+  color-scheme: light;
+
   --n-bg:            #FFFFFF;
   --n-bg-secondary:  #F7F6F3;
   --n-bg-hover:      #F1F0ED;
@@ -43,6 +45,53 @@
   --card-shadow:    0 1px 3px rgba(15, 15, 15, 0.03), 0 4px 14px rgba(15, 15, 15, 0.04), 0 0 0 1px rgba(55, 53, 47, 0.06);
   --card-shadow-md: 0 2px 6px rgba(15, 15, 15, 0.04), 0 10px 28px rgba(15, 15, 15, 0.07), 0 0 0 1px rgba(55, 53, 47, 0.09);
   --card-shadow-lg: 0 4px 12px rgba(15, 15, 15, 0.05), 0 18px 42px rgba(15, 15, 15, 0.10), 0 0 0 1px rgba(55, 53, 47, 0.11);
+  --card-shadow-hover: 0 12px 32px rgba(15, 15, 15, 0.06);
+
+  /* Rellenos sólidos con texto blanco: no cambian con el tema (el blanco siempre contrasta) */
+  --n-accent-fill: #1B65B0;
+  --n-green-solid: #166534;
+  --n-red-solid:   #991B1B;
+  --acento-claro:  #60A5FA;                     /* final de los degradados de progreso */
+  --boton-fin:     #174F8C;                     /* final del degradado del botón principal */
+
+  /* Superficies y tintes derivados (cada tema los redefine) */
+  --superficie-hundida: #FAF9F6;               /* avisos y bloques vacíos con borde punteado */
+  --superficie-bloqueada: rgba(247, 246, 243, 0.75);
+  --superficie-icono: rgba(255, 255, 255, 0.9);
+  --superficie-cabecera: rgba(247, 246, 243, 0.88);
+  --tinte-suave:  rgba(55, 53, 47, 0.03);
+  --tinte:        rgba(55, 53, 47, 0.045);
+  --tinte-fuerte: rgba(55, 53, 47, 0.16);
+  --marca-fondo:  #37352F;                      /* disco del logo en el header */
+  --certificado-fondo: linear-gradient(145deg, #FFFFFF 0%, #FAF8F5 100%);
+  --video-marco: linear-gradient(145deg, #F0EDE6 0%, #E5E1D8 100%);
+  --reco-fondo: rgba(255, 244, 214, 0.9);
+  --reco-borde: rgba(217, 119, 6, 0.3);
+  --reco-texto: #8a4b00;
+  --reco-marca: #b45309;
+  --scrim: rgba(15, 15, 15, 0.45);
+  --blob-opacidad: 0.55;
+  /* Portadas de las tarjetas de módulo: el tono lo pone cada tarjeta, saturación y luz el tema */
+  --cubierta-s: 70%;
+  --cubierta-l1: 90%;
+  --cubierta-l2: 81%;
+  --resaltador: rgba(228, 184, 49, 0.45);
+
+  /* Vidrios de la portada */
+  --vidrio-portada: rgba(255, 255, 255, 0.62);
+  --vidrio-menu: rgba(255, 255, 255, 0.82);
+  --vidrio-aviso: rgba(255, 255, 255, 0.78);
+  --vidrio-flotante: rgba(255, 255, 255, 0.5);
+  --vidrio-mini: rgba(255, 255, 255, 0.85);
+  --vidrio-panel: rgba(255, 255, 255, 0.92);
+  --vidrio-item: rgba(255, 255, 255, 0.6);
+  --vidrio-play: rgba(255, 255, 255, 0.95);
+  --vidrio-borde-card: rgba(255, 255, 255, 0.6);
+  --vidrio-brillo: rgba(255, 255, 255, 0.55);
+  --vidrio-resalte: rgba(255, 255, 255, 0.8);
+  --superficie-solida: #FFFFFF;                 /* para prefers-reduced-transparency */
+  --superficie-mini: #FFFFFF;
+  --tally-fondo: #FFFFFF;                       /* iframe de Tally: siempre claro */
 
   /* Motion */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -50,13 +99,14 @@
 
   /* Capas */
   --z-header: 200;
-  --header-h: 72px; /* header sticky (52px) + barra de progreso + aire */
+  --header-h: 72px; /* header sticky (52px) + aire */
+  --ancho-max: 1240px; /* ancho del contenido; el header se alinea con él */
   --z-skip:   300;
 
   /* Tipografía */
   --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  --fs-label: 0.72rem;   /* 11.5px: etiquetas en mayúsculas */
+  --fs-label: 0.75rem;   /* 12px: etiquetas en mayúsculas (mínimo legible) */
   --fs-meta:  0.78rem;   /* 12.5px: texto auxiliar */
   --fs-ui:    0.84rem;   /* 13.5px: controles y navegación */
   --fs-body:  0.9375rem; /* 15px: lectura */
@@ -137,7 +187,7 @@ code {
 
 /* ── Layout Global ── */
 .wrap {
-  max-width: 1060px;
+  max-width: var(--ancho-max);
   margin: 0 auto;
   padding: 0 24px;
 }
@@ -153,7 +203,7 @@ code {
   position: sticky;
   top: 0;
   z-index: var(--z-header);
-  background: rgba(247, 246, 243, 0.88);
+  background: var(--superficie-cabecera);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--n-border);
@@ -198,9 +248,9 @@ code {
   align-items: center;
   justify-content: center;
   border-radius: var(--r-sm);
-  background: var(--n-text);
+  background: var(--marca-fondo);
   padding: 3px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 0 0 1px var(--n-border-med);
   flex-shrink: 0;
 }
 
@@ -208,398 +258,815 @@ code {
   display: block;
 }
 
-.notion-workspace-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11.5px;
-  font-weight: 500;
-  color: var(--n-text-muted);
-  background: var(--n-bg);
-  border: 1px solid var(--n-border-med);
-  border-radius: var(--r-md);
-  padding: 3px 10px;
-  white-space: nowrap;
-}
 
-.pasos-nav {
-  display: flex;
-  gap: 2px;
-  margin-left: auto;
-  align-items: center;
-}
-
-.pasos-nav a {
-  font-size: 12.5px;
-  font-weight: 500;
-  padding: 5px 10px;
-  border-radius: var(--r-sm);
-  color: var(--n-text-muted);
-  transition: background 0.12s, color 0.12s;
-  white-space: nowrap;
-}
-
-.pasos-nav a:hover {
-  background: var(--n-bg-hover);
-  color: var(--n-text);
-  opacity: 1;
-}
-
-/* Barra de progreso continua con gradiente y resplandor */
-.medidor {
+/* Barra de ventana (puntos + ruta): compartida por la portada y el curso */
+.ventana-barra {
   position: relative;
-  height: 3px;
-  background: var(--n-border);
-  overflow: visible;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--n-border);
+  font-size: var(--fs-label);
+  color: var(--n-text-muted);
 }
 
-.medidor span {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, var(--n-accent), #60A5FA);
-  transition: width 0.45s var(--ease-out);
-  border-radius: 0 2px 2px 0;
-  box-shadow: 0 0 10px var(--n-accent-glow);
-}
+.ventana-puntos { display: inline-flex; gap: 6px; }
+.ventana-puntos i { width: 10px; height: 10px; border-radius: 50%; background: var(--tinte-fuerte); }
 
 /* ══════════════════════════════════════════
-   HERO NOTION PAGE
+   CURSO: RECORRIDO + UNA ETAPA A LA VEZ
+   Un solo foco por pantalla: el recorrido orienta, la etapa se lee en una columna
+   y sus pasos siguen el orden en que se hacen.
 ══════════════════════════════════════════ */
-.hero {
-  padding: 60px 0 44px;
-}
 
-.hero-inner {
-  background: var(--n-surface);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--n-border-med);
-  border-radius: var(--r-xl);
-  padding: 52px 52px 44px;
-  box-shadow: var(--card-shadow-md);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Resplandor decorativo sutil estilo Notion */
-.hero-inner::before {
-  content: '';
-  position: absolute;
-  top: -80px;
-  right: -80px;
-  width: 320px;
-  height: 320px;
-  background: radial-gradient(circle, rgba(35, 131, 226, 0.10) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.hero-inner::after {
-  content: '';
-  position: absolute;
-  bottom: -120px;
-  left: -90px;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(228, 184, 49, 0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.hero-inner > * {
-  position: relative;
-  z-index: 1;
-}
-
-.hero-emoji {
-  font-size: 3rem;
-  line-height: 1;
-  margin-bottom: 20px;
-  display: block;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.06));
-}
-
-.hero-titulo:focus {
-  outline: none; /* destino programático al entrar al curso, no un control */
-}
-
-.hero p.bajada {
-  font-size: 1.05rem;
+/* Header: dónde estás (empuja tema y menú a la derecha) */
+.barra-ubicacion {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding-left: 12px;
+  border-left: 1px solid var(--n-border-med);
+  font-size: var(--fs-ui);
+  font-weight: 500;
   color: var(--n-text-muted);
-  max-width: 56ch;
-  margin-top: 14px;
-  font-weight: 400;
-  line-height: 1.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Propiedades de página Notion */
-.notion-page-meta {
+.curso-layout {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+  padding-top: 28px; /* el contenido arranca justo debajo de la barra */
+  padding-bottom: 56px;
+}
+
+/* ── Recorrido (barra lateral) ── */
+/* Barra lateral de vidrio flotante, como el sidebar de iPadOS 26 */
+.recorrido {
+  position: sticky;
+  top: calc(var(--header-h) + 20px);
+  transition: top 0.35s var(--ease-out);
+  padding: 16px 8px 10px;
+  border-radius: 26px;
+  background: var(--glass-tint);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  outline: 1px solid var(--n-border);
+  outline-offset: -1px;
+}
+
+/* Con la barra minimizada, el recorrido sube y aprovecha el espacio */
+.con-barra-mini .recorrido { top: 72px; }
+
+.recorrido-cab {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 12px 10px;
+}
+
+.recorrido-titulo {
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--n-text-muted);
+}
+
+.recorrido-resumen { font-size: var(--fs-meta); font-weight: 600; color: var(--n-text-muted); }
+
+.recorrido ol { display: grid; gap: 2px; list-style: none; }
+
+.recorrido-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 60px;
+  padding: 8px 12px;
+  border-radius: 18px;
+  color: var(--n-text);
+  transition: background 0.12s;
+}
+
+.recorrido-item:hover { background: var(--n-bg-hover); opacity: 1; }
+.recorrido-item[aria-current="step"] { background: var(--n-accent-soft); }
+.recorrido-item:focus-visible { outline: 2px solid var(--n-link); outline-offset: -2px; }
+
+.recorrido-marca {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  font-size: var(--fs-ui);
+  font-weight: 700;
+  color: var(--n-text-muted);
+  background: var(--n-bg);
+  box-shadow: 0 0 0 1px var(--n-border-med);
+}
+
+.recorrido-item.hecho .recorrido-marca { color: #fff; background: var(--n-green-solid); box-shadow: none; }
+.recorrido-item[aria-current="step"] .recorrido-marca { color: #fff; background: var(--n-accent-fill); box-shadow: none; }
+
+.recorrido-texto { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+.recorrido-nombre { font-size: 0.95rem; font-weight: 600; }
+.recorrido-detalle { font-size: var(--fs-meta); color: var(--n-text-muted); }
+.recorrido-reco { color: var(--reco-texto); }
+.recorrido-reco svg, .etapa-reco svg { vertical-align: -0.1em; fill: currentColor; }
+
+/* ── Etapa ── */
+.escenario { min-width: 0; }
+
+.etapa {
+  min-height: 70vh;
+  min-height: 70dvh; /* dvh: no salta con la barra del navegador móvil */ /* la etapa es la protagonista: ocupa la pantalla aunque el paso sea corto */
+  padding: 44px 52px 32px;
+  border-radius: 28px;
+  background: var(--glass-tint-content);
+  box-shadow: var(--glass-shadow);
+  outline: 1px solid var(--n-border);
+  outline-offset: -1px;
+  animation: etapaEntra 0.35s var(--ease-out) both;
+}
+
+.etapa[hidden] { display: none; }
+
+@keyframes etapaEntra {
+  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+}
+
+.etapa-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  color: var(--n-text-muted);
+}
+
+.etapa-titulo {
+  margin-top: 10px;
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.8vw, 2.25rem);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.etapa-titulo:focus { outline: none; } /* destino programático al cambiar de etapa */
+
+.etapa-intro { display: grid; gap: 12px; margin-top: 18px; }
+
+/* Cabecera con ícono: el ícono grande ancla "dónde estás" a la izquierda del título */
+.etapa-cab--con-icono {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 20px;
+  align-items: center;
+}
+
+.etapa-cab--con-icono .etapa-icono { grid-row: 1 / span 2; }
+.etapa-cab--con-icono .etapa-titulo { margin-top: 4px; }
+
+.etapa-icono {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--n-link);
+  background: var(--n-accent-soft);
+  box-shadow: inset 0 0 0 1px var(--n-border);
+}
+
+/* Logro: una frase con ícono, sin caja (menos ruido) */
+.etapa-logro {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 68ch;
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--n-text);
+}
+
+.etapa-logro strong { font-weight: 700; color: var(--n-link); }
+.etapa-logro-icono { flex-shrink: 0; margin-top: 3px; color: var(--n-link); }
+
+.etapa-reco { margin: 0; font-size: var(--fs-meta); font-weight: 600; color: var(--reco-texto); }
+.etapa-bajada {
+  max-width: 68ch;
+  margin: 0;
+  line-height: 1.7;
+  color: var(--n-text-muted);
+}
+
+.etapa-cab + .etapa-bajada { margin: 14px 0 8px; }
+
+.etapa .desbloqueo-banner { margin: 20px 0 0; }
+
+/* Párrafos introductorios dentro de una etapa (cierre, evaluación final) */
+.intro {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--n-text-muted);
+}
+
+/* Pasos del módulo: pestañas, se ve un paso a la vez (sin scroll largo) */
+.pasos-modulo { margin-top: 28px; }
+
+/* Segmented control al estilo iOS: compacto, solo texto, pista sutil y pastilla que se desliza */
+.pasos-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px;
+  max-width: 520px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--tinte);
+}
+
+.pasos-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--n-text-muted);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.pasos-tab { position: relative; }
+.pasos-tab:hover { color: var(--n-text); }
+.pasos-tab[aria-selected="true"] { color: var(--n-text); }
+
+/* Pastilla que se desliza entre pestañas (segmented control de iOS); el contenido va encima */
+.pasos-tab-pastilla {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--n-bg);
+  box-shadow: var(--card-shadow);
+}
+
+.pasos-tab > :not(.pasos-tab-pastilla):not(.sr-only) { position: relative; z-index: 1; }
+
+.pasos-tab:focus-visible { outline: 2px solid var(--n-link); outline-offset: 2px; }
+
+/* Paso completo: un tilde chico al lado del nombre, no un círculo que compite con el texto */
+.pasos-tab-check { flex-shrink: 0; color: var(--n-green-text); }
+
+.pasos-panel { padding-top: 24px; }
+/* Solo al cambiar de pestaña: al entrar al módulo ya anima la etapa entera */
+.pasos-modulo.interactuado .pasos-panel { animation: panelPasoEntra 0.25s var(--ease-out) both; }
+.pasos-panel[hidden] { display: none; }
+
+@keyframes panelPasoEntra {
+  from { opacity: 0; transform: translate3d(0, 6px, 0); }
+}
+
+.pasos-panel-titulo { margin: 0 0 14px; font-size: 1.05rem; }
+.pasos-panel-titulo + * { margin-top: 0; }
+.paso-clave { margin: 0 0 16px; }
+
+.paso-lectura { max-width: 68ch; }
+.paso-lectura p { margin: 0 0 1em; line-height: 1.75; }
+.paso-lectura p:last-child { margin-bottom: 0; }
+
+.pasos-panel-pie {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.pasos-siguiente {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--n-border-med);
+  border-radius: 999px;
+  font: inherit;
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  color: var(--n-text);
+  background: var(--n-bg);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.pasos-siguiente:hover { background: var(--n-bg-hover); border-color: var(--n-border-strong); }
+.pasos-siguiente:focus-visible { outline: 2px solid var(--n-link); outline-offset: 2px; }
+
+/* Doble clase: esta regla va antes que .boton-primario en el archivo */
+.boton-primario.boton-primario--chico { min-height: 44px; padding: 0 20px; font-size: var(--fs-ui); }
+
+/* ══════════════════════════════════════════
+   INICIO DEL CURSO: galería de módulos (vista Galería de Notion)
+══════════════════════════════════════════ */
+.curso-layout--inicio { grid-template-columns: minmax(0, 1fr); }
+.curso-layout--inicio .recorrido { display: none; } /* la galería ya es el recorrido */
+
+.inicio { animation: etapaEntra 0.35s var(--ease-out) both; }
+.inicio[hidden] { display: none; }
+
+.inicio-cab { max-width: 640px; }
+
+.inicio-kicker { margin: 0 0 6px; font-size: var(--fs-meta); font-weight: 600; color: var(--n-text-muted); }
+.inicio-titulo { font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1.08; letter-spacing: -0.045em; }
+.inicio-titulo:focus { outline: none; }
+.inicio-sub { margin: 10px 0 0; font-size: 1.02rem; line-height: 1.6; color: var(--n-text-muted); }
+
+/* El progreso, en una tarjeta de vidrio */
+.inicio-progreso {
+  margin-top: 28px;
+  padding: 18px 22px 16px;
+  border-radius: 24px;
+  background: var(--glass-tint-content);
+  box-shadow: var(--glass-shadow);
+  outline: 1px solid var(--n-border);
+  outline-offset: -1px;
+}
+
+.inicio-progreso .progreso-piezas { padding-top: 0; border-top: 0; }
+
+.inicio-plan {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 0 0;
+  font-size: var(--fs-ui);
+  color: var(--n-text-muted);
+}
+
+.inicio-plan svg { flex-shrink: 0; color: var(--reco-marca); fill: currentColor; }
+.inicio-plan a { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+/* Aviso del diagnóstico: el primer paso sugerido, antes de la galería */
+.inicio-diagnostico {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 18px;
+  padding: 16px 20px;
+  border-radius: 20px;
+  color: var(--n-text);
+  background: var(--n-accent-soft);
+  box-shadow: inset 0 0 0 1px var(--n-accent-glow);
+  transition: transform 0.25s var(--ease-out);
+}
+
+.inicio-diagnostico:hover { opacity: 1; transform: translateY(-1px); }
+.inicio-diagnostico:focus-visible { outline: 3px solid var(--n-link); outline-offset: 3px; }
+
+.inicio-diagnostico-icono {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  color: var(--n-link);
+  background: var(--n-bg);
+}
+
+.inicio-diagnostico-texto { display: flex; flex-direction: column; flex: 1; min-width: 0; line-height: 1.4; }
+.inicio-diagnostico-texto span { font-size: var(--fs-ui); color: var(--n-text-muted); }
+
+/* Galería: tarjetas con portada de color, ícono de la pieza y propiedades (como Notion) */
+.galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  margin-top: 28px;
+  list-style: none;
+}
+
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 22px;
+  color: var(--n-text);
+  background: var(--glass-tint-content);
+  box-shadow: var(--card-shadow);
+  outline: 1px solid var(--n-border);
+  outline-offset: -1px;
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+}
+
+.tarjeta:hover { opacity: 1; transform: translateY(-3px); box-shadow: var(--glass-shadow); }
+.tarjeta:active { transform: translateY(-1px) scale(0.99); }
+.tarjeta:focus-visible { outline: 3px solid var(--n-link); outline-offset: 3px; }
+
+.tarjeta-cubierta {
+  position: relative;
+  height: 108px;
+  background: linear-gradient(135deg,
+    hsl(var(--tono) var(--cubierta-s) var(--cubierta-l1)),
+    hsl(calc(var(--tono) + 35) var(--cubierta-s) var(--cubierta-l2)));
+}
+
+/* El ícono "se apoya" sobre el borde de la portada, como el ícono de página de Notion */
+.tarjeta-icono {
+  position: absolute;
+  bottom: -22px;
+  left: 18px;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  font-size: 1.8rem;
+  line-height: 1;
+  background: var(--n-bg);
+  box-shadow: var(--card-shadow-md);
+}
+
+.tarjeta-icono--svg { color: var(--n-text-muted); }
+
+.tarjeta-cuerpo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 4px;
+  padding: 32px 18px 18px;
+}
+
+.tarjeta-num { font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--n-text-muted); }
+.tarjeta-titulo { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
+
+.tarjeta-desc {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: var(--fs-ui);
+  line-height: 1.45;
+  color: var(--n-text-muted);
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.tarjeta-props {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.tarjeta-estado,
+.tarjeta-prop {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  color: var(--n-text-muted);
+  background: var(--tinte);
+}
+
+.tarjeta-estado--aprobado { color: var(--n-green-text); background: var(--n-green-bg); }
+.tarjeta-estado--en-curso { color: var(--n-link); background: var(--n-accent-soft); }
+.tarjeta-prop--reco { color: var(--reco-texto); background: var(--reco-fondo); }
+.tarjeta-prop--reco svg { fill: currentColor; }
+
+.tarjeta-pasos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  font-size: var(--fs-meta);
+  color: var(--n-text-muted);
+}
+
+.tarjeta-pasos-barra {
+  flex: 1;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--n-border-med);
+}
+
+.tarjeta-pasos-barra span { display: block; height: 100%; border-radius: inherit; background: var(--n-green); }
+
+.tarjeta--bloqueada .tarjeta-cubierta { filter: grayscale(0.7); opacity: 0.7; }
+
+/* ══════════════════════════════════════════
+   MÓDULO: portada (intro + Empezar) y lección (contenido arriba)
+══════════════════════════════════════════ */
+.modulo-portada { display: grid; gap: 14px; margin-top: 22px; }
+.modulo-portada[hidden], .modulo-leccion[hidden] { display: none; }
+
+/* Adelanto de los 4 pasos: qué vas a hacer, y qué ya hiciste */
+.modulo-temario {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 28px;
+  margin: 8px 0 4px;
+  list-style: none;
+}
+
+.modulo-temario li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 6px;
+  border-radius: 999px;
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  background: var(--tinte);
+}
+
+.modulo-temario small { font-weight: 500; color: var(--n-text-muted); }
+
+.modulo-temario-num {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: var(--fs-meta);
+  color: var(--n-link);
+  background: var(--n-bg);
+}
+
+.modulo-temario li.listo .modulo-temario-num { color: #fff; background: var(--n-green-solid); }
+
+.modulo-empezar { justify-self: start; margin-top: 8px; }
+
+/* Lección: cabecera en una sola línea, así el video y las pestañas quedan arriba */
+.etapa-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  margin: -8px 0 12px -10px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  color: var(--n-link);
+  background: transparent;
+  cursor: pointer;
+}
+
+.etapa-volver:hover { background: var(--n-bg-hover); }
+.etapa-volver:focus-visible { outline: 2px solid var(--n-link); outline-offset: 2px; }
+
+.etapa-cab--compacta.etapa-cab--con-icono { column-gap: 14px; }
+.etapa-cab--compacta .etapa-icono { width: 44px; height: 44px; border-radius: 14px; font-size: 1.4rem; }
+.etapa-cab--compacta .etapa-titulo { font-size: 1.15rem; letter-spacing: -0.02em; }
+
+.modulo-leccion .pasos-modulo { margin-top: 18px; }
+
+@media (max-width: 640px) {
+  .galeria { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .tarjeta-cubierta { height: 84px; }
+  .inicio-progreso { padding: 16px; }
+}
+
+/* ── Progreso: las 6 piezas del dashboard, una por módulo ── */
+.progreso-piezas {
+  flex-basis: 100%;
+  padding-top: 16px;
+  border-top: 1px solid var(--n-border);
+}
+
+.progreso-piezas-cab {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.progreso-piezas-cab h2 {
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--n-text-muted);
+}
+
+.progreso-piezas-cuenta { font-size: var(--fs-ui); font-weight: 700; color: var(--n-text); }
+
+.progreso-piezas-lista {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  list-style: none;
+}
+
+.pieza {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px; /* objetivo táctil: el segmento es un enlace al módulo */
+  padding-bottom: 4px;
+  border-radius: 10px;
+  color: var(--n-text-muted);
+}
+
+.pieza-check { flex-shrink: 0; color: var(--n-green-text); }
+
+.pieza:hover { color: var(--n-text); opacity: 1; }
+.pieza:focus-visible { outline: 2px solid var(--n-link); outline-offset: 4px; }
+
+.pieza-barra {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--n-border-med);
+  transition: background 0.3s var(--ease-out);
+}
+
+.pieza:hover .pieza-barra { background: var(--n-border-strong); }
+.pieza.encendida .pieza-barra { background: var(--n-green); }
+
+/* La próxima pieza se ve "en construcción": rayado con el acento */
+.pieza.proxima .pieza-barra {
+  background: repeating-linear-gradient(-45deg, var(--n-accent-soft) 0 6px, var(--n-accent-glow) 6px 12px);
+  box-shadow: inset 0 0 0 1px var(--n-accent-glow);
+}
+
+.pieza-cuerpo { display: flex; align-items: center; gap: 6px; min-width: 0; }
+
+.pieza-icono { font-size: 1rem; line-height: 1; filter: grayscale(1); opacity: 0.6; }
+.pieza.encendida .pieza-icono,
+.pieza.proxima .pieza-icono { filter: none; opacity: 1; }
+
+.pieza-nombre {
+  overflow: hidden;
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pieza.encendida .pieza-nombre { color: var(--n-green-text); }
+.pieza.proxima .pieza-nombre { color: var(--n-text); }
+
+.progreso-piezas-proxima { margin: 12px 0 0; font-size: var(--fs-meta); color: var(--n-text-muted); }
+
+.progreso-piezas-proxima strong { color: var(--n-text); }
+
+/* Anterior / siguiente */
+.etapa-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 36px;
   padding-top: 20px;
   border-top: 1px solid var(--n-border);
 }
 
-.notion-property {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 10px;
-  border-radius: var(--r-sm);
-  font-size: 12.5px;
-  color: var(--n-text-muted);
-  min-width: 190px;
-  transition: background 0.1s;
-  cursor: default;
-}
-
-.notion-property:hover {
-  background: var(--n-bg-hover);
-}
-
-.notion-property-label {
-  font-weight: 500;
-  color: var(--n-text-muted);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 95px;
-}
-
-.notion-property-value {
-  color: var(--n-text);
-  font-weight: 400;
-}
-
-.notion-property-value.tag {
+.etapa-nav-link {
   display: inline-flex;
   align-items: center;
-  background: var(--n-bg-hover);
-  border: 1px solid var(--n-border-med);
-  border-radius: var(--r-xs);
-  padding: 2px 8px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-/* Resumen de avance + dashboard dentro del hero */
-.progreso-resumen {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
-  gap: var(--space-5);
-  align-items: center;
-  margin-top: 28px;
-  padding: var(--space-5);
-  background: var(--n-bg-secondary);
-  border: 1px solid var(--n-border-med);
-  border-radius: var(--r-lg);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-}
-
-.progreso-resumen h2 {
-  font-size: 1.05rem;
-  margin-bottom: var(--space-1);
-}
-
-.progreso-resumen-txt p {
-  font-size: var(--fs-ui);
-  color: var(--n-text-muted);
-  margin: 0;
-}
-
-.continuar-btn {
-  margin-top: var(--space-4);
-}
-
-.progreso-resumen-txt .progreso-resumen-sig {
-  margin-top: var(--space-2);
-  font-size: var(--fs-meta);
-}
-
-/* Callout Notion (objetivos del programa) */
-.notion-callout {
-  display: flex;
-  gap: 16px;
-  background: var(--n-bg-secondary);
-  border: 1px solid var(--n-border-med);
-  border-radius: var(--r-lg);
-  padding: 22px 24px;
-  margin-top: 28px;
-  max-width: 720px;
-}
-
-.notion-callout-emoji {
-  font-size: 1.6rem;
-  line-height: 1;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-.notion-callout-body {
-  min-width: 0;
-  flex: 1;
-}
-
-.notion-callout-body h2 {
-  font-size: 0.98rem;
-  letter-spacing: -0.01em;
-  font-weight: 600;
-  margin-bottom: 4px;
+  gap: 10px;
+  max-width: 48%;
+  min-height: 52px;
+  padding: 8px 14px;
+  border-radius: 16px;
   color: var(--n-text);
+  transition: background 0.12s;
 }
 
-.notion-callout-body .nota {
-  font-size: 12.5px;
-  color: var(--n-text-muted);
-  margin-bottom: 14px;
-  line-height: 1.6;
-}
+.etapa-nav-link:hover { background: var(--n-bg-hover); opacity: 1; }
+.etapa-nav-link:focus-visible { outline: 2px solid var(--n-link); outline-offset: 2px; }
 
-/* ══════════════════════════════════════════
-   STACK DE SECCIONES COMO TARJETAS (CARD SYSTEM)
-══════════════════════════════════════════ */
-.sections-stack {
+.etapa-nav-link span {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 8px 0 36px;
-}
-
-.bloque-wrapper {
-  margin: 0;
-  padding: 0;
-}
-
-/* Tarjeta flotante principal */
-.section-card {
-  background: var(--n-surface);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--n-border-med);
-  border-radius: var(--card-radius);
-  box-shadow: var(--card-shadow);
-  overflow: hidden;
-  transition:
-    box-shadow 0.24s var(--ease-out),
-    border-color 0.2s ease,
-    transform 0.2s var(--ease-out);
-}
-
-.section-card:hover {
-  box-shadow: var(--card-shadow-md);
-  border-color: var(--n-border-strong);
-}
-
-/* Estado completado (aprobado): acento verde discreto */
-.section-card.is-completed {
-  border-left: 3.5px solid var(--n-green);
-}
-
-/* Estado bloqueado: atenuado */
-.section-card.is-locked {
-  background: rgba(247, 246, 243, 0.75);
-  border-color: rgba(55, 53, 47, 0.08);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
-}
-
-.section-card.is-locked:hover {
-  transform: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-}
-
-/* Cabecera de la tarjeta (área interactiva clicable) */
-.section-card-header,
-button.section-card-header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 22px 28px;
-  background: transparent;
-  border: 0;
-  font: inherit;
-  color: inherit;
-  text-align: left;
-  cursor: pointer;
-  border-radius: var(--card-radius) var(--card-radius) 0 0;
-  transition: background 0.12s ease;
-}
-
-.section-card:not(.is-open) button.section-card-header {
-  border-radius: var(--card-radius);
-}
-
-button.section-card-header:hover {
-  background: rgba(55, 53, 47, 0.025);
-}
-
-button.section-card-header.disabled {
-  cursor: not-allowed;
-}
-
-button.section-card-header.disabled:hover {
-  background: transparent;
-}
-
-.cab-txt {
-  display: block;
-  max-width: 68ch;
-}
-
-.cab-txt .num {
-  display: block;
-  font-size: var(--fs-label);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--n-text-muted);
-  margin-bottom: 6px;
-}
-
-.cab-txt h2 {
-  font-size: clamp(1.2rem, 2.4vw, 1.6rem);
-  font-weight: 700;
-  color: var(--n-text);
+  font-size: var(--fs-ui);
+  font-weight: 600;
   line-height: 1.3;
 }
 
-.cab-txt .intro {
-  display: block;
-  color: var(--n-text-muted);
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.65;
+.etapa-nav-link small { font-size: var(--fs-label); font-weight: 500; color: var(--n-text-muted); }
+.etapa-nav-link--siguiente { margin-left: auto; text-align: right; }
+.etapa-nav-link--siguiente span { align-items: flex-end; }
+
+/* ── Barra inferior flotante (pantallas angostas), como la tab bar de iOS 26 ── */
+.barra-inferior { display: none; }
+
+@media (max-width: 900px) {
+  .curso-layout { grid-template-columns: 1fr; }
+  .recorrido { display: none; }  /* la barra inferior cubre la navegación */
+  .etapa-nav { display: none; }  /* anterior/siguiente ya están en la barra inferior */
+
+  .barra-inferior {
+    position: fixed;
+    right: 12px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+    left: 12px;
+    z-index: var(--z-header);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 6px;
+    border-radius: 999px;
+    background: var(--glass-tint);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  }
+
+  /* Espacio para que la barra no tape el final del contenido */
+  .vista:has(.barra-inferior) { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 88px); }
+
+  .barra-inferior-paso {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    color: var(--n-text);
+    transition: background 0.12s;
+  }
+
+  .barra-inferior-paso:hover { background: var(--n-bg-hover); opacity: 1; }
+  .barra-inferior-paso:active { background: var(--n-bg-active); }
+  .barra-inferior-paso:focus-visible { outline: 2px solid var(--n-link); outline-offset: 2px; }
+
+  .barra-inferior .menu-modulos-btn {
+    min-height: 48px;
+    padding: 0 18px;
+    border: 0;
+    background: var(--n-bg);
+    box-shadow: var(--card-shadow);
+  }
 }
 
-.cab-lado {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 0 0 auto;
-  padding-top: 4px;
+@media (max-width: 640px) {
+  .etapa { padding: 24px 18px 20px; border-radius: 22px; }
+  .etapa-cab--con-icono { column-gap: 14px; }
+  .etapa-icono { width: 52px; height: 52px; border-radius: 16px; font-size: 1.6rem; }
+  /* 4 pestañas en pantallas chicas: ocupan el ancho y el nombre se recorta si no entra */
+  .pasos-tabs { max-width: none; }
+  .pasos-tab { gap: 4px; padding: 0 6px; font-size: var(--fs-meta); }
+  .pasos-tab span:not(.sr-only) { overflow: hidden; text-overflow: ellipsis; }
+  /* Piezas: en pantallas chicas solo el ícono (el nombre sigue disponible para lectores de pantalla) */
+  .pieza-cuerpo { justify-content: center; }
+  .pieza-nombre {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .etapa-nav-link { max-width: 50%; padding: 8px 10px; }
 }
 
-/* Flecha de despliegue estilo Notion */
-.flecha {
-  color: var(--n-text-muted);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  transition: transform 0.22s var(--ease-out), background 0.12s;
-  transform: rotate(0deg);
+@media (max-width: 520px) {
+  .barra-ubicacion { visibility: hidden; } /* el botón "Módulos" ya muestra el avance */
+  /* En celular la cápsula mínima se ajusta a su contenido: logo + tema */
+  .app-header--mini { width: fit-content; }
+  .app-header--mini .barra-ubicacion { display: none; }
 }
 
-button.section-card-header:hover .flecha {
-  background: var(--n-bg-hover);
+@media (max-width: 640px) {
+  /* Menos capas de desenfoque simultáneas en celular */
+  .borde-desplazamiento { backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
 
-.flecha.expandido {
-  transform: rotate(90deg);
+@media (prefers-reduced-motion: reduce) {
+  .etapa, .inicio, .pasos-modulo.interactuado .pasos-panel { animation: none; }
+  .tarjeta:hover, .tarjeta:active { transform: none; }
+  .inicio-diagnostico:hover { transform: none; }
+  .app-header, .app-header .barra, .barra-ubicacion, .borde-desplazamiento, .recorrido { transition: none; }
 }
 
 /* Chips de estado Notion */
@@ -634,19 +1101,6 @@ button.section-card-header:hover .flecha {
   color: var(--n-text-muted);
 }
 
-/* Separador elegante dentro de la tarjeta */
-.section-card-divider {
-  height: 1px;
-  background: var(--n-border);
-  margin: 0 28px;
-}
-
-/* Cuerpo de la tarjeta */
-.section-card-body {
-  padding: 24px 28px 32px;
-  animation: cardFadeIn 0.22s var(--ease-out) forwards;
-}
-
 @keyframes cardFadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -657,8 +1111,8 @@ button.section-card-header:hover .flecha {
   margin: 0 28px 24px;
   padding: 16px 20px;
   border-radius: var(--r-md);
-  background: #FAF9F6;
-  border: 1px dashed rgba(55, 53, 47, 0.22);
+  background: var(--superficie-hundida);
+  border: 1px dashed var(--n-border-strong);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -719,68 +1173,6 @@ button.section-card-header:hover .flecha {
 }
 
 /* ══════════════════════════════════════════
-   BARRA DE CONTROLES GLOBALES
-══════════════════════════════════════════ */
-.barra-plan {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4px 6px 14px;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.barra-plan-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12.5px;
-  color: var(--n-text-muted);
-  font-weight: 500;
-}
-
-.barra-plan-pill {
-  background: var(--n-bg);
-  border: 1px solid var(--n-border-med);
-  border-radius: 100px;
-  padding: 2px 10px;
-  font-size: 11.5px;
-  color: var(--n-link);
-  font-weight: 600;
-  box-shadow: var(--card-shadow);
-}
-
-.barra-plan-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.barra-plan-actions button {
-  font-family: var(--font-ui);
-  font-size: 12.5px;
-  font-weight: 500;
-  padding: 6px 13px;
-  border: 1px solid var(--n-border-med);
-  background: var(--n-bg);
-  border-radius: 100px;
-  cursor: pointer;
-  color: var(--n-text-muted);
-  transition: background 0.12s, color 0.12s, border-color 0.12s, transform 0.12s, box-shadow 0.12s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: var(--card-shadow);
-}
-
-.barra-plan-actions button:hover {
-  background: var(--n-bg-hover);
-  color: var(--n-text);
-  border-color: var(--n-border-strong);
-  transform: translateY(-1px);
-  box-shadow: var(--card-shadow-md);
-}
-
-/* ══════════════════════════════════════════
    ENCUESTA INICIAL
 ══════════════════════════════════════════ */
 .pregunta {
@@ -835,20 +1227,6 @@ button.section-card-header:hover .flecha {
   font-weight: 600;
   box-shadow: 0 1px 4px var(--n-accent-glow);
   transform: translateY(-1px);
-}
-
-/* ══════════════════════════════════════════
-   BLOQUES DE CONTENIDO (DOS COLUMNAS)
-══════════════════════════════════════════ */
-.bloque {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 240px;
-  gap: 32px;
-  align-items: start;
-}
-
-.bloque-principal {
-  min-width: 0;
 }
 
 /* ── Recurso PDF Descargable ── */
@@ -932,9 +1310,9 @@ button.section-card-header:hover .flecha {
 }
 
 .recurso-pdf-btn:hover .recurso-pdf-action {
-  background: var(--n-link);
+  background: var(--n-accent-fill);
   color: #fff;
-  border-color: var(--n-link);
+  border-color: var(--n-accent-fill);
 }
 
 .recurso-pdf-arrow {
@@ -984,7 +1362,7 @@ button.section-card-header:hover .flecha {
   aspect-ratio: 16/9;
   display: grid;
   place-items: center;
-  background: linear-gradient(145deg, #F0EDE6 0%, #E5E1D8 100%);
+  background: var(--video-marco);
   position: relative;
 }
 
@@ -1019,8 +1397,8 @@ button.section-card-header:hover .flecha {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: var(--vidrio-play);
+  border: 1px solid var(--vidrio-borde-card);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
   display: grid;
   place-items: center;
@@ -1189,17 +1567,6 @@ details .cuerpo {
   background: var(--n-green-bg);
 }
 
-.seccion-intro-box {
-  margin-bottom: 20px;
-}
-
-.seccion-explicacion-breve {
-  font-size: var(--fs-body);
-  color: var(--n-text);
-  line-height: 1.7;
-  margin: 0;
-}
-
 /* Hands-On Card (callout "Práctica") */
 .hands {
   margin-top: 18px;
@@ -1244,7 +1611,7 @@ details .cuerpo {
 .check {
   margin-top: 14px;
   padding-top: 12px;
-  border-top: 1px dashed rgba(55, 53, 47, 0.18);
+  border-top: 1px dashed var(--n-border-strong);
 }
 
 .check .rot {
@@ -1275,7 +1642,7 @@ details .cuerpo {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--n-accent), #7EB5F0);
+  background: linear-gradient(90deg, var(--n-accent), var(--acento-claro));
 }
 
 .quiz h3 {
@@ -1361,8 +1728,8 @@ details .cuerpo {
   font-size: 13px;
   font-weight: 600;
   padding: 9px 18px;
-  border: 1px solid var(--n-accent);
-  background: var(--n-accent);
+  border: 1px solid var(--n-accent-fill);
+  background: var(--n-accent-fill); /* AA con texto blanco en los tres temas */
   color: #fff;
   border-radius: var(--r-md);
   cursor: pointer;
@@ -1409,8 +1776,8 @@ details .cuerpo {
   display: flex;
   gap: var(--space-3);
   padding: 16px 18px;
-  background: #FAF9F6;
-  border: 1px dashed rgba(55, 53, 47, 0.28);
+  background: var(--superficie-hundida);
+  border: 1px dashed var(--n-border-strong);
   border-radius: var(--r-md);
 }
 
@@ -1440,99 +1807,6 @@ details .cuerpo {
   flex-wrap: wrap;
   gap: var(--space-2);
   margin-top: var(--space-3);
-}
-
-/* Sidebar / Lateral */
-aside.lateral {
-  position: sticky;
-  top: var(--header-h);
-}
-
-aside.lateral .caja-lat {
-  border: 1px solid var(--n-border-med);
-  border-radius: var(--r-lg);
-  padding: 18px;
-  background: var(--n-bg);
-  box-shadow: var(--card-shadow);
-}
-
-.caja-lat-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  gap: 8px;
-}
-
-.caja-lat-header h3 {
-  margin-bottom: 0;
-}
-
-.caja-lat-badge {
-  font-size: 10.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 2px 7px;
-  border-radius: 100px;
-}
-
-.caja-lat-badge.ok {
-  background: var(--n-green-bg);
-  color: var(--n-green-text);
-  border: 1px solid rgba(22, 163, 74, 0.28);
-}
-
-.caja-lat-badge.lock {
-  background: var(--n-bg-hover);
-  color: var(--n-text-muted);
-  border: 1px solid var(--n-border-med);
-}
-
-.caja-lat-badge.active {
-  background: var(--n-accent-soft);
-  color: var(--n-link);
-  border: 1px solid rgba(35, 131, 226, 0.25);
-}
-
-aside.lateral h3 {
-  font-size: var(--fs-label);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--n-text-muted);
-  margin-bottom: 12px;
-}
-
-aside.lateral ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-aside.lateral li {
-  margin-bottom: 3px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 6px 8px;
-  border-radius: var(--r-sm);
-  font-size: 12.5px;
-  color: var(--n-text-muted);
-  cursor: default;
-  transition: background 0.1s, color 0.1s;
-}
-
-aside.lateral li:hover {
-  background: var(--n-bg-hover);
-  color: var(--n-text);
-}
-
-aside.lateral li::before {
-  content: "→";
-  font-size: 11px;
-  opacity: 0.55;
-  flex-shrink: 0;
 }
 
 .opcional {
@@ -1763,9 +2037,9 @@ aside.lateral li::before {
 }
 
 .caso-opcion-btn.seleccionada .opcion-badge {
-  background: var(--n-link);
+  background: var(--n-accent-fill);
   color: #fff;
-  border-color: var(--n-link);
+  border-color: var(--n-accent-fill);
 }
 
 .caso-opcion-btn.opcion-correcta {
@@ -1774,9 +2048,9 @@ aside.lateral li::before {
 }
 
 .caso-opcion-btn.opcion-correcta .opcion-badge {
-  background: var(--n-green-text);
+  background: var(--n-green-solid);
   color: #fff;
-  border-color: var(--n-green-text);
+  border-color: var(--n-green-solid);
 }
 
 .caso-opcion-btn.opcion-fallada {
@@ -1785,9 +2059,9 @@ aside.lateral li::before {
 }
 
 .caso-opcion-btn.opcion-fallada .opcion-badge {
-  background: var(--n-red-text);
+  background: var(--n-red-solid);
   color: #fff;
-  border-color: var(--n-red-text);
+  border-color: var(--n-red-solid);
 }
 
 .caso-feedback {
@@ -1900,7 +2174,7 @@ aside.lateral li::before {
 /* Certificado Notion */
 .certificado-notion-card {
   margin-top: var(--space-4);
-  background: linear-gradient(145deg, #FFFFFF 0%, #FAF8F5 100%);
+  background: var(--certificado-fondo);
   border: 2px solid rgba(228, 184, 49, 0.4);
   border-radius: var(--r-xl);
   padding: 32px 36px;
@@ -1917,7 +2191,7 @@ aside.lateral li::before {
   font-size: 3.5rem;
   font-weight: 900;
   letter-spacing: 0.1em;
-  color: rgba(55, 53, 47, 0.03);
+  color: var(--tinte-suave);
   pointer-events: none;
   white-space: nowrap;
 }
@@ -2005,7 +2279,7 @@ aside.lateral li::before {
   min-height: 44px;
   border: 1px solid var(--n-border-strong);
   border-radius: var(--r-sm);
-  background: #fff;
+  background: var(--n-bg);
   min-width: 260px;
   color: var(--n-text);
   transition: border-color 0.15s;
@@ -2051,11 +2325,44 @@ aside.lateral li::before {
   border: 1px solid var(--n-border-med);
   border-radius: var(--r-lg);
   overflow: hidden;
-  background: var(--n-bg);
+  /* El formulario de Tally no se puede tematizar (texto oscuro, fondo transparente):
+     en modo oscuro queda como tarjeta clara a propósito */
+  background: var(--tally-fondo);
   box-shadow: var(--card-shadow);
 }
 
+.tally-wrapper { position: relative; }
+
+/* Esqueleto mientras carga el formulario: reserva el lugar y avisa que algo viene */
+.tally-esqueleto {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 28px;
+  pointer-events: none;
+}
+
+.tally-esqueleto span {
+  height: 14px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(55, 53, 47, 0.06), rgba(55, 53, 47, 0.12), rgba(55, 53, 47, 0.06));
+  background-size: 200% 100%;
+  animation: esqueletoBrilla 1.4s ease-in-out infinite;
+}
+
+.tally-esqueleto span:first-child { width: 45%; height: 20px; }
+.tally-esqueleto .corta { width: 65%; }
+
+@keyframes esqueletoBrilla { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tally-esqueleto span { animation: none; }
+}
+
 .tally-wrapper iframe {
+  color-scheme: light;
   width: 100%;
   min-height: 600px;
   border: 0;
@@ -2077,7 +2384,7 @@ aside.lateral li::before {
 }
 
 .repaso-modal::backdrop {
-  background: rgba(15, 15, 15, 0.45);
+  background: var(--scrim);
 }
 
 .repaso-modal-emoji {
@@ -2113,12 +2420,10 @@ aside.lateral li::before {
 }
 
 /* ══════════════════════════════════════════
-   MENÚ DE MÓDULOS (pantallas angostas)
+   MENÚ DE MÓDULOS: hoja que sube desde la barra inferior (pantallas angostas)
 ══════════════════════════════════════════ */
 .menu-modulos {
-  display: none;
-  position: relative;
-  margin-left: auto;
+  display: block;
   flex-shrink: 0;
 }
 
@@ -2151,22 +2456,79 @@ aside.lateral li::before {
   font-weight: 700;
 }
 
-.menu-modulos-panel {
-  position: absolute;
-  top: calc(100% + 6px);
-  right: 0;
-  width: min(380px, calc(100vw - 24px));
-  max-height: calc(100vh - 80px);
-  overflow-y: auto;
-  padding: var(--space-2);
-  background: var(--n-surface);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--n-border-med);
-  border-radius: var(--r-lg);
-  box-shadow: var(--card-shadow-lg);
-  animation: cardFadeIn 0.18s var(--ease-out);
+/* Velo detrás de la hoja: aísla el contenido y se toca para cerrar */
+.menu-modulos-velo {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: var(--scrim);
+  animation: veloEntra 0.25s var(--ease-out) both;
 }
+
+@keyframes veloEntra { from { opacity: 0; } }
+
+.menu-modulos-panel {
+  position: fixed;
+  right: 8px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+  left: 8px;
+  z-index: 301;
+  max-width: 560px;
+  max-height: 78dvh;
+  margin: 0 auto;
+  overflow-y: auto;
+  padding: 10px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+  background: var(--vidrio-panel);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  border: 0;
+  border-radius: 32px;
+  box-shadow: var(--glass-shadow);
+  overscroll-behavior: contain; /* al llegar al final de la lista no arrastra la página de atrás */
+  animation: hojaSube 0.32s cubic-bezier(0.2, 0.9, 0.25, 1) both;
+}
+
+/* Manija de la hoja, como en iOS */
+.menu-modulos-panel::before {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 5px;
+  margin: 0 auto 8px;
+  border-radius: 999px;
+  background: var(--n-border-strong);
+}
+
+@keyframes hojaSube { from { transform: translate3d(0, 24px, 0); opacity: 0; } }
+
+.menu-modulos-cab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 8px 12px;
+}
+
+.menu-modulos-titulo {
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--n-text-muted);
+}
+
+.menu-modulos-cerrar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  color: var(--n-text-muted);
+  background: var(--tinte);
+  cursor: pointer;
+}
+
+.menu-modulos-cerrar:focus-visible { outline: 2px solid var(--n-link); outline-offset: 2px; }
 
 .menu-modulos-panel ul {
   list-style: none;
@@ -2237,7 +2599,7 @@ aside.lateral li::before {
   padding: var(--space-3) var(--space-2);
   text-align: center;
   background: var(--n-bg);
-  border: 1px dashed rgba(55, 53, 47, 0.24);
+  border: 1px dashed var(--n-border-strong);
   border-radius: var(--r-md);
   color: var(--n-text-muted);
   transition:
@@ -2332,75 +2694,20 @@ footer {
 }
 
 /* ══════════════════════════════════════════
-   NAVEGACIÓN: sección activa
-══════════════════════════════════════════ */
-.pasos-nav a[aria-current="location"] {
-  background: var(--n-accent-soft);
-  color: var(--n-link);
-  font-weight: 600;
-}
-
-/* En anchos medios la etiqueta larga queda solo para lectores de pantalla */
-@media (max-width: 1200px) {
-  .notion-workspace-tag {
-    display: none;
-  }
-  .nav-txt {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-  }
-}
-
-/* ══════════════════════════════════════════
    RESPONSIVE DESIGN
 ══════════════════════════════════════════ */
 @media (max-width: 900px) {
-  .bloque {
-    grid-template-columns: 1fr;
-  }
-  aside.lateral {
-    position: static;
-  }
-  .pasos-nav {
-    display: none;
-  }
   .menu-modulos {
     display: block;
+    margin-left: 0;
   }
-}
-
-@media (max-width: 760px) {
-  .progreso-resumen {
-    grid-template-columns: 1fr;
-    padding: var(--space-4);
+  /* Sin la navegación visible, el botón de tema empuja los controles a la derecha */
+  .barra .selector-tema {
+    margin-left: auto;
   }
 }
 
 @media (max-width: 640px) {
-  .notion-workspace-tag {
-    display: none;
-  }
-  .hero {
-    padding: 32px 0 28px;
-  }
-  .hero-inner {
-    padding: 32px 22px 28px;
-  }
-  .section-card-header,
-  button.section-card-header {
-    padding: 18px 20px;
-  }
-  .section-card-body {
-    padding: 16px 20px 24px;
-  }
-  .section-card-divider {
-    margin: 0 20px;
-  }
   .desbloqueo-banner {
     margin: 0 16px 18px;
     padding: 12px 14px;
@@ -2422,14 +2729,6 @@ footer {
   }
   .dash-certificado {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .notion-callout {
-    padding: 18px 16px;
-    gap: 12px;
-  }
-  .notion-property {
-    min-width: 0;
-    width: 100%;
   }
   h1 {
     font-size: 1.85rem;
@@ -2462,7 +2761,6 @@ footer {
 }
 
 /* Dentro de contenedores con overflow:hidden el anillo va hacia adentro */
-button.section-card-header:focus-visible,
 .caso-opcion-btn:focus-within {
   outline: 2px solid var(--n-accent);
   outline-offset: -2px;
@@ -2494,7 +2792,7 @@ button.section-card-header:focus-visible,
   z-index: var(--z-skip);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--r-sm);
-  background: var(--n-text);
+  background: var(--n-accent-fill);
   color: #fff;
   font-size: var(--fs-ui);
   font-weight: 600;
@@ -2510,20 +2808,16 @@ button.section-card-header:focus-visible,
 }
 
 /* Objetivos táctiles de al menos 44px */
-.pasos-nav a,
 .saltear,
-.barra-plan-actions button,
 .ops button,
 .ops-q button,
 .corregir,
 .eval-tab-btn,
 .caso-opcion-btn,
-.recurso-pdf-btn,
-button.section-card-header {
+.recurso-pdf-btn {
   min-height: 44px;
 }
 
-.pasos-nav a,
 .saltear {
   display: inline-flex;
   align-items: center;
@@ -2542,50 +2836,6 @@ button.section-card-header {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
   }
-}
-
-/* ══════════════════════════════════════════
-   OBJETIVOS DEL PROGRAMA (lista de solo lectura, se marca al aprobar)
-══════════════════════════════════════════ */
-.objetivos {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 6px;
-}
-
-.objetivos li {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  padding: 4px 0;
-  font-size: 13.5px;
-  color: var(--n-text);
-}
-
-.objetivo-check {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 17px;
-  height: 17px;
-  margin-top: 2px;
-  border: 1.5px solid var(--n-border-strong);
-  border-radius: 3.5px;
-  background: var(--n-bg);
-  color: white;
-  transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
-}
-
-.objetivos li.logrado .objetivo-check {
-  background: var(--n-accent);
-  border-color: var(--n-accent);
-}
-
-.objetivos li.logrado .objetivo-txt {
-  color: var(--n-text-muted);
 }
 
 /* ══════════════════════════════════════════
@@ -2608,6 +2858,175 @@ button.section-card-header {
     0 8px 24px rgba(15, 15, 15, 0.08),
     0 24px 48px rgba(15, 15, 15, 0.06);
   --r-glass: 28px;
+}
+
+/* ══════════════════════════════════════════
+   MODO OSCURO (estilo Notion dark)
+   data-tema="oscuro" lo fija siempre el script de index.html / useTema:
+   por eso alcanza con este único selector.
+   --n-bg es la superficie elevada (tarjetas, inputs); --n-bg-secondary, la página.
+══════════════════════════════════════════ */
+/* Solo en pantalla: al imprimir, el certificado sale siempre con la paleta clara */
+@media screen {
+  /* Noche hereda la estructura del oscuro y después redefine sus colores en tonos cálidos */
+  :root[data-tema="oscuro"],
+  :root[data-tema="noche"] {
+    color-scheme: dark;
+
+    --n-bg:            #252525;
+    --n-bg-secondary:  #191919;
+    --n-bg-hover:      rgba(255, 255, 255, 0.055);
+    --n-bg-active:     rgba(255, 255, 255, 0.08);
+    --n-surface:       rgba(37, 37, 37, 0.94);
+    --n-text:          #DEDEDC;
+    --n-text-muted:    #A5A5A5;  /* AA sobre #191919, #252525 y sus estados hover/activo */
+    --n-text-light:    #6F6F6F;  /* solo decoración: nunca para texto */
+    --n-border:        rgba(255, 255, 255, 0.09);
+    --n-border-med:    rgba(255, 255, 255, 0.13);
+    --n-border-strong: rgba(255, 255, 255, 0.22);
+    --n-link:          #6CB4F5;
+    --n-accent-soft:   rgba(35, 131, 226, 0.18);
+    --n-accent-glow:   rgba(35, 131, 226, 0.35);
+    --n-yellow-bg:     rgba(228, 184, 49, 0.14);
+    --n-amber-text:    #F2C265;
+    --n-green-bg:      rgba(22, 163, 74, 0.18);
+    --n-green-text:    #4ADE80;
+    --n-red-bg:        rgba(220, 38, 38, 0.18);
+    --n-red-text:      #FCA5A5;
+
+    --grid-color: rgba(255, 255, 255, 0.045);
+
+    --card-shadow:    0 1px 3px rgba(0, 0, 0, 0.30), 0 4px 14px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.07);
+    --card-shadow-md: 0 2px 6px rgba(0, 0, 0, 0.32), 0 10px 28px rgba(0, 0, 0, 0.36), 0 0 0 1px rgba(255, 255, 255, 0.10);
+    --card-shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.36), 0 18px 42px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.12);
+    --card-shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.35);
+
+    --superficie-hundida: #202020;
+    --superficie-bloqueada: rgba(32, 32, 32, 0.75);
+    --superficie-icono: rgba(255, 255, 255, 0.08);
+    --superficie-cabecera: rgba(25, 25, 25, 0.88);
+    --tinte-suave:  rgba(255, 255, 255, 0.03);
+    --tinte:        rgba(255, 255, 255, 0.05);
+    --tinte-fuerte: rgba(255, 255, 255, 0.18);
+    --marca-fondo:  #3A3A3A;
+    --certificado-fondo: linear-gradient(145deg, #2A2A2A 0%, #222222 100%);
+    --video-marco: linear-gradient(145deg, #2B2B2B 0%, #1F1F1F 100%);
+    --reco-fondo: rgba(228, 184, 49, 0.16);
+    --reco-borde: rgba(228, 184, 49, 0.35);
+    --reco-texto: #F2C265;
+    --reco-marca: #F2C265;
+    --scrim: rgba(0, 0, 0, 0.65);
+    --blob-opacidad: 0.28;
+    --cubierta-s: 30%;
+    --cubierta-l1: 25%;
+    --cubierta-l2: 18%;
+    --resaltador: rgba(228, 184, 49, 0.30);
+
+    --vidrio-portada: rgba(37, 37, 37, 0.62);
+    --vidrio-menu: rgba(44, 44, 44, 0.84);
+    --vidrio-aviso: rgba(44, 44, 44, 0.80);
+    --vidrio-flotante: rgba(37, 37, 37, 0.55);
+    --vidrio-mini: rgba(44, 44, 44, 0.88);
+    --vidrio-panel: rgba(37, 37, 37, 0.94);
+    --vidrio-item: rgba(255, 255, 255, 0.04);
+    --vidrio-play: rgba(37, 37, 37, 0.92);
+    --vidrio-borde-card: rgba(255, 255, 255, 0.08);
+    --vidrio-brillo: rgba(255, 255, 255, 0.10);
+    --vidrio-resalte: rgba(255, 255, 255, 0.06);
+    --superficie-solida: #252525;
+    --superficie-mini: #2C2C2C;
+
+    --glass-tint: rgba(37, 37, 37, 0.6);
+    --glass-tint-content: rgba(32, 32, 32, 0.92);
+    --glass-rim: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.03) 40%, rgba(255,255,255,0.10));
+    --glass-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 1px 2px rgba(0, 0, 0, 0.35),
+      0 8px 24px rgba(0, 0, 0, 0.40),
+      0 24px 48px rgba(0, 0, 0, 0.45);
+  }
+
+  /* ── MODO NOCHE: lectura nocturna ──
+     Sin azules (menos luz azul), fondo cálido casi negro y texto pergamino con
+     contraste moderado (≈10:1, no 13:1) para reducir el halo sobre fondo oscuro.
+     Contrastes WCAG sobre #1A1714 / #24201B:
+       texto #CFC0A8 10.0 / 9.1 · muted #AD9D84 6.7 / 6.1 · link #E3A75F 8.5 / 7.7
+       blanco sobre --n-accent-fill #9A5413 5.8 · verde #3F6B2E 6.3 · rojo #8E3324 7.9 */
+  :root[data-tema="noche"] {
+    --n-bg:            #24201B;
+    --n-bg-secondary:  #1A1714;
+    --n-bg-hover:      rgba(255, 228, 190, 0.05);
+    --n-bg-active:     rgba(255, 228, 190, 0.075);
+    --n-surface:       rgba(36, 32, 27, 0.94);
+    --n-text:          #CFC0A8;
+    --n-text-muted:    #AD9D84;  /* AA también sobre hover, activo y --n-accent-soft (4.7) */
+    --n-text-light:    #6E6252;  /* solo decoración: nunca para texto */
+    --n-border:        rgba(255, 228, 190, 0.08);
+    --n-border-med:    rgba(255, 228, 190, 0.12);
+    --n-border-strong: rgba(255, 228, 190, 0.20);
+    --n-accent:        #D08A3E;
+    --n-link:          #E3A75F;
+    --n-accent-fill:   #9A5413;
+    --n-accent-soft:   rgba(208, 138, 62, 0.16);
+    --n-accent-glow:   rgba(208, 138, 62, 0.28);
+    --acento-claro:    #E8B96F;
+    --boton-fin:       #6E3A0E;
+    --n-yellow-bg:     rgba(228, 184, 49, 0.12);
+    --n-amber-text:    #E8B86A;
+    --n-green-bg:      rgba(120, 170, 100, 0.16);
+    --n-green-text:    #9CCB86;
+    --n-green-solid:   #3F6B2E;
+    --n-red-bg:        rgba(220, 110, 90, 0.16);
+    --n-red-text:      #F2A08F;
+    --n-red-solid:     #8E3324;
+
+    --grid-color: rgba(255, 228, 190, 0.035);
+
+    --superficie-hundida: #1E1B17;
+    --superficie-bloqueada: rgba(30, 27, 23, 0.75);
+    --superficie-icono: rgba(255, 228, 190, 0.07);
+    --superficie-cabecera: rgba(26, 23, 20, 0.88);
+    --tinte-suave:  rgba(255, 228, 190, 0.025);
+    --tinte:        rgba(255, 228, 190, 0.045);
+    --tinte-fuerte: rgba(255, 228, 190, 0.16);
+    --marca-fondo:  #3A332B;
+    --certificado-fondo: linear-gradient(145deg, #2A251F 0%, #221E19 100%);
+    --video-marco: linear-gradient(145deg, #2B2620 0%, #1E1B17 100%);
+    --scrim: rgba(10, 8, 6, 0.7);
+    --blob-opacidad: 0.2;
+    --cubierta-s: 26%;
+    --cubierta-l1: 22%;
+    --cubierta-l2: 16%;
+    --resaltador: rgba(208, 138, 62, 0.30);
+
+    --vidrio-portada: rgba(36, 32, 27, 0.62);
+    --vidrio-menu: rgba(43, 38, 32, 0.86);
+    --vidrio-aviso: rgba(43, 38, 32, 0.82);
+    --vidrio-flotante: rgba(36, 32, 27, 0.55);
+    --vidrio-mini: rgba(43, 38, 32, 0.88);
+    --vidrio-panel: rgba(36, 32, 27, 0.95);
+    --vidrio-item: rgba(255, 228, 190, 0.035);
+    --vidrio-play: rgba(36, 32, 27, 0.92);
+    --vidrio-borde-card: rgba(255, 228, 190, 0.07);
+    --vidrio-brillo: rgba(255, 228, 190, 0.07);
+    --vidrio-resalte: rgba(255, 228, 190, 0.05);
+    --superficie-solida: #24201B;
+    --superficie-mini: #2B2620;
+
+    --glass-tint: rgba(36, 32, 27, 0.6);
+    --glass-tint-content: rgba(30, 27, 23, 0.92);
+    --glass-rim: linear-gradient(135deg, rgba(255,228,190,0.14), rgba(255,228,190,0.025) 40%, rgba(255,228,190,0.08));
+    --glass-shadow:
+      inset 0 1px 0 rgba(255, 228, 190, 0.05),
+      0 1px 2px rgba(0, 0, 0, 0.35),
+      0 8px 24px rgba(0, 0, 0, 0.40),
+      0 24px 48px rgba(0, 0, 0, 0.45);
+  }
+
+  /* Tally no se puede tematizar: de noche se atenúa para que no encandile */
+  :root[data-tema="noche"] .tally-wrapper iframe {
+    filter: brightness(0.82) sepia(0.12);
+  }
 }
 
 .glass {
@@ -2646,10 +3065,13 @@ button.section-card-header {
   border-radius: 999px;
 }
 
-/* Header: píldora flotante separada de los bordes */
+/* Barra superior al estilo iOS 26: cápsula de vidrio flotante alineada con el contenido.
+   Al bajar se achica a una cápsula mínima (ver useBarraAlDesplazar) y al subir vuelve completa.
+   La legibilidad del contenido que pasa por debajo la resuelve .borde-desplazamiento. */
 .app-header {
   top: 12px;
-  width: min(1060px, calc(100% - 24px));
+  width: calc(100% - 24px);
+  max-width: calc(var(--ancho-max) - 48px);
   margin: 12px auto 0;
   border: 0;
   border-radius: var(--r-glass);
@@ -2658,7 +3080,37 @@ button.section-card-header {
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
   isolation: isolate;
+  transition: max-width 0.4s var(--ease-out);
 }
+
+.app-header .barra { transition: height 0.3s var(--ease-out), padding 0.3s var(--ease-out); }
+
+/* Cápsula mínima: solo el logo, dónde estás y el tema */
+.app-header--mini { max-width: 460px; }
+.app-header--mini .barra { height: 44px; padding: 0 6px 0 12px; }
+.app-header--mini .marca-texto { display: none; }
+
+/* Título chico: arriba de todo se lee el título grande de la página; al bajar pasa a la barra */
+.barra-ubicacion { opacity: 0; transition: opacity 0.25s var(--ease-out); }
+.con-barra-desplazada .barra-ubicacion { opacity: 1; }
+
+/* Scroll edge effect: difumina el contenido justo donde pasa por debajo de la barra */
+.borde-desplazamiento {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: calc(var(--z-header) - 1);
+  height: calc(var(--header-h) + 8px);
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--n-bg-secondary), transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent);
+  mask-image: linear-gradient(to bottom, #000 45%, transparent);
+  opacity: 0;
+  transition: opacity 0.25s var(--ease-out);
+}
+
+.con-barra-desplazada .borde-desplazamiento { opacity: 1; }
 
 .app-header::before {
   content: '';
@@ -2675,48 +3127,26 @@ button.section-card-header {
   z-index: 2;
 }
 
-.app-header .medidor {
-  margin: 0 18px 7px;
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.app-header .medidor span {
-  border-radius: 999px;
-}
-
-:root { --header-h: 88px; }
+:root { --header-h: 80px; } /* 12px de separación + 52px de barra + aire */
 
 /* Cápsulas: botones y chips */
-.pasos-nav a,
 .saltear,
 .corregir,
 .eval-tab-btn,
 .recurso-pdf-action,
-.caja-lat-badge,
 .chip,
 .ops button,
-.barra-plan-actions button,
-.barra-plan-pill,
-.notion-workspace-tag,
 .menu-modulos-btn {
   border-radius: 999px;
 }
 
 /* Retroalimentación al presionar: resorte con rebote leve */
-.pasos-nav a,
 .saltear,
 .corregir,
 .eval-tab-btn,
 .ops button,
-.barra-plan-actions button,
 .menu-modulos-btn {
   transition: transform 0.35s var(--ease-spring), background 0.12s, color 0.12s, border-color 0.12s, box-shadow 0.12s;
-}
-
-.hero-titulo {
-  font-size: clamp(1.9rem, 4vw, 2.7rem);
-  letter-spacing: -0.04em;
 }
 
 /* Destello especular que sigue al puntero (variables CSS, sin layout) */
@@ -2725,7 +3155,7 @@ button.section-card-header {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(160px circle at var(--sx, 50%) var(--sy, 0%), rgba(255, 255, 255, 0.55), transparent 70%);
+  background: radial-gradient(160px circle at var(--sx, 50%) var(--sy, 0%), var(--vidrio-brillo), transparent 70%);
   opacity: 0;
   transition: opacity 0.25s;
   pointer-events: none;
@@ -2734,95 +3164,233 @@ button.section-card-header {
 
 .glass-sheen:hover::after { opacity: 1; }
 
-.pasos-nav a { padding: 5px 12px; }
+/* Botón principal en cápsula: compartido por la portada y el curso.
+   Va después de .glass a propósito: con la misma especificidad, su fondo tiene que ganar. */
+.boton-primario {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 30px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--n-accent-fill), var(--boton-fin));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 6px 18px var(--n-accent-glow),
+    0 18px 40px var(--n-accent-soft);
+}
+
+.boton-primario:focus-visible {
+  outline: 3px solid var(--n-link);
+  outline-offset: 3px;
+}
+
+/* En la portada el resorte lo maneja motion; en el curso, CSS */
+.boton-primario.modulo-empezar { transition: transform 0.35s var(--ease-spring); }
+.boton-primario.modulo-empezar:active { transform: scale(0.97); }
 
 .corregir:active,
 .saltear:active,
 .ops button:active,
-.barra-plan-actions button:active,
 .menu-modulos-btn:active {
   transform: scale(0.97);
 }
 
-/* Tarjetas: vidrio de lectura (opaco) y radio grande */
-.section-card,
-.hero-inner {
-  --card-radius: 22px;
-  border-radius: var(--card-radius);
-  background: var(--glass-tint-content);
-  box-shadow: var(--glass-shadow);
-  border-color: rgba(255, 255, 255, 0.6);
-  outline: 1px solid var(--n-border);
-  outline-offset: -1px;
-}
-
-.section-card {
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-.hero-inner {
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-  border-radius: 28px;
-}
-
-.section-card:hover { box-shadow: var(--glass-shadow), 0 12px 32px rgba(15, 15, 15, 0.06); }
-
 /* Radios concéntricos: interior = exterior − padding */
-.section-card .quiz,
-.section-card .tally-wrapper,
-.section-card .caja-lat,
-.section-card .caso-item,
-.section-card .video,
-.section-card .callout,
-.progreso-resumen,
-.notion-callout {
+.etapa .quiz,
+.etapa .tally-wrapper,
+.etapa .caso-item,
+.etapa .video,
+.etapa .callout {
   border-radius: 16px;
 }
 
-/* Menú móvil: hoja de vidrio */
-.menu-modulos-panel {
-  /* Sin backdrop-filter propio: dentro del header (que ya desenfoca) quedaba plano */
-  background: rgba(255, 255, 255, 0.92);
-  border: 0;
-  border-radius: 24px;
-  box-shadow: var(--glass-shadow);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+/* Botón de tema: cápsula de vidrio, gemela de .menu-modulos-btn */
+.boton-tema {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  min-height: 44px;
+  padding: 0;
+  color: var(--n-text);
+  background: var(--n-bg);
+  border: 1px solid var(--n-border-med);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.35s var(--ease-spring), background 0.12s, border-color 0.12s, box-shadow 0.12s;
 }
 
+.boton-tema:hover {
+  background: var(--n-bg-hover);
+  border-color: var(--n-border-strong);
+  box-shadow: var(--card-shadow-md);
+}
+
+.boton-tema:active { transform: scale(0.94); }
+
+.boton-tema:focus-visible {
+  outline: 3px solid var(--n-link);
+  outline-offset: 3px;
+}
+
+/* Selector de tema: el botón abre un panel con los tres modos */
+.selector-tema {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* En la portada flota sobre el fondo: vidrio del mismo material que el resto */
+.selector-tema--portada {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 14px);
+  right: 16px;
+  z-index: 10;
+}
+
+.selector-tema--portada .boton-tema {
+  background: var(--glass-tint);
+  border: 0;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+}
+
+.selector-tema--portada .boton-tema:hover { background: var(--glass-tint); box-shadow: var(--glass-shadow), var(--card-shadow-hover); }
+
+.selector-tema-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  display: grid;
+  gap: 2px;
+  width: 290px;
+  max-width: calc(100vw - 32px);
+  padding: 6px;
+  border-radius: 20px;
+  background: var(--vidrio-panel);
+  box-shadow: var(--glass-shadow);
+  outline: 1px solid var(--n-border);
+  outline-offset: -1px;
+  transform-origin: top right;
+  animation: panelTemaEntra 0.18s var(--ease-out) both;
+}
+
+@keyframes panelTemaEntra {
+  from { opacity: 0; transform: translate3d(0, -4px, 0) scale(0.97); }
+}
+
+.selector-tema-opcion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 14px;
+  font: inherit;
+  text-align: left;
+  color: var(--n-text);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.selector-tema-opcion:hover { background: var(--n-bg-hover); }
+.selector-tema-opcion[aria-checked="true"] { background: var(--n-accent-soft); }
+
+.selector-tema-opcion:focus-visible {
+  outline: 2px solid var(--n-link);
+  outline-offset: -2px;
+}
+
+/* Muestras con los colores reales de cada modo: fijos a propósito, no siguen el tema */
+.selector-tema-muestra {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px var(--n-border-med);
+}
+
+.selector-tema-muestra--claro  { background: #F7F6F3; color: #37352F; }
+.selector-tema-muestra--oscuro { background: #191919; color: #DEDEDC; }
+.selector-tema-muestra--noche  { background: #1A1714; color: #E3A75F; }
+
+.selector-tema-texto { display: flex; flex-direction: column; min-width: 0; line-height: 1.35; }
+.selector-tema-texto strong { font-size: var(--fs-ui); }
+.selector-tema-texto span { font-size: var(--fs-meta); color: var(--n-text-muted); }
+
+.selector-tema-check { flex-shrink: 0; margin-left: auto; color: var(--n-link); }
+
+/* Menú móvil: hoja de vidrio */
 .menu-modulos-panel a { border-radius: 16px; }
 
 /* Transparencia reducida: superficies sólidas */
 @media (prefers-reduced-transparency: reduce) {
-  :root {
-    --glass-tint: #FFFFFF;
-    --glass-tint-content: #FFFFFF;
+  :root,
+  :root[data-tema="oscuro"],
+  :root[data-tema="noche"] {
+    --glass-tint: var(--superficie-solida);
+    --glass-tint-content: var(--superficie-solida);
   }
   .glass--chrome,
   .app-header,
-  .hero-inner,
+  .recorrido,
+  .barra-inferior,
+  .borde-desplazamiento,
   .menu-modulos-panel,
-  .section-card {
+  .selector-tema--portada .boton-tema {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
 }
 
+/* Cambio de tema suave: solo color y fondo, para no pelear con las animaciones de transform */
+.tema-cambiando,
+.tema-cambiando *,
+.tema-cambiando *::before,
+.tema-cambiando *::after {
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease !important;
+}
+
 /* Movimiento reducido: sin destello ni resortes */
 @media (prefers-reduced-motion: reduce) {
+  .tema-cambiando,
+  .tema-cambiando *,
+  .tema-cambiando *::before,
+  .tema-cambiando *::after { transition: none !important; }
   .glass-sheen::after { display: none; }
-  .pasos-nav a, .saltear, .corregir, .eval-tab-btn, .ops button,
-  .barra-plan-actions button, .menu-modulos-btn { transition: background 0.12s, color 0.12s; }
-  .corregir:active, .saltear:active, .ops button:active,
-  .barra-plan-actions button:active, .menu-modulos-btn:active { transform: none; }
+  .boton-primario.modulo-empezar { transition: none; }
+  .boton-primario.modulo-empezar:active { transform: none; }
+  .saltear,
+  .corregir,
+  .eval-tab-btn,
+  .ops button,
+  .menu-modulos-btn { transition: background 0.12s, color 0.12s; }
+  .corregir:active,
+  .saltear:active,
+  .ops button:active,
+  .menu-modulos-btn:active { transform: none; }
+  .boton-tema { transition: background 0.12s, border-color 0.12s; }
+  .boton-tema:active { transform: none; }
+  .selector-tema-panel { animation: none; }
 }
 
 @media (max-width: 640px) {
-  :root { --header-h: 80px; --r-glass: 24px; }
-  /* Menos capas de backdrop-filter en móvil: la tarjeta hero queda opaca */
-  .hero-inner { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  :root { --header-h: 72px; --r-glass: 24px; }
   .glass-sheen::after { display: none; }
   .app-header { top: 8px; margin-top: 8px; width: calc(100% - 16px); }
 }
@@ -2844,14 +3412,16 @@ button.section-card-header {
   .portada,
   footer,
   .skip-link,
-  .hero,
-  .sections-stack > :not(#cierre) {
+  .recorrido,
+  .borde-desplazamiento,
+  .barra-inferior,
+  .escenario > :not(#cierre) {
     display: none !important;
   }
 
-  .sections-stack {
+  .curso-layout {
+    display: block;
     padding: 0;
-    gap: 0;
   }
 
   .wrap {
@@ -2859,22 +3429,19 @@ button.section-card-header {
     padding: 0;
   }
 
-  #cierre .section-card {
-    border: 0;
+  #cierre.etapa {
+    padding: 0;
     border-radius: 0;
     background: #fff;
     box-shadow: none;
-    overflow: visible;
-  }
-
-  #cierre .section-card-header,
-  #cierre .section-card-divider {
-    display: none !important;
-  }
-
-  #cierre .section-card-body {
-    padding: 0;
+    outline: 0;
     animation: none;
+  }
+
+  #cierre .etapa-cab,
+  #cierre > .etapa-bajada,
+  #cierre .etapa-nav {
+    display: none !important;
   }
 
   /* Del cierre se conserva únicamente la tarjeta del certificado */
@@ -2903,9 +3470,9 @@ button.section-card-header {
    PLAN PERSONALIZADO (resultado del diagnóstico)
 ══════════════════════════════════════════ */
 .chip.recomendado {
-  background: rgba(255, 244, 214, 0.9);
-  border-color: rgba(217, 119, 6, 0.3);
-  color: #8a4b00;
+  background: var(--reco-fondo);
+  border-color: var(--reco-borde);
+  color: var(--reco-texto);
 }
 
 .plan {
@@ -2969,7 +3536,7 @@ button.section-card-header {
   padding: 10px 14px;
   border-radius: 14px;
   border: 1px solid var(--n-border);
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--vidrio-item);
 }
 
 .plan-modulo {
@@ -2981,10 +3548,4 @@ button.section-card-header {
   font-size: 13px;
   color: var(--n-text-muted);
   line-height: 1.5;
-}
-
-.nav-reco {
-  margin-left: 4px;
-  color: #b45309;
-  font-size: 11px;
 }

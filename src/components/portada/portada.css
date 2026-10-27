@@ -32,14 +32,13 @@
   position: absolute;
   border-radius: 50%;
   filter: blur(60px);
-  opacity: 0.55;
+  opacity: var(--blob-opacidad);
   will-change: transform;
   animation: blobFlota 16s ease-in-out infinite alternate;
 }
 
 .blob-1 { width: 460px; height: 460px; top: -120px; right: 8%;   background: rgba(35, 131, 226, 0.35); }
 .blob-2 { width: 380px; height: 380px; bottom: -110px; left: 4%; background: rgba(228, 184, 49, 0.30); animation-delay: -5s; }
-.blob-3 { width: 320px; height: 320px; top: 38%; right: -80px;   background: rgba(168, 85, 247, 0.20); animation-delay: -9s; }
 
 @keyframes blobFlota {
   from { transform: translate3d(0, 0, 0) scale(1); }
@@ -86,6 +85,29 @@
 
 .portada h1:focus { outline: none; }
 
+/* Resaltador que se dibuja bajo "tarde": subraya el problema que resuelve el curso */
+.portada-marca {
+  position: relative;
+  isolation: isolate;
+  white-space: nowrap;
+}
+
+.portada-marca::after {
+  content: '';
+  position: absolute;
+  left: -0.08em;
+  right: -0.08em;
+  bottom: 0.06em;
+  height: 0.36em;
+  z-index: -1;
+  border-radius: 0.12em;
+  background: var(--resaltador);
+  transform-origin: left center;
+  animation: marcaTrazo 0.7s var(--ease-spring, ease-out) 0.75s both;
+}
+
+@keyframes marcaTrazo { from { transform: scaleX(0); } }
+
 .vista[hidden] { display: none; }
 .vista:not([hidden]) { animation: vistaEntra 0.45s var(--ease-spring, ease-out) both; }
 @keyframes vistaEntra { from { opacity: 0; } to { opacity: 1; } }
@@ -106,26 +128,7 @@
   margin-top: 6px;
 }
 
-.portada-boton {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 56px;
-  padding: 0 30px;
-  border: 0;
-  font: inherit;
-  font-size: 1.02rem;
-  font-weight: 700;
-  color: #fff;
-  cursor: pointer;
-  background: linear-gradient(135deg, var(--n-link), #174f8c);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    0 6px 18px rgba(35, 131, 226, 0.35),
-    0 18px 40px rgba(35, 131, 226, 0.22);
-}
-
-.portada-boton:focus-visible,
+/* El botón principal (.boton-primario) vive en index.css: lo comparte el curso */
 .portada-continuar:focus-visible {
   outline: 3px solid var(--n-link);
   outline-offset: 3px;
@@ -160,7 +163,7 @@
   list-style: none;
   margin-top: 8px;
   font-size: var(--fs-meta);
-  color: #4A4843;
+  color: var(--n-text-muted);
 }
 
 /* ── Escena ── */
@@ -177,12 +180,22 @@
   align-items: center;
 }
 
+/* Sin overflow:hidden: el bloque tiene que poder salir volando hacia su flotante.
+   El destello se recorta en su propia capa. */
 .vn-ventana {
   position: relative;
   width: 100%;
   border-radius: 28px;
+  background: var(--vidrio-portada);
+}
+
+.vn-brillo-capa {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.62);
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 .vn-brillo {
@@ -192,25 +205,8 @@
   width: 360px;
   height: 360px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.55), transparent 65%);
-  pointer-events: none;
-  z-index: 1;
+  background: radial-gradient(circle, var(--vidrio-brillo), transparent 65%);
 }
-
-.vn-barra {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 18px;
-  border-bottom: 1px solid var(--n-border);
-  font-size: var(--fs-label);
-  color: var(--n-text-muted);
-}
-
-.vn-puntos { display: inline-flex; gap: 6px; }
-.vn-puntos i { width: 10px; height: 10px; border-radius: 50%; background: rgba(55, 53, 47, 0.18); }
 
 .vn-pagina {
   position: relative;
@@ -254,9 +250,16 @@
   z-index: 5;
   width: min(300px, 100%);
   padding: 8px;
-  list-style: none;
+  overflow: hidden;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.82);
+  background: var(--vidrio-menu);
+}
+
+/* La lista se desplaza dentro del menú para que el resalte siempre quede a la vista */
+.vn-menu-lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .vn-menu li {
@@ -264,7 +267,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 7px 10px;
+  height: 46px; /* = ALTO_OPCION en VentanaNotion.jsx */
+  padding: 0 10px;
   border-radius: 16px;
 }
 
@@ -273,7 +277,7 @@
   inset: 0;
   border-radius: 16px;
   background: rgba(35, 131, 226, 0.14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 0 0 1px rgba(35, 131, 226, 0.16);
+  box-shadow: inset 0 1px 0 var(--vidrio-resalte), 0 0 0 1px rgba(35, 131, 226, 0.16);
 }
 
 .vn-op-icono {
@@ -284,7 +288,7 @@
   height: 32px;
   flex-shrink: 0;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--superficie-icono);
   box-shadow: 0 0 0 1px var(--n-border-med);
   font-size: 0.8rem;
   font-weight: 700;
@@ -297,13 +301,54 @@
 
 .vn-bloque { width: 100%; }
 
+/* ── Aviso: cierra cada vuelta de la demo con el recordatorio que promete el título ── */
+.vn-aviso {
+  position: absolute;
+  top: 56px;
+  right: 14px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(300px, calc(100% - 28px));
+  padding: 10px 14px 10px 10px;
+  border-radius: 20px;
+  background: var(--vidrio-aviso);
+}
+
+.vn-aviso-icono {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  background: var(--superficie-icono);
+  box-shadow: 0 0 0 1px var(--n-border-med);
+  font-size: 1.15rem;
+}
+
+.vn-aviso-texto { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; font-size: var(--fs-label); }
+.vn-aviso-cab {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--n-text-muted);
+}
+.vn-aviso-texto strong { font-size: var(--fs-ui); color: var(--n-text); }
+.vn-aviso-texto em { font-style: normal; color: var(--n-text-muted); }
+
 /* ── Mini bloques de Notion (ilustración) ── */
 .mb-tabla, .mb-tablero, .mb-cal, .mb-toggle { font-size: 0.72rem; color: var(--n-text); line-height: 1.3; }
 
-.mb-tabla { display: flex; flex-direction: column; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px var(--n-border-med); background: rgba(255, 255, 255, 0.85); }
+.mb-tabla { display: flex; flex-direction: column; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px var(--n-border-med); background: var(--vidrio-mini); }
 .mb-tabla-fila { display: grid; grid-template-columns: 1.5fr 1fr 0.8fr; gap: 8px; align-items: center; padding: 8px 12px; border-top: 1px solid var(--n-border); }
 .mb-tabla-fila:first-child { border-top: 0; }
-.mb-tabla-cab { color: var(--n-text-muted); font-weight: 600; background: rgba(55, 53, 47, 0.04); }
+.mb-tabla-cab { color: var(--n-text-muted); font-weight: 600; background: var(--tinte); }
 
 .mb-tag { font-style: normal; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
 .mb-tag-rojo  { background: var(--n-red-bg);    color: var(--n-red-text); }
@@ -311,11 +356,11 @@
 .mb-tag-verde { background: var(--n-green-bg);  color: var(--n-green-text); }
 
 .mb-tablero { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.mb-col { display: flex; flex-direction: column; gap: 6px; padding: 8px; border-radius: 14px; background: rgba(55, 53, 47, 0.045); }
+.mb-col { display: flex; flex-direction: column; gap: 6px; padding: 8px; border-radius: 14px; background: var(--tinte); }
 .mb-col-titulo { font-weight: 700; color: var(--n-text-muted); }
-.mb-card { padding: 7px 8px; border-radius: 10px; background: #fff; box-shadow: 0 0 0 1px var(--n-border-med), 0 1px 3px rgba(15, 15, 15, 0.06); }
+.mb-card { padding: 7px 8px; border-radius: 10px; background: var(--superficie-mini); box-shadow: 0 0 0 1px var(--n-border-med), 0 1px 3px rgba(15, 15, 15, 0.06); }
 
-.mb-cal { padding: 10px 12px; border-radius: 16px; background: rgba(255, 255, 255, 0.85); box-shadow: 0 0 0 1px var(--n-border-med); }
+.mb-cal { padding: 10px 12px; border-radius: 16px; background: var(--vidrio-mini); box-shadow: 0 0 0 1px var(--n-border-med); }
 .mb-cal-cab { display: flex; justify-content: space-between; margin-bottom: 6px; }
 .mb-cal-cab span { color: var(--n-text-muted); }
 .mb-cal-grilla { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
@@ -324,11 +369,11 @@
 .mb-dia-rojo  { background: var(--n-red);    color: #fff; }
 .mb-dia-verde { background: var(--n-green);  color: #fff; }
 
-.mb-toggle { padding: 10px 12px; border-radius: 14px; background: rgba(255, 255, 255, 0.85); box-shadow: 0 0 0 1px var(--n-border-med); }
+.mb-toggle { padding: 10px 12px; border-radius: 14px; background: var(--vidrio-mini); box-shadow: 0 0 0 1px var(--n-border-med); }
 .mb-toggle-cab { font-weight: 600; }
 .mb-toggle-flecha { color: var(--n-text-muted); }
 .mb-toggle-cuerpo { display: flex; flex-direction: column; gap: 5px; margin: 8px 0 2px 16px; }
-.mb-toggle-cuerpo span { height: 6px; border-radius: 99px; background: rgba(55, 53, 47, 0.14); }
+.mb-toggle-cuerpo span { height: 6px; border-radius: 99px; background: var(--tinte-fuerte); }
 .mb-toggle-cuerpo .corta { width: 55%; }
 
 /* ── Bloques flotantes ── */
@@ -342,10 +387,10 @@
 
 @keyframes flotaSuave {
   from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(0, -10px, 0); }
+  to   { transform: translate3d(0, -6px, 0); }
 }
 
-.flotante-vidrio { padding: 8px; border-radius: 22px; background: rgba(255, 255, 255, 0.5); }
+.flotante-vidrio { padding: 8px; border-radius: 22px; background: var(--vidrio-flotante); }
 
 /* ── Refracción (lente líquida): solo Chromium de escritorio ── */
 @supports (backdrop-filter: url(#x)) {
@@ -353,6 +398,37 @@
     backdrop-filter: url(#liquid-glass) blur(var(--glass-blur)) saturate(var(--glass-sat));
   }
 }
+
+/* ── Transición a la capacitación: la ventana de Notion se convierte en la ventana
+   del dashboard del curso (mismo vidrio, misma barra) y el header baja desde arriba.
+   La clase vt-entrando existe solo durante la View Transition (ver Portada.jsx). */
+.vt-entrando .vn-ventana,
+.vt-entrando .inicio-progreso { view-transition-name: ventana-notion; }
+.vt-entrando .app-header { view-transition-name: app-header; }
+
+::view-transition-group(ventana-notion) {
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1);
+}
+
+/* Las dos ventanas tienen proporciones distintas: se ajustan al grupo sin deformarse */
+::view-transition-old(ventana-notion),
+::view-transition-new(ventana-notion) {
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+::view-transition-new(app-header) {
+  animation: vtHeaderBaja 0.5s cubic-bezier(0.2, 0.9, 0.25, 1) 0.1s both;
+}
+
+@keyframes vtHeaderBaja {
+  from { opacity: 0; transform: translate3d(0, -28px, 0); }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: 0.3s; }
 
 /* ── Adaptaciones ── */
 @media (max-width: 960px) {
@@ -364,7 +440,11 @@
 
 @media (max-width: 720px), (pointer: coarse) {
   .portada-contenido { padding: 80px 18px 18px; }
-  .extra, .vn-brillo, .blob-3 { display: none; }
+  .extra, .vn-brillo-capa { display: none; }
+  /* Sin vuelo en pantallas chicas: la ventana vuelve a recortar su contenido */
+  .vn-ventana { overflow: hidden; }
+  .vn-aviso { top: 46px; right: 10px; gap: 10px; padding: 8px 10px 8px 8px; }
+  .vn-aviso-icono { width: 30px; height: 30px; font-size: 1rem; }
   .flotante { width: 150px; }
   .pos-toggle { top: -6%; left: -3%; }
   .pos-tabla  { display: none; }
@@ -387,16 +467,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .blob, .flotante-flota, .vn-cursor, .vista:not([hidden]) { animation: none; }
-  .vn-brillo { display: none; }
+  .blob, .flotante-flota, .vn-cursor, .vista:not([hidden]), .portada-marca::after { animation: none; }
+  .vn-brillo-capa { display: none; }
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .vn-ventana, .vn-menu, .flotante-vidrio { background: #fff; }
-  .vn-ventana, .vn-menu, .flotante-vidrio, .portada-boton, .portada-kicker, .portada-continuar {
+  .vn-ventana, .vn-menu, .vn-aviso, .flotante-vidrio { background: var(--superficie-solida); }
+  .vn-ventana, .vn-menu, .vn-aviso, .flotante-vidrio, .boton-primario, .portada-kicker, .portada-continuar {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
-  .portada-boton { background: var(--n-link); }
+  .boton-primario { background: var(--n-accent-fill); }
   .con-lente .glass-lens { backdrop-filter: none !important; }
 }

@@ -12,6 +12,8 @@ export const CLAVES = {
   ultima:      'capacitacion-cmd:ultima',
   certificado: 'capacitacion-cmd:certificado',
   vista:       'capacitacion-cmd:vista',
+  tema:        'capacitacion-cmd:tema',
+  pasos:       'capacitacion-cmd:pasos', // { [idModulo]: ['video', ...] } pasos ya recorridos
 }
 
 export function leerProgreso(clave, porDefecto) {

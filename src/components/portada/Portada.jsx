@@ -1,8 +1,11 @@
 import { useEffect, useRef, useSyncExternalStore } from 'react'
+import { flushSync } from 'react-dom'
 import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
 import VentanaNotion from './VentanaNotion.jsx'
 import Flotantes from './Flotantes.jsx'
+import BotonTema from '../BotonTema.jsx'
+import { OPCIONES, useGuion } from './guion.js'
 import './portada.css'
 
 const MQ_COMPACTO = '(max-width: 720px), (pointer: coarse)'
@@ -36,12 +39,17 @@ function soportaLente() {
  * @param {function} onEntrar         - pasa al curso
  * @param {function} [onContinuar]    - pasa al curso en el módulo pendiente (si hay progreso)
  * @param {string}   [textoContinuar] - detalle de dónde se continúa
+ * @param {boolean}  [activa]         - false mientras la portada está oculta: pausa la demo
  */
-export default function Portada({ onEntrar, onContinuar, textoContinuar }) {
+export default function Portada({ onEntrar, onContinuar, textoContinuar, activa = true }) {
   const sinMovimiento = Boolean(useReducedMotion())
   const compacto = useCompacto()
   const conPuntero = !sinMovimiento && !compacto
   const raizRef = useRef(null)
+
+  // El guion se comparte: el bloque elegido viaja entre su flotante y la ventana
+  const guion = useGuion(sinMovimiento, activa)
+  const enUso = guion.fase === 'bloque' ? OPCIONES[guion.idx].id : null
 
   // Posición normalizada del puntero (-0.5..0.5) suavizada con resorte
   const mx = useMotionValue(0)
@@ -76,6 +84,16 @@ export default function Portada({ onEntrar, onContinuar, textoContinuar }) {
     e.currentTarget.style.setProperty('--sy', `${e.clientY - r.top}px`)
   }
 
+  // Al entrar, la ventana de Notion se transforma en la cabecera del curso (View Transitions).
+  // El nombre de transición solo se asigna durante el cambio: fuera de él no altera el vidrio.
+  const entrarConTransicion = () => {
+    if (sinMovimiento || !document.startViewTransition) return onEntrar()
+    const raiz = document.documentElement
+    raiz.classList.add('vt-entrando')
+    const transicion = document.startViewTransition(() => flushSync(onEntrar))
+    transicion.finished.finally(() => raiz.classList.remove('vt-entrando'))
+  }
+
   const entrada = (retraso) => (sinMovimiento
     ? { initial: false }
     : {
@@ -85,7 +103,7 @@ export default function Portada({ onEntrar, onContinuar, textoContinuar }) {
       })
 
   return (
-    <motion.main
+    <main
       ref={raizRef}
       id="portada"
       className="portada"
@@ -100,10 +118,11 @@ export default function Portada({ onEntrar, onContinuar, textoContinuar }) {
         </filter>
       </svg>
 
+      <BotonTema className="selector-tema--portada" />
+
       <div className="portada-fondo" aria-hidden="true">
         <span className="blob blob-1" />
         <span className="blob blob-2" />
-        <span className="blob blob-3" />
       </div>
 
       <div className="portada-contenido">
@@ -112,7 +131,7 @@ export default function Portada({ onEntrar, onContinuar, textoContinuar }) {
             <span aria-hidden="true">📚</span> Comunicación Multimedial · Capacitación Notion
           </motion.span>
           <motion.h1 id="portada-titulo" tabIndex={-1} {...entrada(0.12)}>
-            Dejá de enterarte<br />tarde de las entregas
+            Dejá de enterarte<br /><span className="portada-marca">tarde</span> de las entregas
           </motion.h1>
           <motion.p className="portada-sub" {...entrada(0.2)}>
             Armá en Notion, en 6 módulos prácticos, el sistema donde viven tus materias,
@@ -122,13 +141,13 @@ export default function Portada({ onEntrar, onContinuar, textoContinuar }) {
           <motion.div className="portada-cta" {...entrada(0.28)}>
             <motion.button
               type="button"
-              className="portada-boton glass glass--chrome glass-lens glass-sheen"
+              className="boton-primario glass glass--chrome glass-lens glass-sheen"
               onPointerMove={moverBrillo}
               style={{ borderRadius: 999 }}
               whileTap={{ scale: 0.97 }}
               whileHover={sinMovimiento ? undefined : { scale: 1.03 }}
               transition={{ type: 'spring', stiffness: 380, damping: 26 }}
-              onClick={onEntrar}
+              onClick={entrarConTransicion}
             >
               <span>Entrar a la capacitación</span>
               <ArrowRight size={18} aria-hidden="true" />
@@ -141,20 +160,26 @@ export default function Portada({ onEntrar, onContinuar, textoContinuar }) {
             )}
           </motion.div>
 
-          <ul className="portada-datos" aria-label="Datos del curso">
+          <motion.ul className="portada-datos" aria-label="Datos del curso" {...entrada(0.36)}>
             <li><span aria-hidden="true">🧱</span> 6 módulos prácticos</li>
             <li><span aria-hidden="true">⏱️</span> Unas 2 horas</li>
             <li><span aria-hidden="true">🧑‍💻</span> De cero a avanzado</li>
-          </ul>
+          </motion.ul>
         </div>
 
         <div className="portada-escena" aria-hidden="true">
           <motion.div className="portada-ventana-pos" style={conPuntero ? { x: ventanaX, y: ventanaY } : undefined}>
-            <VentanaNotion estatico={sinMovimiento} brillo={conPuntero ? { x: brilloX, y: brilloY } : null} />
+            <VentanaNotion
+              guion={guion}
+              vuelo={conPuntero}
+              compacto={compacto}
+              estatico={sinMovimiento}
+              brillo={conPuntero ? { x: brilloX, y: brilloY } : null}
+            />
           </motion.div>
-          <Flotantes px={px} py={py} estatico={sinMovimiento} />
+          <Flotantes px={px} py={py} estatico={sinMovimiento} enUso={enUso} vuelo={conPuntero} />
         </div>
       </div>
-    </motion.main>
+    </main>
   )
 }

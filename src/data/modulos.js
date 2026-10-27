@@ -5,13 +5,16 @@
  * - explicacionBreve (visible por defecto)
  * - explicacionDetallada (desplegable tipo acordeón)
  * - recurso PDF con link descargable
+ * - clave: [etiqueta, texto] del dato práctico que conviene recordar
  * - corto: nombre breve para navegación y para la pieza del dashboard
+ * - logro: lo que vas a poder hacer al terminar (objetivo del programa, en concreto)
  */
 
 export const SECCIONES = [
   {
     id: 'sec1',
     corto: 'Bloques',
+    logro: 'Crear cualquier bloque con el atajo / y ordenar tu cursada en páginas dentro de páginas.',
     num: 'Sección 1 · Módulo Fundamentos',
     titulo: 'Deconstruyendo el Caos Estudiantil (Mentalidad Notion)',
     tag: 'Mentalidad Notion',
@@ -29,15 +32,12 @@ export const SECCIONES = [
       titulo: 'Guía Rápida: Los 10 atajos de teclado y comandos esenciales',
       url: '/pdfs/guia-1.pdf',
     },
-    recursosAside: [
-      'Video: Mentalidad de bloques (2:09)',
-      'PDF: 10 atajos y comandos esenciales',
-      'Atajo clave: escribí / para insertar cualquier bloque',
-    ],
+    clave: ['Atajo clave', 'escribí / para insertar cualquier bloque'],
   },
   {
     id: 'sec2',
     corto: 'Apuntes',
+    logro: 'Armar apuntes por materia con toggles que te preguntan antes de mostrarte la respuesta (Active Recall).',
     num: 'Sección 2 · Toma de Notas Inteligente',
     titulo: 'El Cuaderno Digital Inteligente (Toma de Apuntes Activa)',
     tag: 'Active Recall',
@@ -55,15 +55,12 @@ export const SECCIONES = [
       titulo: 'Active Recall en Notion: cómo estudiar con preguntas y respuestas ocultas',
       url: '/pdfs/guia-2.pdf',
     },
-    recursosAside: [
-      'Video: Toggles y Active Recall (2:08)',
-      'PDF: Metodología Active Recall',
-      'Comando clave: /toggle para ocultar respuestas',
-    ],
+    clave: ['Comando clave', '/toggle para ocultar respuestas'],
   },
   {
     id: 'sec3',
     corto: 'Base de datos',
+    logro: 'Tener todas tus entregas en una base de datos con materia, estado y fecha de entrega.',
     num: 'Sección 3 · Bases de Datos',
     titulo: 'El Núcleo de Datos: Tu Primera Base de Datos Estudiantil',
     tag: 'Bases de Datos',
@@ -81,15 +78,12 @@ export const SECCIONES = [
       titulo: 'Diccionario de Propiedades: Entendiendo las Bases de Datos',
       url: '/pdfs/guia-3.pdf',
     },
-    recursosAside: [
-      'Video: Creación de bases de datos (14:20)',
-      'PDF: Diccionario de Propiedades',
-      'Atajo clave: /database inline para insertar la tabla',
-    ],
+    clave: ['Atajo clave', '/database inline para insertar la tabla'],
   },
   {
     id: 'sec4',
     corto: 'Vistas',
+    logro: 'Ver esas mismas entregas como tablero Kanban o como calendario del mes, sin duplicar nada.',
     num: 'Sección 4 · Vistas Visuales',
     titulo: 'Control Visual del Tiempo: Tableros Kanban y Calendarios',
     tag: 'Kanban & Calendarios',
@@ -107,15 +101,12 @@ export const SECCIONES = [
       titulo: 'Las 6 Vistas de Notion y cuándo usar cada una',
       url: '/pdfs/guia-4.pdf',
     },
-    recursosAside: [
-      'Video: Vistas Board y Calendar (2:09)',
-      'PDF: Guía de las 6 Vistas de Notion',
-      'Tip: Arrastrá tarjetas en el Board para cambiar su estado',
-    ],
+    clave: ['Tip', 'Arrastrá tarjetas en el Board para cambiar su estado'],
   },
   {
     id: 'sec5',
     corto: 'Filtros',
+    logro: 'Ver solo lo que vence esta semana, ordenado por urgencia.',
     num: 'Sección 5 · Filtros & Foco',
     titulo: 'Filtros, Ordenamiento y "Mi Día Hoy"',
     tag: 'Filtros & Sorts',
@@ -133,15 +124,12 @@ export const SECCIONES = [
       titulo: 'Lógica de Filtros: Cómo crear vistas dinámicas',
       url: '/pdfs/guia-5.pdf',
     },
-    recursosAside: [
-      'Video: Filtros dinámicos y orden (12:10)',
-      'PDF: Fórmulas y filtros clave',
-      'Regla de oro: Date is Today para el foco diario',
-    ],
+    clave: ['Regla de oro', 'Date is Today para el foco diario'],
   },
   {
     id: 'sec6',
     corto: 'Dashboard',
+    logro: 'Juntar todo en un dashboard de inicio en columnas, con tus bases vinculadas.',
     num: 'Sección 6 · Arquitectura Final',
     titulo: 'El Hub Central del Estudiante (Dashboard Principal)',
     tag: 'Dashboard Maestro',
@@ -159,10 +147,6 @@ export const SECCIONES = [
       titulo: 'Layouts y Columnas: Diseño de Interfaces en Notion',
       url: '/pdfs/guia-6.pdf',
     },
-    recursosAside: [
-      'Video: Armado del Dashboard (15:45)',
-      'PDF: Layouts y Columnas en Notion',
-      'Bloque clave: /linked database para espejar tus datos',
-    ],
+    clave: ['Bloque clave', '/linked database para espejar tus datos'],
   },
 ]

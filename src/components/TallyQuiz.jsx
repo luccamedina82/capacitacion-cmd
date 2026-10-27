@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Lock } from 'lucide-react'
 import RepasoModal from './RepasoModal.jsx'
 import { PUNTAJE_MAXIMO, PUNTAJE_MINIMO } from '../data/tally.js'
 
@@ -55,6 +56,7 @@ export default function TallyQuiz({
   const [modalAbierto, setModal]    = useState(false)
   const [intento, setIntento]       = useState(0) // cambia la key del iframe para reiniciar el formulario
   const [sinPuntaje, setSinPuntaje] = useState(false) // se envió, pero el formulario no expone un puntaje
+  const [cargado, setCargado]       = useState(false) // el iframe terminó de cargar (hasta entonces, esqueleto)
   const onAprobadoRef               = useRef(onAprobado)
   const iframeRef                   = useRef(null)
 
@@ -94,6 +96,7 @@ export default function TallyQuiz({
     setModal(false)
     setPuntaje(null)
     setSinPuntaje(false)
+    setCargado(false)
     setIntento(n => n + 1)
   }
 
@@ -108,7 +111,7 @@ export default function TallyQuiz({
 
       {bloqueado ? (
         <div className="quiz-bloqueado">
-          <span className="quiz-bloqueado-icono" aria-hidden="true">🔒</span>
+          <span className="quiz-bloqueado-icono" aria-hidden="true"><Lock size={20} /></span>
           <div className="quiz-bloqueado-texto">
             <strong>Cuestionario bloqueado</strong>
             <span>
@@ -131,8 +134,20 @@ export default function TallyQuiz({
           </div>
         </div>
       ) : (
-        <div className="tally-wrapper">
-          <iframe ref={iframeRef} key={intento} src={src} title={titulo} loading="lazy" />
+        <div className="tally-wrapper" aria-busy={!cargado}>
+          {!cargado && (
+            <div className="tally-esqueleto" aria-hidden="true">
+              <span /><span /><span className="corta" /><span /><span className="corta" />
+            </div>
+          )}
+          <iframe
+            ref={iframeRef}
+            key={intento}
+            src={src}
+            title={titulo}
+            loading="lazy"
+            onLoad={() => setCargado(true)}
+          />
         </div>
       )}
 

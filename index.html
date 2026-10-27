@@ -3,6 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      // Fija el tema antes del primer pintado para evitar el destello (ver src/lib/tema.js)
+      (function () {
+        var tema
+        try {
+          var guardado = JSON.parse(localStorage.getItem('capacitacion-cmd:tema'))
+          if (guardado === 'oscuro' || guardado === 'claro' || guardado === 'noche') tema = guardado
+        } catch (e) {}
+        if (!tema) {
+          tema = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'oscuro' : 'claro'
+        }
+        document.documentElement.dataset.tema = tema
+      })()
+    </script>
     <title>Organizá tu cursada — Capacitación Notion | CMD 2026</title>
     <meta
       name="description"
