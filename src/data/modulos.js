@@ -5,12 +5,16 @@
  * - explicacionBreve (visible por defecto)
  * - explicacionDetallada (desplegable tipo acordeón)
  * - recurso PDF con link descargable
- * - Quiz con 2 preguntas interactivas y validación secuencial
+ * - clave: [etiqueta, texto] del dato práctico que conviene recordar
+ * - corto: nombre breve para navegación y para la pieza del dashboard
+ * - logro: lo que vas a poder hacer al terminar (objetivo del programa, en concreto)
  */
 
 export const SECCIONES = [
   {
     id: 'sec1',
+    corto: 'Bloques',
+    logro: 'Crear cualquier bloque con el atajo / y ordenar tu cursada en páginas dentro de páginas.',
     num: 'Sección 1 · Módulo Fundamentos',
     titulo: 'Deconstruyendo el Caos Estudiantil (Mentalidad Notion)',
     tag: 'Mentalidad Notion',
@@ -21,41 +25,19 @@ export const SECCIONES = [
       'Descubrí qué es Notion y por qué funciona diferente a Word o Google Docs. Aprenderemos a navegar por la interfaz, a crear tu primera página y a dominar el concepto fundamental de "bloques" para centralizar toda tu cursada sin saturarte de información.',
     explicacionDetallada: [
       'A diferencia de los procesadores de texto tradicionales que funcionan como "hojas de papel", Notion funciona como un juego de piezas de Lego. Todo lo que ves (un párrafo, un título, una imagen, una lista de tareas) es un "bloque" independiente. Esto permite que puedas arrastrar, reordenar y transformar la información en segundos.',
-      'Para empezar, solo necesitas dominar el atajo maestro: la barra invertida (/). Al escribirla en cualquier lugar, se despliega un menú con todos los bloques disponibles: textos, encabezados (H1, H2, H3), listas con viñetas, bloques de código, citas o "Callouts" (cajas de texto resaltadas ideales para destacar fechas de parciales o advertencias).',
+      'Para empezar, solo necesitas dominar el atajo maestro: la barra (/). Al escribirla en cualquier lugar, se despliega un menú con todos los bloques disponibles: textos, encabezados (H1, H2, H3), listas con viñetas, bloques de código, citas o "Callouts" (cajas de texto resaltadas ideales para destacar fechas de parciales o advertencias).',
       'La regla de oro del estudiante en Notion es la limpieza visual: crear una página principal y anidar páginas dentro de ella en lugar de tener cientos de archivos sueltos.',
     ],
     pdf: {
       titulo: 'Guía Rápida: Los 10 atajos de teclado y comandos esenciales',
       url: '/pdfs/guia-1.pdf',
     },
-    recursosAside: [
-      'Video: Mentalidad de bloques (2:09)',
-      'PDF: 10 atajos y comandos esenciales',
-      'Atajo clave: escribe / para insertar cualquier bloque',
-    ],
-    quiz: [
-      {
-        texto: '¿Qué tecla se utiliza en Notion para abrir el menú principal y agregar cualquier tipo de bloque?',
-        opciones: [
-          { op: 'a', texto: '@ (mencionar personas o páginas)' },
-          { op: 'b', texto: '/ (barra inclinada o comando maestro)' },
-          { op: 'c', texto: '# (etiquetas numéricas)' },
-        ],
-        ok: 'b',
-      },
-      {
-        texto: '¿Qué es un "bloque" en Notion?',
-        opciones: [
-          { op: 'a', texto: 'Una carpeta tradicional para guardar archivos' },
-          { op: 'b', texto: 'Una plantilla prediseñada inmodificable del sistema' },
-          { op: 'c', texto: 'Cualquier elemento individual (párrafo, título, imagen, lista) que se puede mover y transformar libremente' },
-        ],
-        ok: 'c',
-      },
-    ],
+    clave: ['Atajo clave', 'escribí / para insertar cualquier bloque'],
   },
   {
     id: 'sec2',
+    corto: 'Apuntes',
+    logro: 'Armar apuntes por materia con toggles que te preguntan antes de mostrarte la respuesta (Active Recall).',
     num: 'Sección 2 · Toma de Notas Inteligente',
     titulo: 'El Cuaderno Digital Inteligente (Toma de Apuntes Activa)',
     tag: 'Active Recall',
@@ -63,44 +45,22 @@ export const SECCIONES = [
     videoTitulo: 'Estructuración de Materias, Toggles y Active Recall',
     videoDuracion: '2:08',
     explicacionBreve:
-      'Transformá tus apuntes estáticos en material interactivo. Aprenderemos a estructurar la página de una materia, a incrustar recursos externos (como PDFs de la cátedra) y a utilizar los Toggles para aplicar la técnica de Active Recall y estudiar en menos tiempo.',
+      'Transformá tus apuntes estáticos en material interactivo. Aprenderemos a estructurar la página de una materia, a incrustar recursos externos (como PDFs de la cátedra) y a utilizar los Toggles para aplicar la técnica de Active Recall y estudiar de forma más activa.',
     explicacionDetallada: [
       'El verdadero poder de estudiar en Notion no es solo escribir, sino crear un sistema que te evalúe. Para la estructura de una materia, lo ideal es dividir la página en tres zonas: Recursos (links al campus, programa oficial), Trabajos Prácticos, y Apuntes Teóricos.',
       'En la zona de apuntes, la herramienta estrella es la lista desplegable o Toggle (/toggle). En lugar de leer pasivamente un texto largo, escribes una posible pregunta de examen como título del Toggle, y ocultas la respuesta dentro. Al estudiar, intentas recordar la respuesta antes de desplegarlo (técnica de Active Recall).',
       'Además, Notion permite escribir /pdf para subir o incrustar los apuntes de la cátedra directamente en la página, permitiendo leer el material y tomar notas justo al lado sin cambiar de ventana.',
     ],
     pdf: {
-      titulo: 'Active Recall en Notion: Cómo estudiar para retener el 100%',
+      titulo: 'Active Recall en Notion: cómo estudiar con preguntas y respuestas ocultas',
       url: '/pdfs/guia-2.pdf',
     },
-    recursosAside: [
-      'Video: Toggles y Active Recall (2:08)',
-      'PDF: Metodología Active Recall',
-      'Comando clave: /toggle para ocultar respuestas',
-    ],
-    quiz: [
-      {
-        texto: '¿Qué bloque es ideal para aplicar la técnica de autoevaluación o Active Recall?',
-        opciones: [
-          { op: 'a', texto: 'Callout (caja de texto destacada)' },
-          { op: 'b', texto: 'Toggle list (lista desplegable con contenido ocultable)' },
-          { op: 'c', texto: 'Divider (línea divisoria estática)' },
-        ],
-        ok: 'b',
-      },
-      {
-        texto: '¿Se pueden visualizar archivos PDF completos directamente dentro de una página de Notion sin descargarlos?',
-        opciones: [
-          { op: 'a', texto: 'Sí, mediante los bloques nativos Embed o PDF' },
-          { op: 'b', texto: 'No, únicamente es posible colocar enlaces externos' },
-          { op: 'c', texto: 'Sí, pero exclusivamente instalando plugins externos de navegador' },
-        ],
-        ok: 'a',
-      },
-    ],
+    clave: ['Comando clave', '/toggle para ocultar respuestas'],
   },
   {
     id: 'sec3',
+    corto: 'Base de datos',
+    logro: 'Tener todas tus entregas en una base de datos con materia, estado y fecha de entrega.',
     num: 'Sección 3 · Bases de Datos',
     titulo: 'El Núcleo de Datos: Tu Primera Base de Datos Estudiantil',
     tag: 'Bases de Datos',
@@ -118,34 +78,12 @@ export const SECCIONES = [
       titulo: 'Diccionario de Propiedades: Entendiendo las Bases de Datos',
       url: '/pdfs/guia-3.pdf',
     },
-    recursosAside: [
-      'Video: Creación de bases de datos (14:20)',
-      'PDF: Diccionario de Propiedades',
-      'Atajo clave: /database inline para insertar la tabla',
-    ],
-    quiz: [
-      {
-        texto: '¿Cuál es la principal diferencia entre una Tabla Simple y una Base de Datos en Notion?',
-        opciones: [
-          { op: 'a', texto: 'Que la tabla simple permite fórmulas algebraicas avanzadas' },
-          { op: 'b', texto: 'Que cada fila de una base de datos es una página completa con sus propios bloques' },
-          { op: 'c', texto: 'No hay ninguna diferencia real más allá del color' },
-        ],
-        ok: 'b',
-      },
-      {
-        texto: '¿Qué propiedad usarías para asignar una fecha de parcial o entrega?',
-        opciones: [
-          { op: 'a', texto: 'Select (selección única)' },
-          { op: 'b', texto: 'Number (campo numérico)' },
-          { op: 'c', texto: 'Date (propiedad de fecha con recordatorios)' },
-        ],
-        ok: 'c',
-      },
-    ],
+    clave: ['Atajo clave', '/database inline para insertar la tabla'],
   },
   {
     id: 'sec4',
+    corto: 'Vistas',
+    logro: 'Ver esas mismas entregas como tablero Kanban o como calendario del mes, sin duplicar nada.',
     num: 'Sección 4 · Vistas Visuales',
     titulo: 'Control Visual del Tiempo: Tableros Kanban y Calendarios',
     tag: 'Kanban & Calendarios',
@@ -163,34 +101,12 @@ export const SECCIONES = [
       titulo: 'Las 6 Vistas de Notion y cuándo usar cada una',
       url: '/pdfs/guia-4.pdf',
     },
-    recursosAside: [
-      'Video: Vistas Board y Calendar (2:09)',
-      'PDF: Guía de las 6 Vistas de Notion',
-      'Tip: Arrastrá tarjetas en el Board para cambiar su estado',
-    ],
-    quiz: [
-      {
-        texto: 'Si borrás una tarea estando en la vista de Calendario, ¿qué sucede en la vista original de tabla?',
-        opciones: [
-          { op: 'a', texto: 'Sigue existiendo intacta en la base de datos' },
-          { op: 'b', texto: 'Se elimina de toda la base de datos, ya que es el mismo registro' },
-          { op: 'c', texto: 'Se oculta automáticamente pero no se borra' },
-        ],
-        ok: 'b',
-      },
-      {
-        texto: 'Para que el Tablero Kanban funcione y agrupe por columnas de progreso, ¿qué propiedad debe existir?',
-        opciones: [
-          { op: 'a', texto: 'Status o Select (estado o selección)' },
-          { op: 'b', texto: 'Number (número)' },
-          { op: 'c', texto: 'Files & Media (archivos)' },
-        ],
-        ok: 'a',
-      },
-    ],
+    clave: ['Tip', 'Arrastrá tarjetas en el Board para cambiar su estado'],
   },
   {
     id: 'sec5',
+    corto: 'Filtros',
+    logro: 'Ver solo lo que vence esta semana, ordenado por urgencia.',
     num: 'Sección 5 · Filtros & Foco',
     titulo: 'Filtros, Ordenamiento y "Mi Día Hoy"',
     tag: 'Filtros & Sorts',
@@ -208,34 +124,12 @@ export const SECCIONES = [
       titulo: 'Lógica de Filtros: Cómo crear vistas dinámicas',
       url: '/pdfs/guia-5.pdf',
     },
-    recursosAside: [
-      'Video: Filtros dinámicos y orden (12:10)',
-      'PDF: Fórmulas y filtros clave',
-      'Regla de oro: Date is Today para el foco diario',
-    ],
-    quiz: [
-      {
-        texto: '¿Para qué sirve la herramienta Sort (Ordenar) en una base de datos?',
-        opciones: [
-          { op: 'a', texto: 'Para ocultar definitivamente las tareas completadas' },
-          { op: 'b', texto: 'Para ordenar las entradas bajo un criterio específico (ej: fecha límite ascendente)' },
-          { op: 'c', texto: 'Para pintar las celdas con colores automáticos' },
-        ],
-        ok: 'b',
-      },
-      {
-        texto: 'Si aplicás una regla de filtro dinámico donde "Date is Today", ¿qué pasará mañana cuando abras Notion?',
-        opciones: [
-          { op: 'a', texto: 'Se actualizará automáticamente al nuevo día mostrando solo las tareas de esa jornada' },
-          { op: 'b', texto: 'Se bloqueará la base de datos hasta reconfigurarla a mano' },
-          { op: 'c', texto: 'Borrará permanentemente las tareas que no se hayan hecho' },
-        ],
-        ok: 'a',
-      },
-    ],
+    clave: ['Regla de oro', 'Date is Today para el foco diario'],
   },
   {
     id: 'sec6',
+    corto: 'Dashboard',
+    logro: 'Juntar todo en un dashboard de inicio en columnas, con tus bases vinculadas.',
     num: 'Sección 6 · Arquitectura Final',
     titulo: 'El Hub Central del Estudiante (Dashboard Principal)',
     tag: 'Dashboard Maestro',
@@ -253,30 +147,6 @@ export const SECCIONES = [
       titulo: 'Layouts y Columnas: Diseño de Interfaces en Notion',
       url: '/pdfs/guia-6.pdf',
     },
-    recursosAside: [
-      'Video: Armado del Dashboard (15:45)',
-      'PDF: Layouts y Columnas en Notion',
-      'Bloque clave: /linked database para espejar tus datos',
-    ],
-    quiz: [
-      {
-        texto: '¿Qué función cumple el bloque "Linked view of database" (Vista vinculada)?',
-        opciones: [
-          { op: 'a', texto: 'Exporta los datos a un archivo de Excel estático' },
-          { op: 'b', texto: 'Inserta un reflejo sincronizado de una base existente permitiendo vistas y filtros independientes' },
-          { op: 'c', texto: 'Convierte texto plano en una tabla simple' },
-        ],
-        ok: 'b',
-      },
-      {
-        texto: '¿Cómo se crean columnas en una página de Notion?',
-        opciones: [
-          { op: 'a', texto: 'Escribiendo etiquetas de código HTML en un bloque especial' },
-          { op: 'b', texto: 'No se puede, Notion es estrictamente de diseño vertical' },
-          { op: 'c', texto: 'Arrastrando cualquier bloque hacia el extremo lateral derecho o izquierdo de otro bloque' },
-        ],
-        ok: 'c',
-      },
-    ],
+    clave: ['Bloque clave', '/linked database para espejar tus datos'],
   },
 ]

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Play } from 'lucide-react'
 
 function getYouTubeId(url) {
   if (!url) return null
@@ -44,6 +45,7 @@ export default function VideoPlaceholder({ titulo, duracion, src, id }) {
             tabIndex={tieneVideo ? 0 : undefined}
             onKeyDown={e => {
               if (tieneVideo && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault() // evita que Espacio haga scroll de la página
                 setReproduciendo(true)
               }
             }}
@@ -58,7 +60,7 @@ export default function VideoPlaceholder({ titulo, duracion, src, id }) {
                 : undefined
             }
           >
-            <div className="play">▶</div>
+            <div className="play" aria-hidden="true"><Play size={20} fill="currentColor" /></div>
             {youtubeId ? (
               <div className="video-watermark">
                 <span>YouTube</span>
@@ -73,7 +75,9 @@ export default function VideoPlaceholder({ titulo, duracion, src, id }) {
 
         <div className="pie">
           <div className="pie-info">
-            <span className="pie-icon">{youtubeId ? '▶️' : '🎬'}</span>
+            <span className="pie-icon" aria-hidden="true">
+              {youtubeId ? '▶️' : '🎬'}
+            </span>
             <span className="pie-titulo">{titulo}</span>
           </div>
           <span className="pie-duracion">{duracion || 'HD'}</span>

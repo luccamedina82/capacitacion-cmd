@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react'
+import { CircleCheck, CircleX } from 'lucide-react'
 import TallyQuiz from './TallyQuiz.jsx'
+import Callout from './Callout.jsx'
 import { TALLY_FORMS } from '../data/tally.js'
 
 const CASOS_EVALUACION = [
@@ -152,17 +154,18 @@ const CASOS_EVALUACION = [
 
 /**
  * @param {boolean}  tallyAprobado   - si el Tally integrador ya fue aprobado (persistido en App)
- * @param {function} onTallyAprobado
+ * @param {function} onAprobado      - se llama al aprobar el Tally o las situaciones (>= 80 %)
  */
-export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado }) {
+export default function EvaluacionFinal({ tallyAprobado = false, onAprobado }) {
   const [tab, setTab] = useState('tally') // 'tally' | 'situaciones'
   const [respuestas, setRespuestas] = useState({})
   const [enviado, setEnviado] = useState(false)
-  const [nombreAlumno, setNombreAlumno] = useState('')
+  const [aviso, setAviso] = useState('') // feedback accesible cuando faltan respuestas
 
   const handleSeleccionar = useCallback((casoId, op) => {
     if (enviado) return
     setRespuestas(prev => ({ ...prev, [casoId]: op }))
+    setAviso('')
   }, [enviado])
 
   const totalPreguntas = CASOS_EVALUACION.length
@@ -170,19 +173,23 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
   const correctas = CASOS_EVALUACION.filter(c => respuestas[c.id] === c.correcta).length
   const porcentaje = Math.round((correctas / totalPreguntas) * 100)
   const aprobado = enviado && porcentaje >= 80
-  const certificado = aprobado || tallyAprobado
 
   const corregir = () => {
     if (respondidas < totalPreguntas) {
-      alert(`Por favor responde todas las situaciones antes de evaluar (${respondidas}/${totalPreguntas} respondidas).`)
+      const faltan = totalPreguntas - respondidas
+      const pendientes = faltan === 1 ? 'Falta 1 situación' : `Faltan ${faltan} situaciones`
+      setAviso(`${pendientes} por responder antes de evaluar (${respondidas} de ${totalPreguntas} respondidas).`)
       return
     }
+    setAviso('')
     setEnviado(true)
+    if (correctas / totalPreguntas >= 0.8) onAprobado?.()
   }
 
   const reiniciar = () => {
     setRespuestas({})
     setEnviado(false)
+    setAviso('')
   }
 
   return (
@@ -191,31 +198,31 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
         <button
           type="button"
           className={`eval-tab-btn${tab === 'tally' ? ' active' : ''}`}
+          aria-pressed={tab === 'tally'}
           onClick={() => setTab('tally')}
         >
-          <span>📋</span> Evaluación final {tallyAprobado ? '✓' : ''}
+          <span aria-hidden="true">📝</span> Evaluación final
+          {tallyAprobado && <span role="img" aria-label="aprobada">✓</span>}
         </button>
         <button
           type="button"
           className={`eval-tab-btn${tab === 'situaciones' ? ' active' : ''}`}
+          aria-pressed={tab === 'situaciones'}
           onClick={() => setTab('situaciones')}
         >
-          <span>🎯</span> Situaciones Reales de Estudio ({respondidas}/{totalPreguntas})
+          <span aria-hidden="true">🎯</span> Situaciones reales de estudio ({respondidas}/{totalPreguntas})
         </button>
       </div>
 
       {tab === 'situaciones' && (
         <div className="eval-casos-container">
-          <div className="eval-intro-box">
-            <span className="eval-intro-icon">💡</span>
-            <div>
-              <p className="eval-intro-title">Evaluación General Integradora</p>
-              <p className="eval-intro-desc">
-                Poné a prueba tu criterio frente a 5 situaciones cotidianas de cursada universitaria.
-                Leé con atención cada escenario y seleccioná la mejor decisión de diseño y organización en Notion.
-              </p>
-            </div>
-          </div>
+          <Callout variante="idea" className="eval-intro-box">
+            <p className="eval-intro-title">Evaluación general integradora</p>
+            <p className="eval-intro-desc">
+              Poné a prueba tu criterio frente a 5 situaciones cotidianas de cursada universitaria.
+              Leé con atención cada escenario y seleccioná la mejor decisión de diseño y organización en Notion.
+            </p>
+          </Callout>
 
           <div className="casos-lista">
             {CASOS_EVALUACION.map((caso, index) => {
@@ -238,9 +245,12 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
                     <p>{caso.contexto}</p>
                   </div>
 
-                  <p className="caso-pregunta">👉 {caso.pregunta}</p>
+                  <p className="caso-pregunta" id={`caso-pregunta-${caso.id}`}>
+                    <span aria-hidden="true">👉</span>
+                    <span>{caso.pregunta}</span>
+                  </p>
 
-                  <div className="caso-opciones">
+                  <div className="caso-opciones" role="radiogroup" aria-labelledby={`caso-pregunta-${caso.id}`}>
                     {caso.opciones.map(op => {
                       const seleccionada = elegida === op.op
                       let estiloOpcion = ''
@@ -250,25 +260,42 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
                       }
 
                       return (
-                        <button
+                        <label
                           key={op.op}
-                          type="button"
-                          className={`caso-opcion-btn${seleccionada ? ' seleccionada' : ''}${estiloOpcion}`}
-                          onClick={() => handleSeleccionar(caso.id, op.op)}
-                          disabled={enviado}
+                          className={`caso-opcion-btn${seleccionada ? ' seleccionada' : ''}${estiloOpcion}${enviado ? ' deshabilitada' : ''}`}
                         >
-                          <span className="opcion-badge">{op.op.toUpperCase()}</span>
+                          <input
+                            type="radio"
+                            className="sr-only"
+                            name={`caso-${caso.id}`}
+                            value={op.op}
+                            checked={seleccionada}
+                            disabled={enviado}
+                            onChange={() => handleSeleccionar(caso.id, op.op)}
+                          />
+                          <span className="opcion-badge" aria-hidden="true">{op.op.toUpperCase()}</span>
                           <span className="opcion-texto">{op.texto}</span>
-                        </button>
+                          {estiloOpcion === ' opcion-correcta' && (
+                            <>
+                              <CircleCheck size={18} className="opcion-estado" aria-hidden="true" />
+                              <span className="sr-only">Respuesta correcta</span>
+                            </>
+                          )}
+                          {estiloOpcion === ' opcion-fallada' && (
+                            <>
+                              <CircleX size={18} className="opcion-estado" aria-hidden="true" />
+                              <span className="sr-only">Tu respuesta, incorrecta</span>
+                            </>
+                          )}
+                        </label>
                       )
                     })}
                   </div>
 
                   {mostrarFeedback && (
-                    <div className={`caso-feedback ${esCorrecta ? 'feedback-ok' : 'feedback-error'}`}>
-                      <span className="feedback-icon">{esCorrecta ? '✅' : 'ℹ️'}</span>
+                    <Callout variante={esCorrecta ? 'comprobacion' : 'idea'} className="caso-feedback">
                       <p>{caso.feedback}</p>
-                    </div>
+                    </Callout>
                   )}
                 </div>
               )
@@ -276,15 +303,23 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
           </div>
 
           {/* Botones de acción y resultado */}
-          <div className="eval-actions-bar">
+          <div className="eval-actions-bar" aria-live="polite">
             {!enviado ? (
-              <button
-                type="button"
-                className="corregir eval-submit-btn"
-                onClick={corregir}
-              >
-                Evaluar mis respuestas ({respondidas}/{totalPreguntas})
-              </button>
+              <>
+                <button
+                  type="button"
+                  className="corregir eval-submit-btn"
+                  onClick={corregir}
+                  aria-describedby={aviso ? 'eval-aviso' : undefined}
+                >
+                  Evaluar mis respuestas ({respondidas}/{totalPreguntas})
+                </button>
+                {aviso && (
+                  <p id="eval-aviso" className="eval-aviso" role="alert">
+                    <span aria-hidden="true">ℹ️</span> {aviso}
+                  </p>
+                )}
+              </>
             ) : (
               <div className="eval-resultado-panel">
                 <div className={`eval-score-badge ${aprobado ? 'score-aprobado' : 'score-reintentar'}`}>
@@ -295,12 +330,16 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
                 <div className="eval-resultado-texto">
                   {aprobado ? (
                     <>
-                      <h4>🎉 ¡Excelente! Aprobaste la evaluación integradora</h4>
+                      <h3>
+                        <span aria-hidden="true">✅</span> ¡Excelente! Aprobaste la evaluación integradora
+                      </h3>
                       <p>Demostraste un dominio sólido del modelo mental de bloques, bases de datos y vistas de Notion.</p>
                     </>
                   ) : (
                     <>
-                      <h4>Necesitás 80% o más para certificar (actual: {porcentaje}%)</h4>
+                      <h3>
+                        <span aria-hidden="true">ℹ️</span> Necesitás 80 % o más para certificar (actual: {porcentaje} %)
+                      </h3>
                       <p>Revisá las situaciones marcadas en rojo, leé la explicación sugerida y volvé a intentar.</p>
                     </>
                   )}
@@ -325,36 +364,10 @@ export default function EvaluacionFinal({ tallyAprobado = false, onTallyAprobado
             formId={TALLY_FORMS.final}
             titulo="Evaluación integradora — Formulario Tally.so"
             aprobado={tallyAprobado}
-            onAprobado={onTallyAprobado}
+            onAprobado={onAprobado}
+            meta="obtener tu certificado"
+            exito="ya podés descargar tu certificado."
           />
-        </div>
-      )}
-
-      {/* Certificado Notion cuando aprueba cualquiera de las dos evaluaciones */}
-      {certificado && (
-        <div className="certificado-notion-card">
-          <div className="cert-header">
-            <span className="cert-emoji">🎓</span>
-            <div>
-              <span className="cert-kicker">Capacitación Comunicación Multimedial · 2026</span>
-              <h3>Certificado de Finalización de Sistema en Notion</h3>
-            </div>
-          </div>
-          <p className="cert-body">
-            Este certificado avala que has completado el diseño de tu sistema académico personal
-            en Notion: configuración de página, bases de datos con vistas cruzadas (calendario, tablero, tabla),
-            filtros inteligentes y relaciones entre asignaturas y entregas.
-          </p>
-          <div className="cert-footer">
-            <input
-              type="text"
-              className="cert-input-name"
-              placeholder="Escribí tu nombre completo..."
-              value={nombreAlumno}
-              onChange={e => setNombreAlumno(e.target.value)}
-            />
-            <span className="cert-date">{new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-          </div>
         </div>
       )}
     </div>
